@@ -37,7 +37,10 @@
     "agent lifecycle hooks"
   ],
   "bundled": {
-    "scripts": [],
+    "scripts": [
+      "scripts/scaffold_harness.py",
+      "scripts/validate_harness.py"
+    ],
     "assets": [],
     "templates": [
       "templates/harness.py",
