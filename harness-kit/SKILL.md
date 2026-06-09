@@ -13,6 +13,16 @@ Use this skill to design, bootstrap, and audit a zero-dependency, standard-libra
 
 Not for heavy multi-agent frameworks, complex general application architectures, or front-end interface design.
 
+## Installation
+
+To add this skill to your project workspace, run the following command using the Skills CLI:
+
+```bash
+npx skills add nguyenanh92/harness-kit --skill harness-kit
+```
+
+Or copy the `harness-kit` directory manually into your project's `skills/` folder.
+
 ## Core Model
 
 Every standard-library-only Python harness maps the 9 core components onto five main subsystems:
@@ -33,9 +43,42 @@ Every standard-library-only Python harness maps the 9 core components onto five 
 
 ## Common Tasks
 
+### Scaffold a Custom Harness
+
+Scaffold the zero-dependency Python harness templates into your project workspace:
+
+```bash
+# On Windows
+py -m skills.harness-kit.scripts.scaffold_harness --target harness
+
+# On macOS/Linux
+python3 -m skills.harness-kit.scripts.scaffold_harness --target harness
+```
+
+Options:
+- `--target DIR`: Destination folder to write the harness files (default: `harness`).
+- `--force`: Overwrite existing files in the target directory.
+
+### Audit and Validate an Existing Harness
+
+Audit and score your workspace harness across the 5 structural subsystems (Instructions, State, Verification, Scope, Lifecycle):
+
+```bash
+# On Windows
+py -m skills.harness-kit.scripts.validate_harness --target harness
+
+# On macOS/Linux
+python3 -m skills.harness-kit.scripts.validate_harness --target harness
+```
+
+Options:
+- `--json`: Output the score breakdown in JSON format.
+- `--html FILE`: Render and write a visual HTML report to the specified file path.
+- `--min-score SCORE`: Exit with error if score is below threshold (default: 70).
+
 ### Verify Template Syntax
 
-Always check that the python files are syntactically valid before launching the loop:
+Check that all python files in the template directory are syntactically valid:
 
 ```bash
 # On Windows PowerShell
@@ -50,7 +93,11 @@ python3 -m py_compile skills/harness-kit/templates/*.py
 Run the harness in simulation mode to test the while loop, pre/post hooks, sub-agent spawning, and compaction:
 
 ```bash
+# On Windows
 py -m skills.harness-kit.templates.harness --mock --goal "Create a simple calculator class"
+
+# On macOS/Linux
+python3 -m skills.harness-kit.templates.harness --mock --goal "Create a simple calculator class"
 ```
 
 ### Clean Up Simulation Logs
