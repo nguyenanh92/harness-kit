@@ -22,7 +22,9 @@
   "entryPoint": "SKILL.md",
   "references": [
     "references/architecture-principles.md",
-    "references/concurrency-and-safety.md"
+    "references/concurrency-and-safety.md",
+    "references/agent-harness-deep-dive.md",
+    "references/agent-harness-deep-dive.vi.md"
   ],
   "triggers": [
     "harness-kit",

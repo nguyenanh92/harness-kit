@@ -120,6 +120,16 @@ Chỉ nạp các tài liệu tham khảo khi gặp các bài toán thiết kế 
 
 - Khởi chạy, điều phối vòng lặp và ghi logs append-only: [Architecture Principles](references/architecture-principles.md)
 - Phân loại câu lệnh shell, cấp quyền an toàn và tác nhân con: [Concurrency & Safety](references/concurrency-and-safety.md)
+- Tìm hiểu chuyên sâu về 9 thành phần cốt lõi và cách ánh xạ sang 5 phân hệ: [Tìm hiểu về Agent Harness](references/agent-harness-deep-dive.vi.md)
+
+## Quy tắc Làm việc cho AI Agent (Working Rules for AI Agents)
+
+Khi bất kỳ AI Agent nào (như Claude Code, Cursor, Windsurf, Antigravity) tải skill này và làm việc trong dự án, tác nhân phải tuân thủ nghiêm ngặt các bước sau để đảm bảo không phá hỏng mã nguồn:
+
+1. **Đọc tài liệu chỉ dẫn đầu tiên**: Đọc tệp `AGENTS.md` hoặc `CLAUDE.md` ở thư mục gốc để hiểu các quy định chung của dự án.
+2. **Kiểm tra và giới hạn phạm vi (Scope)**: Đọc `feature_list.json` để biết tính năng nào đang được triển khai. Chỉ tập trung giải quyết MỘT tính năng tại một thời điểm (One-feature-at-a-time). Tuyệt đối không sửa các file ngoài phạm vi tính năng đó.
+3. **Cập nhật trạng thái**: Ghi nhận chi tiết những gì đã làm, trạng thái hiện tại và bước tiếp theo vào tệp `progress.md` trước khi kết thúc phiên làm việc.
+4. **Bắt buộc xác minh (Mandatory Verification)**: Trước khi báo cáo hoàn thành tác vụ, bắt buộc phải chạy lệnh kiểm thử tự động (ví dụ chạy `./init.sh` hoặc chạy script đánh giá `py .agents/skills/harness-kit/scripts/validate_harness.py --target harness`) và đính kèm bằng chứng/kết quả kiểm thử vào phản hồi.
 
 ## Quy chuẩn Thiết kế (Design Rules)
 

@@ -120,6 +120,16 @@ Load only the reference documentation needed for the specific design problem:
 
 - General setup, loop orchestration, and append-only logging: [Architecture Principles](references/architecture-principles.md)
 - Command classification, permission levels, and sub-agent forks: [Concurrency & Safety](references/concurrency-and-safety.md)
+- Deep-dive explanation of the 9 core components and how they map to the 5 subsystems: [Agent Harness Deep Dive](references/agent-harness-deep-dive.md)
+
+## Working Rules for AI Agents
+
+When any AI Agent (e.g., Claude Code, Cursor, Windsurf, Antigravity) loads this skill in a workspace, the agent MUST strictly adhere to the following workflow to maintain scope and prevent breaking the codebase:
+
+1. **Read Guidelines First**: Read the `AGENTS.md` or `CLAUDE.md` file at the root of the project to understand workspace rules.
+2. **Stay in Scope**: Read `feature_list.json` to find the active feature. Focus on ONLY one feature at a time. Never modify files unrelated to the active feature.
+3. **Update Progress Log**: Document the current state, modifications, and the next steps in `progress.md` before ending the session.
+4. **Mandatory Verification**: Run verification tests (e.g., `./init.sh` or validate via `py .agents/skills/harness-kit/scripts/validate_harness.py --target harness`) and output the test execution evidence before claiming a task is done.
 
 ## Design Rules
 
