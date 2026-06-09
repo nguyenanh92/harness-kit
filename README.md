@@ -1,3 +1,28 @@
+<p align="center">
+  <a href="https://harness-guide.com">
+    <img src="site/public/banner.png" alt="Harness Engineering Guide" width="100%" />
+  </a>
+</p>
+
+<p align="center">
+  <em>The practical guide to building AI agent harnesses — with real code examples you can copy and run.</em>
+</p>
+
+<p align="center">
+  <a href="https://github.com/nguyenanh92/harness-kit/stargazers"><img src="https://img.shields.io/github/stars/nguyenanh92/harness-kit?style=social" alt="Stars"></a>
+  <a href="https://github.com/nguyenanh92/harness-kit/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+</p>
+
+<p align="center">
+  🌐 <b><a href="https://harness-guide.com">harness-guide.com</a></b>
+</p>
+
+<p align="center">
+  <b>English</b> | <a href="README-VI.md">Tiếng Việt</a>
+</p>
+
+---
+
 # Deep Dive: Understanding Agent Harness (AI Agent Architecture)
 
 This document is compiled from practical observations combined with an analysis of the engineering design patterns available in the **harness-kit** project.

@@ -1,3 +1,28 @@
+<p align="center">
+  <a href="https://harness-guide.com">
+    <img src="site/public/banner.png" alt="Harness Engineering Guide" width="100%" />
+  </a>
+</p>
+
+<p align="center">
+  <em>The practical guide to building AI agent harnesses — with real code examples you can copy and run.</em>
+</p>
+
+<p align="center">
+  <a href="https://github.com/nguyenanh92/harness-kit/stargazers"><img src="https://img.shields.io/github/stars/nguyenanh92/harness-kit?style=social" alt="Stars"></a>
+  <a href="https://github.com/nguyenanh92/harness-kit/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+</p>
+
+<p align="center">
+  🌐 <b><a href="https://harness-guide.com">harness-guide.com</a></b>
+</p>
+
+<p align="center">
+  <a href="README.md">English</a> | <b>Tiếng Việt</b>
+</p>
+
+---
+
 # Tài Liệu Chuyên Sâu: Tìm Hiểu Về Agent Harness (Khung Kiến Trúc Tác Nhân AI)
 
 Tài liệu này được tổng hợp từ bài chia sẻ thực tế kết hợp với việc đối chiếu, phân tích các mẫu thiết kế kỹ thuật (design patterns) hiện có trong dự án **harness-kit**.
