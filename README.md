@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://harness-guide.com">
+  <a href="https://harness.nguyenanh98.com">
     <img src="site/public/banner.png" alt="Harness Engineering Guide" width="100%" />
   </a>
 </p>
@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  🌐 <b><a href="https://harness-guide.com">harness-guide.com</a></b>
+  🌐 <b><a href="https://harness.nguyenanh98.com">harness-guide.com</a></b>
 </p>
 
 <p align="center">
