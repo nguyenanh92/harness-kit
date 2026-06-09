@@ -1,0 +1,25 @@
+# Python cache and bytecodes
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Agent Harness runtime logs and test artifacts
+.harness/
+calculator.py
+
+# Node.js dependencies and logs (for harness-creator tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# IDE configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

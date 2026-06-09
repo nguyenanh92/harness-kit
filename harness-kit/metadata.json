@@ -1,0 +1,49 @@
+{
+  "name": "harness-kit",
+  "version": "1.0.0",
+  "description": "Standard-library-only Python Agent Harness implementation for Cursor, Codex, Claude Code, and Antigravity. Guides agents on building minimalist, highly resilient, and secure execution loops.",
+  "license": "MIT",
+  "author": "Learn Harness Engineering",
+  "repository": "https://github.com/walkinglabs/learn-harness-engineering",
+  "languages": ["en", "vi"],
+  "compatibility": {
+    "minCliVersion": "0.1.0",
+    "agents": [
+      "claude-code",
+      "codex-cli",
+      "cursor",
+      "windsurf",
+      "generic"
+    ]
+  },
+  "entryPoint": "SKILL.md",
+  "references": [
+    "references/architecture-principles.md",
+    "references/concurrency-and-safety.md"
+  ],
+  "triggers": [
+    "harness-kit",
+    "python harness",
+    "build harness",
+    "harness loop",
+    "9 components",
+    "safety registry",
+    "append-only logs",
+    "context compaction",
+    "prompt assembly",
+    "agent lifecycle hooks"
+  ],
+  "bundled": {
+    "scripts": [],
+    "assets": [],
+    "templates": [
+      "templates/harness.py",
+      "templates/context_manager.py",
+      "templates/tool_registry.py",
+      "templates/persistence.py",
+      "templates/hooks.py",
+      "templates/subagent.py",
+      "templates/prompt_assembly.py"
+    ]
+  }
+}
