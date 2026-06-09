@@ -7,7 +7,6 @@ __pycache__/
 # Agent Harness runtime logs and test artifacts
 .harness/
 calculator.py
-
 # Node.js dependencies and logs (for harness-creator tools)
 node_modules/
 npm-debug.log*

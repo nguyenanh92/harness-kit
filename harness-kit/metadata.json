@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Standard-library-only Python Agent Harness implementation for Cursor, Codex, Claude Code, and Antigravity. Guides agents on building minimalist, highly resilient, and secure execution loops.",
   "license": "MIT",
-  "author": "Learn Harness Engineering",
-  "repository": "https://github.com/walkinglabs/learn-harness-engineering",
-  "languages": ["en", "vi"],
+  "author": "Harness Kit",
+  "repository": "https://github.com/nguyenanh92/harness-kit",
+  "languages": [
+    "en",
+    "vi"
+  ],
   "compatibility": {
     "minCliVersion": "0.1.0",
     "agents": [

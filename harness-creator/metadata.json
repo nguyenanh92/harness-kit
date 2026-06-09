@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Harness engineering for AI coding agents — five subsystems, memory persistence, session continuity, verification workflows, scope control, lifecycle management.",
   "license": "MIT",
-  "author": "Learn Harness Engineering",
-  "repository": "https://github.com/walkinglabs/learn-harness-engineering",
-  "languages": ["en", "zh"],
+  "author": "Harness Kit",
+  "repository": "https://github.com/nguyenanh92/harness-kit",
+  "languages": [
+    "en",
+    "zh"
+  ],
   "compatibility": {
     "minCliVersion": "0.1.0",
     "agents": [
