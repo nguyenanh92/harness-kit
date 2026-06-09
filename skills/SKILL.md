@@ -47,13 +47,34 @@ Every standard-library-only Python harness maps the 9 core components onto five 
 
 Scaffold the zero-dependency Python harness templates into your project workspace:
 
-```bash
-# On Windows
-py -m skills.scripts.scaffold_harness --target harness
+- **Case 1: CLI Installation (Located under `.agents/skills/harness-kit`)**
+  Run from the root of your project:
+  ```bash
+  # On Windows
+  py .agents/skills/harness-kit/scripts/scaffold_harness.py --target harness
 
-# On macOS/Linux
-python3 -m skills.scripts.scaffold_harness --target harness
-```
+  # On macOS/Linux
+  python3 .agents/skills/harness-kit/scripts/scaffold_harness.py --target harness
+  ```
+
+- **Case 2: Manual copy to root `skills` folder**
+  Run from the root of your project:
+  ```bash
+  # On Windows
+  py -m skills.scripts.scaffold_harness --target harness
+
+  # On macOS/Linux
+  python3 -m skills.scripts.scaffold_harness --target harness
+  ```
+
+- **Case 3: Running directly inside `harness-kit` directory**
+  ```bash
+  # On Windows
+  py scripts/scaffold_harness.py --target ../../../harness
+
+  # On macOS/Linux
+  python3 scripts/scaffold_harness.py --target ../../../harness
+  ```
 
 Options:
 - `--target DIR`: Destination folder to write the harness files (default: `harness`).
@@ -63,13 +84,34 @@ Options:
 
 Audit and score your workspace harness across the 5 structural subsystems (Instructions, State, Verification, Scope, Lifecycle):
 
-```bash
-# On Windows
-py -m skills.scripts.validate_harness --target harness
+- **Case 1: CLI Installation (Located under `.agents/skills/harness-kit`)**
+  Run from the root of your project:
+  ```bash
+  # On Windows
+  py .agents/skills/harness-kit/scripts/validate_harness.py --target harness
 
-# On macOS/Linux
-python3 -m skills.scripts.validate_harness --target harness
-```
+  # On macOS/Linux
+  python3 .agents/skills/harness-kit/scripts/validate_harness.py --target harness
+  ```
+
+- **Case 2: Manual copy to root `skills` folder**
+  Run from the root of your project:
+  ```bash
+  # On Windows
+  py -m skills.scripts.validate_harness --target harness
+
+  # On macOS/Linux
+  python3 -m skills.scripts.validate_harness --target harness
+  ```
+
+- **Case 3: Running directly inside `harness-kit` directory**
+  ```bash
+  # On Windows
+  py scripts/validate_harness.py --target ../../../harness
+
+  # On macOS/Linux
+  python3 scripts/validate_harness.py --target ../../../harness
+  ```
 
 Options:
 - `--json`: Output the score breakdown in JSON format.

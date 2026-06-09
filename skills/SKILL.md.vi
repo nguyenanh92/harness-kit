@@ -47,13 +47,34 @@ Mỗi bộ Harness Python chỉ dùng thư viện chuẩn sẽ ánh xạ 9 thàn
 
 Khởi tạo bộ tệp tin mẫu Harness Python không phụ thuộc vào dự án của bạn:
 
-```bash
-# Trên Windows
-py -m skills.scripts.scaffold_harness --target harness
+- **Trường hợp 1: Cài đặt qua CLI (Nằm trong thư mục `.agents/skills/harness-kit`)**
+  Chạy lệnh từ thư mục gốc của dự án (ví dụ `vinfast/`):
+  ```bash
+  # Trên Windows
+  py .agents/skills/harness-kit/scripts/scaffold_harness.py --target harness
 
-# Trên macOS/Linux
-python3 -m skills.scripts.scaffold_harness --target harness
-```
+  # Trên macOS/Linux
+  python3 .agents/skills/harness-kit/scripts/scaffold_harness.py --target harness
+  ```
+
+- **Trường hợp 2: Copy thủ công thư mục `skills` vào gốc dự án**
+  Chạy lệnh từ thư mục gốc của dự án:
+  ```bash
+  # Trên Windows
+  py -m skills.scripts.scaffold_harness --target harness
+
+  # Trên macOS/Linux
+  python3 -m skills.scripts.scaffold_harness --target harness
+  ```
+
+- **Trường hợp 3: Chạy từ bên trong thư mục `harness-kit`**
+  ```bash
+  # Trên Windows
+  py scripts/scaffold_harness.py --target ../../../harness
+
+  # Trên macOS/Linux
+  python3 scripts/scaffold_harness.py --target ../../../harness
+  ```
 
 Các tham số tùy chọn:
 - `--target DIR`: Thư mục đích để ghi các tệp Harness (mặc định: `harness`).
@@ -63,13 +84,34 @@ Các tham số tùy chọn:
 
 Đánh giá và chấm điểm cấu trúc bộ Harness dự án của bạn trên 5 phân hệ (Instructions, State, Verification, Scope, Lifecycle):
 
-```bash
-# Trên Windows
-py -m skills.scripts.validate_harness --target harness
+- **Trường hợp 1: Cài đặt qua CLI (Nằm trong thư mục `.agents/skills/harness-kit`)**
+  Chạy lệnh từ thư mục gốc của dự án:
+  ```bash
+  # Trên Windows
+  py .agents/skills/harness-kit/scripts/validate_harness.py --target harness
 
-# Trên macOS/Linux
-python3 -m skills.scripts.validate_harness --target harness
-```
+  # Trên macOS/Linux
+  python3 .agents/skills/harness-kit/scripts/validate_harness.py --target harness
+  ```
+
+- **Trường hợp 2: Copy thủ công thư mục `skills` vào gốc dự án**
+  Chạy lệnh từ thư mục gốc của dự án:
+  ```bash
+  # Trên Windows
+  py -m skills.scripts.validate_harness --target harness
+
+  # Trên macOS/Linux
+  python3 -m skills.scripts.validate_harness --target harness
+  ```
+
+- **Trường hợp 3: Chạy từ bên trong thư mục `harness-kit`**
+  ```bash
+  # Trên Windows
+  py scripts/validate_harness.py --target ../../../harness
+
+  # Trên macOS/Linux
+  python3 scripts/validate_harness.py --target ../../../harness
+  ```
 
 Các tham số tùy chọn:
 - `--json`: Xuất kết quả chi tiết dưới định dạng JSON.
