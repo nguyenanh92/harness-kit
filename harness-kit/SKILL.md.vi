@@ -1,0 +1,143 @@
+---
+name: harness-kit
+description: >-
+  Thiết kế, khởi tạo và đánh giá các bộ khung Harness tác nhân Python chỉ dùng thư viện chuẩn theo 9 thành phần cốt lõi:
+  vòng lặp while, nén ngữ cảnh, bộ đăng ký công cụ, tác nhân con, nguyên bản, lưu trữ phiên,
+  lắp ghép prompt hệ thống, lifecycle hooks, và cổng phân quyền shell.
+license: MIT
+---
+
+# Harness Kit
+
+Sử dụng kỹ năng này để thiết kế, khởi tạo (scaffold) và đánh giá một bộ khung Harness tác nhân AI bằng Python siêu nhẹ, chỉ sử dụng thư viện chuẩn. Điều này đảm bảo vòng lặp thực thi của tác nhân luôn gọn nhẹ, bền bỉ và tương thích với mọi môi trường chạy (như Cursor, Codex, Claude Code và Antigravity).
+
+Không phù hợp cho các framework đa tác nhân phức tạp (như LangGraph), cấu trúc ứng dụng chung, hoặc thiết kế giao diện người dùng.
+
+## Cài đặt
+
+Để thêm kỹ năng này vào không gian làm việc của dự án, chạy lệnh sau bằng Skills CLI:
+
+```bash
+npx skills add nguyenanh92/harness-kit --skill harness-kit
+```
+
+Hoặc sao chép thư mục `harness-kit/` thủ công vào thư mục `skills/` trong dự án của bạn.
+
+## Mô hình Cốt lõi
+
+Mỗi bộ Harness Python chỉ dùng thư viện chuẩn sẽ ánh xạ 9 thành phần cốt lõi vào 5 phân hệ chính sau:
+
+| Phân hệ (Subsystem) | Tệp mẫu tương ứng | Mục đích |
+|---|---|---|
+| Instructions (Chỉ dẫn) | `prompt_assembly.py` | Quét thư mục cha để tìm chỉ dẫn (`CLAUDE.md`) và bảo toàn bộ nhớ đệm cache. |
+| State (Trạng thái) | `persistence.py`, `context_manager.py` | Ghi log sự kiện dạng append-only; kiểm soát token và tự động nén lịch sử. |
+| Verification (Xác minh) | Các công cụ cơ bản | Chạy kiểm tra biên dịch cú pháp và các tiến trình con kiểm thử để xác minh tác vụ. |
+| Scope (Phạm vi) | `tool_registry.py`, `subagent.py` | Giới hạn công cụ, phân loại động lệnh shell, khởi tạo tác nhân con đơn cấp cô lập. |
+| Lifecycle (Vòng đời) | `harness.py`, `hooks.py` | Điều phối vòng lặp `while` chính, gọi các hàm hook trước/sau khi chạy công cụ. |
+
+## Khởi đầu (First Move)
+
+1. **Đánh giá môi trường**: Kiểm tra phiên bản Python và tính sẵn sàng của câu lệnh chạy (`py` hoặc `python3`).
+2. **Chọn thư mục Harness**: Xác định thư mục đích (ví dụ: `harness/`) để khởi tạo các tệp mã nguồn Python mẫu.
+3. **Ánh xạ hoạt động**: Xác định các tệp tin tác nhân cần đọc/ghi và các câu lệnh shell yêu cầu người dùng xác nhận trực tiếp.
+
+## Các Tác vụ Thường gặp
+
+### Khởi tạo một Harness Tùy chỉnh (Scaffold)
+
+Khởi tạo bộ tệp tin mẫu Harness Python không phụ thuộc vào dự án của bạn:
+
+```bash
+# Trên Windows
+py -m skills.harness-kit.scripts.scaffold_harness --target harness
+
+# Trên macOS/Linux
+python3 -m skills.harness-kit.scripts.scaffold_harness --target harness
+```
+
+Các tham số tùy chọn:
+- `--target DIR`: Thư mục đích để ghi các tệp Harness (mặc định: `harness`).
+- `--force`: Ghi đè lên các tệp tin đã tồn tại trong thư mục đích.
+
+### Đánh giá và Kiểm tra một Harness Hiện có (Validate)
+
+Đánh giá và chấm điểm cấu trúc bộ Harness dự án của bạn trên 5 phân hệ (Instructions, State, Verification, Scope, Lifecycle):
+
+```bash
+# Trên Windows
+py -m skills.harness-kit.scripts.validate_harness --target harness
+
+# Trên macOS/Linux
+python3 -m skills.harness-kit.scripts.validate_harness --target harness
+```
+
+Các tham số tùy chọn:
+- `--json`: Xuất kết quả chi tiết dưới định dạng JSON.
+- `--html FILE`: Biên dịch và xuất báo cáo HTML trực quan ra đường dẫn tệp được chỉ định.
+- `--min-score SCORE`: Trả về mã lỗi thoát nếu điểm đánh giá dưới ngưỡng tối thiểu (mặc định: 70).
+
+### Biên dịch Kiểm tra Cú pháp
+
+Đảm bảo tất cả các tệp Python mẫu không chứa lỗi cú pháp trước khi chạy vòng lặp:
+
+```bash
+# Trên Windows (PowerShell)
+Get-ChildItem -Path "skills/harness-kit/templates/*.py" | ForEach-Object { py -m py_compile $_.FullName }
+
+# Trên macOS/Linux
+python3 -m py_compile skills/harness-kit/templates/*.py
+```
+
+### Chạy Giả lập Vòng lặp chính (Mock Mode)
+
+Chạy thử nghiệm Harness trong chế độ giả lập để kiểm tra hoạt động của vòng lặp, pre/post hooks, nén ngữ cảnh và tác nhân con:
+
+```bash
+# Trên Windows
+py -m skills.harness-kit.templates.harness --mock --goal "Create a simple calculator class"
+
+# Trên macOS/Linux
+python3 -m skills.harness-kit.templates.harness --mock --goal "Create a simple calculator class"
+```
+
+### Dọn dẹp Logs Giả lập
+
+Xóa bỏ các thư mục và tệp tin tạm tạo ra trong phiên chạy giả lập:
+
+```bash
+# Windows
+Remove-Item -Path "calculator.py" -Force -ErrorAction SilentlyContinue
+Remove-Item -Path ".harness" -Recurse -Force -ErrorAction SilentlyContinue
+
+# macOS / Linux
+rm -f calculator.py
+rm -rf .harness
+```
+
+## Khi nào cần đọc Tài liệu Tham khảo
+
+Chỉ nạp các tài liệu tham khảo khi gặp các bài toán thiết kế cụ thể:
+
+- Khởi chạy, điều phối vòng lặp và ghi logs append-only: [Architecture Principles](references/architecture-principles.md)
+- Phân loại câu lệnh shell, cấp quyền an toàn và tác nhân con: [Concurrency & Safety](references/concurrency-and-safety.md)
+
+## Quy chuẩn Thiết kế (Design Rules)
+
+- **Không sử dụng Thư viện Ngoài**: Tuyệt đối không import các thư viện bên thứ ba trong các module cốt lõi của Harness. Chỉ sử dụng thư viện chuẩn của Python.
+- **Tối ưu hóa Prompt Caching**: Ghép phần prompt tĩnh trước, prompt chỉ dẫn động ghép sau để tránh làm hỏng cache của LLM.
+- **Ghi Logs dạng Append-only**: Ghi trực tiếp các sự kiện xuống đĩa (flush) ngay lập tức. Đọc tuần tự các dòng log để khôi phục trạng thái khi bị gián đoạn.
+- **Ranh giới Tác nhân con đơn cấp**: Cấm các Sub-agent con tự tạo Sub-agent của riêng mình (loại bỏ công cụ `spawn_subagent` trong registry của con).
+- **Hành động Nguy hiểm phải thông qua người dùng**: Mặc định yêu cầu xác nhận trực tiếp từ người dùng (`input()`) đối với các câu lệnh shell chứa từ khóa nguy hiểm (`rm`, `sudo`, `curl`).
+
+## Danh sách Bàn giao (Deliverable Checklist)
+
+Khi xây dựng hoặc đánh giá một bộ Harness Python, đảm bảo thư mục dự án đích có đủ:
+
+- [ ] `harness.py` — vòng lặp chính điều phối
+- [ ] `context_manager.py` — theo dõi token và nén
+- [ ] `tool_registry.py` — bộ đăng ký công cụ và phân quyền shell
+- [ ] `persistence.py` — ghi logs append-only dạng JSON Line
+- [ ] `hooks.py` — các hàm chặn trước/sau khi gọi công cụ
+- [ ] `subagent.py` — chạy tác nhân con cô lập
+- [ ] `prompt_assembly.py` — tự động lắp ráp prompt tối ưu cache
+- [ ] Thư mục `.harness/` chứa nhật ký hoạt động phiên làm việc hiện tại
