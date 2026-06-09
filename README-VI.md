@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://harness.nguyenanh98.com">
-    <img src="site/public/banner.png" alt="Harness Engineering Guide" width="100%" />
+    <img src="https://cv.nguyenanh98.com/products/harness.nguyenanh98.com.png" alt="Harness Engineering Guide" width="100%" />
   </a>
 </p>
 
@@ -38,7 +38,7 @@ Tài liệu này được tổng hợp từ bài chia sẻ thực tế kết h�
 
 > [!NOTE]
 > **Công thức cốt lõi:**
-> $$\text{Mô hình LLM (Động cơ)} + \text{Harness (Khung xe & Hệ thống lái)} = \text{AI Agent (Chiếc xe tự hành)}$$
+> $$\text{Mô hình LLM (Động cơ)} + \text{Harness (Khung xe và Hệ thống lái)} = \text{AI Agent (Chiếc xe tự hành)}$$
 
 *Ví dụ thực tế:* Các công cụ lập trình AI như **Claude Code, Cursor, Windsurf, hay Codex** chính là các Agent Harness. Mỗi công cụ đều xuất phát từ một bài toán cụ thể: làm thế nào để mô hình LLM có thể tự đọc, viết, sửa đổi và kiểm thử mã nguồn trên một kho lưu trữ (repository) thực tế một cách an toàn và nhất quán.
 

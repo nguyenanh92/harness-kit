@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://harness.nguyenanh98.com">
-    <img src="site/public/banner.png" alt="Harness Engineering Guide" width="100%" />
+    <img src="https://cv.nguyenanh98.com/products/harness.nguyenanh98.com.png" alt="Harness Engineering Guide" width="100%" />
   </a>
 </p>
 
