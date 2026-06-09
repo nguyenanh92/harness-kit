@@ -21,7 +21,7 @@ Không phù hợp cho các framework đa tác nhân phức tạp (như LangGraph
 npx skills add nguyenanh92/harness-kit --skill harness-kit
 ```
 
-Hoặc sao chép thư mục `harness-kit/` thủ công vào thư mục `skills/` trong dự án của bạn.
+Hoặc sao chép thư mục `skills/` thủ công vào thư mục `skills/` trong dự án của bạn.
 
 ## Mô hình Cốt lõi
 
@@ -49,10 +49,10 @@ Khởi tạo bộ tệp tin mẫu Harness Python không phụ thuộc vào dự 
 
 ```bash
 # Trên Windows
-py -m skills.harness-kit.scripts.scaffold_harness --target harness
+py -m skills.scripts.scaffold_harness --target harness
 
 # Trên macOS/Linux
-python3 -m skills.harness-kit.scripts.scaffold_harness --target harness
+python3 -m skills.scripts.scaffold_harness --target harness
 ```
 
 Các tham số tùy chọn:
@@ -65,10 +65,10 @@ Các tham số tùy chọn:
 
 ```bash
 # Trên Windows
-py -m skills.harness-kit.scripts.validate_harness --target harness
+py -m skills.scripts.validate_harness --target harness
 
 # Trên macOS/Linux
-python3 -m skills.harness-kit.scripts.validate_harness --target harness
+python3 -m skills.scripts.validate_harness --target harness
 ```
 
 Các tham số tùy chọn:
@@ -82,10 +82,10 @@ Các tham số tùy chọn:
 
 ```bash
 # Trên Windows (PowerShell)
-Get-ChildItem -Path "skills/harness-kit/templates/*.py" | ForEach-Object { py -m py_compile $_.FullName }
+Get-ChildItem -Path "skills/templates/*.py" | ForEach-Object { py -m py_compile $_.FullName }
 
 # Trên macOS/Linux
-python3 -m py_compile skills/harness-kit/templates/*.py
+python3 -m py_compile skills/templates/*.py
 ```
 
 ### Chạy Giả lập Vòng lặp chính (Mock Mode)
@@ -94,10 +94,10 @@ Chạy thử nghiệm Harness trong chế độ giả lập để kiểm tra ho�
 
 ```bash
 # Trên Windows
-py -m skills.harness-kit.templates.harness --mock --goal "Create a simple calculator class"
+py -m skills.templates.harness --mock --goal "Create a simple calculator class"
 
 # Trên macOS/Linux
-python3 -m skills.harness-kit.templates.harness --mock --goal "Create a simple calculator class"
+python3 -m skills.templates.harness --mock --goal "Create a simple calculator class"
 ```
 
 ### Dọn dẹp Logs Giả lập

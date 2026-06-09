@@ -35,11 +35,11 @@ Trước khi chạy, hãy đảm bảo tất cả các file Python không có l�
 
 * **Trên Windows (PowerShell)**:
   ```powershell
-  Get-ChildItem -Path "skills/harness-kit/templates/*.py" | ForEach-Object { py -m py_compile $_.FullName }
+  Get-ChildItem -Path "skills/templates/*.py" | ForEach-Object { py -m py_compile $_.FullName }
   ```
 * **Trên macOS/Linux**:
   ```bash
-  python3 -m py_compile skills/harness-kit/templates/*.py
+  python3 -m py_compile skills/templates/*.py
   ```
 
 ### Bước 3: Chạy chế độ giả lập (Mock Mode)
@@ -47,18 +47,18 @@ Chạy lệnh sau để giả lập vòng lặp xử lý tác vụ của Agent:
 
 * **Trên Windows**:
   ```powershell
-  py -m skills.harness-kit.templates.harness --mock --goal "Tạo một lớp Calculator đơn giản"
+  py -m skills.templates.harness --mock --goal "Tạo một lớp Calculator đơn giản"
   ```
 * **Trên macOS/Linux**:
   ```bash
-  python3 -m skills.harness-kit.templates.harness --mock --goal "Tạo một lớp Calculator đơn giản"
+  python3 -m skills.templates.harness --mock --goal "Tạo một lớp Calculator đơn giản"
   ```
 
 ### Quan sát quá trình thực thi trong Mock Mode:
 1. **Khởi tạo và Replay**: Hệ thống kiểm tra xem có tệp nhật ký phiên làm việc cũ không. Nếu có, nó sẽ tự động phát lại (replay) để phục hồi ngữ cảnh.
 2. **Lượt 1 (Iteration 1)**: LLM quyết định gọi công cụ `spawn_subagent` để kiểm tra cấu trúc thư mục. Lớp Hook sẽ bắt được cuộc gọi (Pre-Hook), chạy sub-agent trong môi trường cô lập, và trả về kết quả cho luồng chính.
 3. **Lượt 2 (Iteration 2)**: LLM quyết định gọi công cụ ghi file (`write_file`) để viết mã nguồn cho file `calculator.py`.
-4. **Lượt 3 (Iteration 3)**: LLM gọi lệnh shell (`run_shell`) để kiểm tra compile mã nguồn vừa tạo. Bộ đăng ký công cụ (`tool_registry`) sẽ phân loại lệnh động, phát hiện đây là lệnh an toàn và cho phép chạy.
+4. **Lượt 3 (Iteration 3)**: LLM gọi lệnh shell (`run_shell`) để kiểm tra compile mã nguồn vừa tạo. Bộ đăng ký công cụ (`tool_registry`) sẽ phân loại lệnh động, phát hiện đây là lệnh an sau và cho phép chạy.
 5. **Lượt 4 (Iteration 4)**: Hệ thống ghi nhận mục tiêu đã hoàn thành và thoát vòng lặp an toàn.
 
 ---
@@ -84,7 +84,7 @@ rm -rf .harness
 Để đưa bộ kit này vào hoạt động thực tế với các API của OpenAI hoặc Anthropic:
 1. Nhập các module này vào ứng dụng chính của bạn:
    ```python
-   from skills.harness_kit.templates.harness import Harness
+   from skills.templates.harness import Harness
    ```
 2. Thay thế hàm `_simulate_mock_turn` trong `harness.py` bằng lời gọi API thực tế tới LLM của bạn (như gửi danh sách `history` và danh sách công cụ từ `self.registry.get_descriptors()`).
 3. Đảm bảo cấu hình biến môi trường bảo mật phù hợp và cấp quyền an toàn trước khi chạy Agent trên kho mã nguồn thực tế.

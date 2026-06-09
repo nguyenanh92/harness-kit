@@ -21,7 +21,7 @@ To add this skill to your project workspace, run the following command using the
 npx skills add nguyenanh92/harness-kit --skill harness-kit
 ```
 
-Or copy the `harness-kit` directory manually into your project's `skills/` folder.
+Or copy the `skills` directory manually into your project's `skills/` folder.
 
 ## Core Model
 
@@ -49,10 +49,10 @@ Scaffold the zero-dependency Python harness templates into your project workspac
 
 ```bash
 # On Windows
-py -m skills.harness-kit.scripts.scaffold_harness --target harness
+py -m skills.scripts.scaffold_harness --target harness
 
 # On macOS/Linux
-python3 -m skills.harness-kit.scripts.scaffold_harness --target harness
+python3 -m skills.scripts.scaffold_harness --target harness
 ```
 
 Options:
@@ -65,10 +65,10 @@ Audit and score your workspace harness across the 5 structural subsystems (Instr
 
 ```bash
 # On Windows
-py -m skills.harness-kit.scripts.validate_harness --target harness
+py -m skills.scripts.validate_harness --target harness
 
 # On macOS/Linux
-python3 -m skills.harness-kit.scripts.validate_harness --target harness
+python3 -m skills.scripts.validate_harness --target harness
 ```
 
 Options:
@@ -82,10 +82,10 @@ Check that all python files in the template directory are syntactically valid:
 
 ```bash
 # On Windows PowerShell
-Get-ChildItem -Path "skills/harness-kit/templates/*.py" | ForEach-Object { py -m py_compile $_.FullName }
+Get-ChildItem -Path "skills/templates/*.py" | ForEach-Object { py -m py_compile $_.FullName }
 
 # On macOS/Linux
-python3 -m py_compile skills/harness-kit/templates/*.py
+python3 -m py_compile skills/templates/*.py
 ```
 
 ### Run Mock Simulation Loop
@@ -94,10 +94,10 @@ Run the harness in simulation mode to test the while loop, pre/post hooks, sub-a
 
 ```bash
 # On Windows
-py -m skills.harness-kit.templates.harness --mock --goal "Create a simple calculator class"
+py -m skills.templates.harness --mock --goal "Create a simple calculator class"
 
 # On macOS/Linux
-python3 -m skills.harness-kit.templates.harness --mock --goal "Create a simple calculator class"
+python3 -m skills.templates.harness --mock --goal "Create a simple calculator class"
 ```
 
 ### Clean Up Simulation Logs

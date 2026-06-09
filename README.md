@@ -93,15 +93,15 @@ Protects the developer's machine from destructive commands:
 
 ## 4. Subsystem Mapping in harness-kit
 
-In our project, the validation tool `validate_harness.py` scores project harnesses across **5 subsystems**. Here is how the 9 components map to these subsystems:
+In our project (`harness-kit`), the validation tool (`skills/scripts/validate_harness.py`) scores project harnesses across **5 subsystems**. Here is how the 9 components map to these subsystems:
 
 | Subsystem | Harness Component | Implementation Details |
 | :--- | :--- | :--- |
-| **1. Instructions** | • System Prompt Assembly<br>• Tools & Skills Registry | Gathers project rules (`CLAUDE.md`) and presents available tools to the LLM. |
-| **2. State** | • Session Persistence<br>• Context Management | Writes progress to JSON Line logs and performs context compaction when token threshold is hit. |
-| **3. Verification** | • Built-in Skills (Tests) | Runs local test suites and compile checks (`init.sh`) to verify code before task completion. |
-| **4. Scope** | • Permissions & Safety<br>• Sub-agent Isolation | Enforces directory boundaries, limits sub-agent access, and dynamic command classification. |
-| **5. Lifecycle** | • While Loop<br>• Lifecycle Hooks | Governs session boot, execution progress, hook interception, and handoff. |
+| **1. Instructions** | • System Prompt Assembly<br>• Tools & Skills Registry | Provides instructions on how the agent operates. Reads the `AGENTS.md`/`CLAUDE.md` files to load rules for the agent and describes available tools. |
+| **2. State** | • Session Persistence<br>• Context Management | Saves execution progress to disk files (`progress.md`, `session-handoff.md`) and manages the conversation history cache (token compaction). |
+| **3. Verification** | • Built-in Skills (Tests) | Runs local test suites and compile checks (`init.sh`) to verify code before task completion (handover). |
+| **4. Scope** | • Permissions & Safety<br>• Sub-agent Isolation | Sets operational boundaries for the agent. Limits the files allowed to be modified (`feature-list.json`), prevents escaping the project directory, and handles shell permissions. |
+| **5. Lifecycle** | • While Loop<br>• Lifecycle Hooks | Manages the operational lifecycle from startup and session handoff (`session-handoff.md`) to task termination. |
 
 ---
 

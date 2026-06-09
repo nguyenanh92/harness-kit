@@ -5,10 +5,10 @@
       "id": 1,
       "name": "Python Harness Scaffolding",
       "prompt": "I want to scaffold a standard-library-only Python harness in my project. What files should be created and what is the bootstrap command?",
-      "expected_output": "python -m harness-kit.scripts.scaffold_harness --target /path/to/project, creating templates like harness.py, persistence.py, and context_manager.py",
+      "expected_output": "python -m skills.scripts.scaffold_harness --target /path/to/project, creating templates like harness.py, persistence.py, and context_manager.py",
       "files": [],
       "expectations": [
-        "Mentions running python -m harness-kit.scripts.scaffold_harness",
+        "Mentions running python -m skills.scripts.scaffold_harness",
         "Lists 7 template files: harness.py, context_manager.py, tool_registry.py, persistence.py, hooks.py, subagent.py, prompt_assembly.py",
         "Emphasizes zero external dependencies rule",
         "Templates are placed in the target project's harness directory"

@@ -10,19 +10,19 @@ It helps a repository provide a highly secure, resilient, and persistent executi
 npx skills add nguyenanh92/harness-kit --skill harness-kit
 ```
 
-Or copy `skills/harness-kit/` into your skill path.
+Or copy `skills/` into your skill path.
 
 ## Use
 
 ```bash
 # Scaffold the Python templates into a target directory
-py -m skills.harness-kit.scripts.scaffold_harness --target /path/to/project/harness
+py -m skills.scripts.scaffold_harness --target /path/to/project/harness
 
 # Validate and score your project's harness
-py -m skills.harness-kit.scripts.validate_harness --target /path/to/project/harness
+py -m skills.scripts.validate_harness --target /path/to/project/harness
 
 # Run mock simulation loop showcasing 9 components
-py -m skills.harness-kit.templates.harness --mock --goal "Create a simple calculator class"
+py -m skills.templates.harness --mock --goal "Create a simple calculator class"
 ```
 
 The scripts use only Python standard library modules. They can be run after copying the skill directory into another repository.
@@ -63,7 +63,7 @@ The score is structural. It tells you whether the harness is present and coheren
 ## Files
 
 ```text
-harness-kit/
+skills/
 ├── SKILL.md
 ├── README.md
 ├── README-VI.md

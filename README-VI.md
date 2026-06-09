@@ -94,7 +94,7 @@ Là lớp bảo vệ ngăn chặn Agent thực hiện các hành động phá ho
 
 ## 4. Ánh Xạ Với Hệ Thống Đánh Giá Của Dự Án (harness-kit)
 
-Trong dự án hiện tại của chúng ta (`harness-kit`), công cụ đánh giá cấu trúc Harness (`validate-harness.mjs`) kiểm tra chất lượng dựa trên **5 hệ thống con (Subsystems)**. Chúng ta có thể ánh xạ 9 thành phần cốt lõi của Harness ở trên vào 5 subsystem này như sau:
+Trong dự án hiện tại của chúng ta (`harness-kit`), công cụ đánh giá cấu trúc Harness (`skills/scripts/validate_harness.py`) kiểm tra chất lượng dựa trên **5 hệ thống con (Subsystems)**. Chúng ta có thể ánh xạ 9 thành phần cốt lõi của Harness ở trên vào 5 subsystem này như sau:
 
 | 5 Subsystems (harness-kit) | Thành phần Harness tương ứng | Ý nghĩa & Cách triển khai thực tế |
 | :--- | :--- | :--- |
