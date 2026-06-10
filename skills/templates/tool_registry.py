@@ -138,7 +138,8 @@ def run_shell_handler(args: Dict[str, Any]) -> str:
             command,
             shell=True,
             capture_output=True,
-            text=True,
+            encoding="utf-8",
+            errors="replace",
             timeout=30
         )
         output = result.stdout + result.stderr

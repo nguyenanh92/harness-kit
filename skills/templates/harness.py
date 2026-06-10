@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 from pathlib import Path
-from typing import List, Dict, Any, Union
+from typing import List, Dict, Any, Union, Tuple
 
 # Relative imports to make it a self-contained module
 from .persistence import SessionLogger
@@ -184,7 +184,7 @@ class Harness:
 
         print("\nSession finished.")
 
-    def _simulate_mock_turn(self, iteration: int, goal: str) -> tuple[str, dict, bool]:
+    def _simulate_mock_turn(self, iteration: int, goal: str) -> Tuple[str, Dict[str, Any], bool]:
         """
         Generates simulated turns to showcase how the harness orchestrates tools.
         """

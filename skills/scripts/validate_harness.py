@@ -35,7 +35,10 @@ def score_harness(target_dir: Path) -> Dict[str, Any]:
         "feature-list.json",
         "progress.md",
         "session-handoff.md",
-        "init.sh"
+        "init.sh",
+        "init.ps1",
+        "init.bat",
+        "init.cmd"
     ]
     
     files_dict = {}
@@ -53,7 +56,13 @@ def score_harness(target_dir: Path) -> Dict[str, Any]:
     feature_list = files_dict.get("feature_list.json", "") or files_dict.get("feature-list.json", "")
     progress = files_dict.get("progress.md", "")
     handoff = files_dict.get("session-handoff.md", "")
-    init = files_dict.get("init.sh", "")
+    
+    # Resolve active init script
+    init = ""
+    for name in ["init.sh", "init.ps1", "init.bat", "init.cmd"]:
+        if name in files_dict:
+            init = files_dict[name]
+            break
     
     checks = {
         "instructions": [
@@ -71,8 +80,8 @@ def score_harness(target_dir: Path) -> Dict[str, Any]:
             {"pass": text_has(handoff or progress, ["Blockers", "Files", "Next Session"]), "message": "Handoff captures blockers/files/next step"}
         ],
         "verification": [
-            {"pass": has_file(files_dict, ["init.sh"]), "message": "Verification entrypoint exists"},
-            {"pass": text_has(init, ["set -e"]), "message": "Verification fails fast"},
+            {"pass": has_file(files_dict, ["init.sh", "init.ps1", "init.bat", "init.cmd"]), "message": "Verification entrypoint exists"},
+            {"pass": text_has(init, ["set -e", "$ErrorActionPreference", "errorlevel", "exit /b"]), "message": "Verification fails fast"},
             {"pass": text_has(init + agents, ["test", "pytest", "vitest", "cargo test", "go test", "dotnet test"]), "message": "Test command documented"},
             {"pass": text_has(init + agents, ["build", "type", "lint", "compile"]), "message": "Static/build check documented"},
             {"pass": text_has(all_text, ["Evidence", "Verification Evidence", "command and output"]), "message": "Verification evidence is recorded"}
@@ -85,7 +94,7 @@ def score_harness(target_dir: Path) -> Dict[str, Any]:
             {"pass": text_has(agents, ["Definition of Done"]), "message": "Completion gate limits scope closure"}
         ],
         "lifecycle": [
-            {"pass": has_file(files_dict, ["init.sh"]), "message": "Startup script exists"},
+            {"pass": has_file(files_dict, ["init.sh", "init.ps1", "init.bat", "init.cmd"]), "message": "Startup script exists"},
             {"pass": text_has(agents, ["End of Session", "Before ending"]), "message": "End-of-session procedure exists"},
             {"pass": has_file(files_dict, ["session-handoff.md"]), "message": "Session handoff template exists"},
             {"pass": text_has(progress + handoff, ["Last Updated", "Current Objective", "Recommended Next Step"]), "message": "Session restart markers exist"},

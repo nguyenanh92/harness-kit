@@ -46,7 +46,7 @@ class ContextManager:
         - Keeps the last N turns intact (e.g., last 4 turns).
         - Summarizes older turns in between.
         """
-        if not self.should_compact(messages) or len(messages) <= 5:
+        if not self.should_compact(messages) or len(messages) <= 10:
             return messages
 
         system_msg = None
