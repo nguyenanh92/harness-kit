@@ -3,18 +3,22 @@ set -e
 
 echo "[init] verifying workspace (build, lint, compile, test)..."
 
-# Static check: compile Python harness modules
-if ls *.py >/dev/null 2>&1; then
-    python3 -m py_compile *.py
+HARNESS_DIR="{{HARNESS_DIR}}"
+
+# Static check: compile harness modules if present.
+if [ -d "$HARNESS_DIR" ]; then
+    python3 -m compileall -q "$HARNESS_DIR"
 fi
 
-# Test stage: run pytest if available, else unittest discover
-if command -v pytest >/dev/null 2>&1 && [ -d "tests" ]; then
-    pytest -q
-elif [ -d "tests" ]; then
-    python3 -m unittest discover -s tests -v
+# Test stage: pytest if available, else unittest discover.
+if [ -d "tests" ]; then
+    if command -v pytest >/dev/null 2>&1; then
+        pytest -q
+    else
+        python3 -m unittest discover -s tests -v
+    fi
 else
-    echo "[init] no tests/ directory yet — skipping test stage"
+    echo "[init] no tests/ directory yet - skipping test stage"
 fi
 
-echo "[init] OK — workspace is clean and restartable"
+echo "[init] OK - workspace is clean and restartable"

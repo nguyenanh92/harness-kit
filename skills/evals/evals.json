@@ -1,133 +1,145 @@
 {
   "skill_name": "harness-kit",
-  "evals": [
+  "version": "1.1.0",
+  "cases": [
     {
       "id": 1,
-      "name": "Python Harness Scaffolding",
-      "prompt": "I want to scaffold a standard-library-only Python harness in my project. What files should be created and what is the bootstrap command?",
-      "expected_output": "python -m skills.scripts.scaffold_harness --target /path/to/project, creating templates like harness.py, persistence.py, and context_manager.py",
+      "name": "Minimal Harness Scaffold",
+      "prompt": "I want to scaffold a standard-library-only Python harness into a fresh project. What files land where, and what command do I run?",
+      "expected_output": "Run scaffold_harness.py --target <project>. Governance files (AGENTS.md, feature_list.json, progress.md, session-handoff.md, init.sh, init.ps1, feature-list.schema.json) land at the project root; harness.py, context_manager.py, tool_registry.py, persistence.py, hooks.py, subagent.py, prompt_assembly.py land in <project>/harness/.",
       "files": [],
       "expectations": [
-        "Mentions running python -m skills.scripts.scaffold_harness",
-        "Lists 7 template files: harness.py, context_manager.py, tool_registry.py, persistence.py, hooks.py, subagent.py, prompt_assembly.py",
-        "Emphasizes zero external dependencies rule",
-        "Templates are placed in the target project's harness directory"
+        "Names the scaffold script path under skills/scripts/",
+        "Distinguishes governance (root) from code modules (harness/)",
+        "Lists all seven Python modules",
+        "Mentions zero-dependency standard-library constraint",
+        "Mentions --agent-file CLAUDE.md or --governance-only as relevant options"
       ]
     },
     {
       "id": 2,
-      "name": "Python Concurrency Safety Check",
-      "prompt": "Explain how the Python tool registry dynamically classifies shell commands to prevent dangerous execution.",
-      "expected_output": "Classification of commands into READ_ONLY, WORKSPACE_WRITE, and FULL_ACCESS with interactive approval for destructive commands",
+      "name": "Session Continuity Across Restart",
+      "prompt": "A session crashes mid-feature. How does the harness make sure the next run resumes from where the previous one stopped?",
+      "expected_output": "Append-only JSONL persistence with immediate flush; replay reconstructs the message list and iteration counter. progress.md and session-handoff.md provide the cross-session restart contract.",
       "files": [],
       "expectations": [
-        "Explains the difference between static tool permissions and dynamic command classification",
-        "Lists safe read-only commands: ls, git status, cat, grep",
-        "Lists restricted full-access commands: rm -rf, sudo, curl, shutdown",
-        "Explains prompt approval mechanism for escalations"
+        "Explains append-only JSONL with f.flush() on every event",
+        "Notes that replay reconstructs context, not side effects",
+        "Mentions progress.md as cross-session memory",
+        "Mentions session-handoff.md as the next-session restart contract",
+        "Distinguishes intra-session log from inter-session Markdown"
       ]
     },
     {
       "id": 3,
-      "name": "Replay-Based Session Durability",
-      "prompt": "How does persistence.py guarantee that the agent session is restorable after a process crash?",
-      "expected_output": "Append-only JSON Line logging with immediate file flushes, plus replay loop reconstruction",
+      "name": "Structural Assessment Score",
+      "prompt": "How do I audit and score an existing project's harness? What does the score mean?",
+      "expected_output": "validate_harness.py scores 25 structural checks across 5 subsystems (Instructions, State, Verification, Scope, Lifecycle). Output is text by default, --json for machine, --html for a self-contained report. The score is structural — it confirms coherence, not real agent effectiveness.",
       "files": [],
       "expectations": [
-        "Explains append-only JSON Line logging format",
-        "Mentions that every event calls flush() to guarantee it is written to disk instantly",
-        "Describes the replay loop reading the JSON lines sequentially to rebuild history",
-        "Points out that it is safe from process crash state losses"
+        "Names validate_harness.py and its --target / --json / --html / --min-score flags",
+        "Lists the five subsystems by name",
+        "Explains that score is structural, not effectiveness",
+        "Mentions the bottleneck subsystem concept",
+        "Recommends pairing the score with real before/after agent sessions"
       ]
     },
     {
       "id": 4,
-      "name": "Context Compaction Trigger",
-      "prompt": "My Python harness exceeds the token limit in long chats. How do I setup context compaction?",
-      "expected_output": "ContextManager class token estimation, threshold detection (e.g. 80%), and system-summarized old turns preservation",
+      "name": "Verification Workflow",
+      "prompt": "How does init.sh enforce that an agent cannot claim 'done' on a broken workspace?",
+      "expected_output": "init.sh runs with set -e (fail-fast), compiles the harness modules with python -m compileall, runs pytest or unittest if a tests/ directory exists. A non-zero exit code blocks the agent's Definition of Done.",
       "files": [],
       "expectations": [
-        "Describes character-word heuristics for token estimation in standard library",
-        "Explains the 80% threshold compaction trigger",
-        "Mentions keeping system prompt and recent N turns verbatim",
-        "Summarizes middle conversation turns into a system message summary block"
+        "Mentions set -e on POSIX and $ErrorActionPreference = 'Stop' on Windows",
+        "Mentions compileall or py_compile for static check",
+        "Mentions pytest / unittest discover as test command",
+        "Notes that the Verification Evidence (command and output) must be pasted into progress.md",
+        "Notes that Definition of Done in AGENTS.md gates done state on init.sh success"
       ]
     },
     {
       "id": 5,
-      "name": "Workspace Hook Isolation",
-      "prompt": "How do I secure lifecycle hooks in Python so that third-party hooks do not execute in untrusted workspaces?",
-      "expected_output": "Workspace trust boundary checking in HookRegistry, all-or-nothing hook execution gating",
+      "name": "Memory Persistence Taxonomy",
+      "prompt": "What is the difference between context compaction, JSONL persistence, and progress.md?",
+      "expected_output": "Compaction reduces the current LLM call's token budget. JSONL persistence records every event for in-session replay. progress.md is human-curated cross-session memory written deliberately at end-of-session.",
       "files": [],
       "expectations": [
-        "Explains the all-or-nothing hook execution constraint",
-        "If workspace is untrusted, all local pre/post hooks are skipped entirely",
-        "Only hardcoded validation checks run in untrusted mode",
-        "Prevents arbitrary execution of malicious hooks from cloned repositories"
+        "Distinguishes intra-call (compaction) vs intra-session (JSONL) vs inter-session (Markdown)",
+        "Explains 80% threshold for compaction",
+        "Notes that compaction must preserve the cache prefix",
+        "Notes that progress.md is not auto-written",
+        "References context-and-memory.md"
       ]
     },
     {
       "id": 6,
-      "name": "Sub-agent Recursion Gate",
-      "prompt": "How does the Python sub-agent implementation prevent exponential context cost explosions?",
-      "expected_output": "Enforces single-level spawning invariant by excluding the spawn_subagent tool from child registries",
+      "name": "Tool Safety and Permission Gate",
+      "prompt": "How does the harness prevent a model that calls run_shell from accidentally running rm -rf /?",
+      "expected_output": "classify_command in tool_registry.py inspects the command string and returns READ_ONLY / WORKSPACE_WRITE / FULL_ACCESS. Destructive patterns (rm -rf, sudo, curl, wget, shutdown) escalate to FULL_ACCESS, which prompts the user interactively. Order matters: more dangerous patterns are checked first.",
       "files": [],
       "expectations": [
-        "Mentions the 'Fork children must not fork' design invariant",
-        "Restricts the sub-agent's registry from including the spawn_subagent tool",
-        "Ensures child context is summarized and returned to parent while discarding chat logs"
+        "Names classify_command in tool_registry.py",
+        "Lists three permission levels",
+        "Notes the rm-inside-rm-rf ordering trap",
+        "Mentions interactive input() escalation",
+        "References tool-registry-and-safety.md"
       ]
     },
     {
       "id": 7,
-      "name": "Prefix Caching Assembly",
-      "prompt": "How does the prompt assembler dynamically construct system prompts without breaking LLM caching?",
-      "expected_output": "Prefix-caching friendly aggregation putting static prompt first and dynamic guidelines second",
+      "name": "Context Budget and Prefix Cache",
+      "prompt": "What rules keep prefix caching warm across iterations?",
+      "expected_output": "The system prompt is built once and only appended to. Project guidelines from CLAUDE.md / AGENTS.md are appended after the base prompt, not inserted. Timestamps and per-run IDs stay out of the prompt. Compaction summaries go into a new system message after the original prefix, not into the prefix itself.",
       "files": [],
       "expectations": [
-        "Mentions searching ancestor directories for CLAUDE.md or AGENTS.md",
-        "Puts the static base prompt at the very beginning",
-        "Appends dynamic project guidelines files at the end of prompt",
-        "Explains how changing instructions at the start invalidates prefix caching"
+        "Explains the prefix-byte-identical invariant",
+        "Notes that timestamps in the prompt invalidate the cache",
+        "Notes the ancestor-walk rule and stopping at the workspace .git root",
+        "Notes that compaction never edits the prefix",
+        "References context-and-memory.md"
       ]
     },
     {
       "id": 8,
-      "name": "Python Harness Validation",
-      "prompt": "Assess a Python project harness using the validate_harness.py script. What metrics are scored?",
-      "expected_output": "Execution of validate_harness.py checking Instructions, State, Verification, Scope, and Lifecycle subsystems",
+      "name": "Multi-Agent Sub-Agent Fork",
+      "prompt": "When and how should I spawn a sub-agent inside this harness?",
+      "expected_output": "Use subagent.py's SubAgentRunner when a scoped sub-task needs an isolated registry and conversation. Build a new ToolRegistry by copying only the parent's allowed tools, omitting spawn_subagent so the child cannot recurse. Pass a tight system prompt naming the deliverable. Collect only the child's final summary.",
       "files": [],
       "expectations": [
-        "Mentions validate_harness.py command line usage",
-        "Lists 5 scored subsystems: Instructions, State, Verification, Scope, Lifecycle",
-        "Checks for key artifacts: AGENTS.md, feature_list.json, progress.md, init.sh",
-        "Explains score threshold (min-score default 70) and exit codes"
+        "Names SubAgentRunner",
+        "States the single-level fork invariant",
+        "Explains the Spawn-Restrict-Collect lifecycle",
+        "Notes that child writes its own JSONL log",
+        "References tool-registry-and-safety.md"
       ]
     },
     {
       "id": 9,
-      "name": "Verification Commands Detection",
-      "prompt": "My Python agent needs to run test verification before submission. How does the harness verify success?",
-      "expected_output": "Subprocess execution of py_compile syntax checks and pytest suites",
+      "name": "Lifecycle Bootstrap Stages",
+      "prompt": "How should the harness gradually grant capabilities at session start?",
+      "expected_output": "Four stages: Minimal (read-only, no hooks), Verification (run init.sh — refuse to advance if it fails), Workspace Write (allow WORKSPACE_WRITE shell, run tests), Trusted (enable hooks if workspace trusted, allow FULL_ACCESS with interactive approval, allow sub-agents).",
       "files": [],
       "expectations": [
-        "Specifies py_compile for checking syntax",
-        "Specifies pytest or unittest command execution",
-        "Captures stdout, stderr, and non-zero exit codes to fail fast",
-        "Logs evidence to the session history"
+        "Names the four stages in order",
+        "Notes that init.sh failure must block advancement",
+        "Mentions the all-or-nothing hook trust gate",
+        "Notes that most sessions never reach the trusted stage",
+        "References lifecycle-and-hooks.md"
       ]
     },
     {
       "id": 10,
-      "name": "Harness Scaffolding Audit",
-      "prompt": "Run the scaffold_harness.py script to initialize a harness in a target project. How is the target directory structured?",
-      "expected_output": "Scaffolding of templates directory into the target's harness folder, preserving module layout",
+      "name": "Scripted Validation in CI",
+      "prompt": "How do I gate a CI job on the harness score?",
+      "expected_output": "Run python skills/scripts/validate_harness.py --target . --min-score 80 --json. Exit code is non-zero when overall score is below the threshold. For richer artifacts, follow up with run_benchmark.py --html to publish a report.",
       "files": [],
       "expectations": [
-        "Scaffolds templates into target folder",
-        "Preserves imports structure for submodules",
-        "Supports --force flag to overwrite existing files",
-        "Verifies directory writes successfully"
+        "Names validate_harness.py with --min-score and --json",
+        "Explains the non-zero exit code behavior",
+        "Mentions run_benchmark.py --html for CI artifacts",
+        "Notes that the score is structural, not a real benchmark",
+        "Mentions pairing with real before/after agent sessions"
       ]
     }
   ]

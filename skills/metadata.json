@@ -1,63 +1,67 @@
 {
   "name": "harness-kit",
-  "version": "1.0.0",
-  "description": "Standard-library-only Python Agent Harness implementation for Cursor, Codex, Claude Code, and Antigravity. Guides agents on building minimalist, highly resilient, and secure execution loops.",
+  "version": "1.1.0",
+  "description": "Standard-library-only Python agent harness with scaffolding, scoring, HTML reporting, and structural benchmarking. Designed for Claude Code, Cursor, Codex, Windsurf, and Antigravity.",
   "license": "MIT",
   "author": "Harness Kit",
   "repository": "https://github.com/nguyenanh92/harness-kit",
-  "languages": [
-    "en",
-    "vi"
-  ],
+  "languages": ["en", "vi"],
   "compatibility": {
     "minCliVersion": "0.1.0",
-    "agents": [
-      "claude-code",
-      "codex-cli",
-      "cursor",
-      "windsurf",
-      "generic"
-    ]
+    "agents": ["claude-code", "codex-cli", "cursor", "windsurf", "generic"]
   },
   "entryPoint": "SKILL.md",
   "references": [
     "references/architecture-principles.md",
-    "references/concurrency-and-safety.md",
-    "references/agent-harness-deep-dive.md",
-    "references/agent-harness-deep-dive.vi.md"
+    "references/nine-components.md",
+    "references/nine-components.vi.md",
+    "references/tool-registry-and-safety.md",
+    "references/context-and-memory.md",
+    "references/lifecycle-and-hooks.md",
+    "references/gotchas.md"
   ],
   "triggers": [
     "harness-kit",
     "python harness",
     "build harness",
+    "scaffold harness",
+    "audit harness",
+    "validate harness",
     "harness loop",
     "9 components",
-    "safety registry",
-    "append-only logs",
+    "tool registry",
+    "permission gate",
+    "append-only log",
     "context compaction",
     "prompt assembly",
-    "agent lifecycle hooks"
+    "lifecycle hooks",
+    "sub-agent fork",
+    "AGENTS.md"
   ],
   "bundled": {
     "scripts": [
       "scripts/scaffold_harness.py",
-      "scripts/validate_harness.py"
+      "scripts/validate_harness.py",
+      "scripts/render_assessment_html.py",
+      "scripts/run_benchmark.py",
+      "scripts/lib/harness_utils.py"
     ],
     "assets": [],
     "templates": [
+      "templates/AGENTS.md",
+      "templates/feature_list.json",
+      "templates/feature-list.schema.json",
+      "templates/progress.md",
+      "templates/session-handoff.md",
+      "templates/init.sh",
+      "templates/init.ps1",
       "templates/harness.py",
       "templates/context_manager.py",
       "templates/tool_registry.py",
       "templates/persistence.py",
       "templates/hooks.py",
       "templates/subagent.py",
-      "templates/prompt_assembly.py",
-      "templates/AGENTS.md",
-      "templates/feature_list.json",
-      "templates/progress.md",
-      "templates/session-handoff.md",
-      "templates/init.sh",
-      "templates/init.ps1"
+      "templates/prompt_assembly.py"
     ]
   }
 }

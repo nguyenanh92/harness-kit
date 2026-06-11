@@ -1,8 +1,8 @@
 # harness-kit
 
-A zero-dependency, standard-library-only Python-based Agent Harness implementation for AI coding agents.
+A standard-library-only Python agent harness, plus a small skill for scaffolding and auditing it.
 
-It helps a repository provide a highly secure, resilient, and persistent execution loop for agents working in IDEs like Cursor, Codex, Claude Code, and Antigravity.
+It helps a repository give AI coding agents (Claude Code, Cursor, Codex, Windsurf, Antigravity) five things they need to be effective: instructions, state, verification, scope boundaries, and lifecycle handoff.
 
 ## Install
 
@@ -15,79 +15,102 @@ Or copy `skills/` into your skill path.
 ## Use
 
 ```bash
-# Scaffold the Python templates into a target directory
-py -m skills.scripts.scaffold_harness --target /path/to/project/harness
-
-# Validate and score your project's harness
-py -m skills.scripts.validate_harness --target /path/to/project/harness
-
-# Run mock simulation loop showcasing 9 components
-py -m skills.templates.harness --mock --goal "Create a simple calculator class"
+python3 skills/scripts/scaffold_harness.py --target /path/to/project
+python3 skills/scripts/validate_harness.py --target /path/to/project
+python3 skills/scripts/run_benchmark.py    --target /path/to/project --html report.html
+python3 skills/scripts/render_assessment_html.py --target /path/to/project
 ```
 
-The scripts use only Python standard library modules. They can be run after copying the skill directory into another repository.
+On Windows use `py` instead of `python3`. Every script uses the standard library only; copy the skill into another repo and it works.
 
 ## What It Creates
 
-- `harness.py` — Main orchestrator loop
-- `context_manager.py` — Token track and compaction
-- `tool_registry.py` — Permission gates and primitives
-- `persistence.py` — Append-only JSON Lines logger
-- `hooks.py` — Pre-tool and post-tool lifecycle hooks
-- `subagent.py` — Isolated sub-agent session context
-- `prompt_assembly.py` — Caching-friendly guidelines aggregator
+The scaffold writes governance files at the project root and code modules under `harness/`:
+
+Project root (governance):
+
+- `AGENTS.md` (or `CLAUDE.md`) — startup workflow, working rules, Definition of Done
+- `feature_list.json` + `feature-list.schema.json` — features and dependency graph
+- `progress.md` — Current State, What I Did, Verification Evidence, Recommended Next Step
+- `session-handoff.md` — Blockers, Files, Next Session
+- `init.sh` / `init.ps1` — fail-fast verification (compile + test)
+
+`<harness-dir>/` (code, default `harness/`):
+
+- `harness.py` — bounded while-loop orchestrator
+- `context_manager.py` — token budget and compaction
+- `tool_registry.py` — permission gate and built-in primitives
+- `persistence.py` — append-only JSONL session log
+- `hooks.py` — pre/post-tool lifecycle hooks with trust gate
+- `subagent.py` — isolated single-level sub-agents
+- `prompt_assembly.py` — caching-friendly guidelines aggregator
+- `__init__.py`
 
 ## What It Checks
 
-`validate_harness.py` scores the five harness subsystems:
+`validate_harness.py` scores the five harness subsystems (25 structural checks):
 
-1. Instructions
-2. State
-3. Verification
-4. Scope
-5. Lifecycle
+1. **Instructions** — `AGENTS.md` presence, startup workflow, Definition of Done, routing to state.
+2. **State** — feature tracker validity, progress log restart markers, handoff completeness.
+3. **Verification** — fail-fast init, test command documented, evidence recorded.
+4. **Scope** — one-feature-at-a-time rule, dependency graph, completion gate.
+5. **Lifecycle** — startup script, end-of-session procedure, restart markers, code modules present.
 
-The score is structural. It tells you whether the harness is present and coherent; it does not replace real before/after agent-session testing.
+`run_benchmark.py` combines the score with eval coverage and produces a recommendation.
+
+The score is structural — it confirms the harness is *coherent*, not that an agent actually performs better. Real effectiveness still needs before/after sessions on representative tasks.
 
 ## Status
 
-- [x] Zero-dependency Python templates
-- [x] Scaffolding script
-- [x] Five-subsystem validation script
-- [x] HTML assessment report generator
-- [x] Append-only event persistence
-- [x] Mock simulation loop
+- [x] Standard-library-only Python harness (7 code modules)
+- [x] Scaffold script with `{{KEY}}` template substitution
+- [x] Five-subsystem validator (no floor-1 score, word-bounded matching)
+- [x] HTML assessment report
+- [x] Structural benchmark with eval-coverage proxy
+- [x] Mock simulation loop in `harness.py`
 - [x] 10 eval cases
-- [x] Vietnamese user guide (`README-VI.md`)
+- [x] Vietnamese references (`README-VI.md`, `SKILL.md.vi`, `nine-components.vi.md`)
 
 ## Files
 
 ```text
 skills/
 ├── SKILL.md
+├── SKILL.md.vi
 ├── README.md
 ├── README-VI.md
 ├── metadata.json
 ├── agents/
 │   └── openai.yaml
+├── evals/
+│   └── evals.json
 ├── scripts/
 │   ├── scaffold_harness.py
-│   └── validate_harness.py
+│   ├── validate_harness.py
+│   ├── render_assessment_html.py
+│   ├── run_benchmark.py
+│   └── lib/
+│       ├── __init__.py
+│       └── harness_utils.py
 ├── templates/
-│   ├── harness.py
-│   ├── context_manager.py
-│   ├── tool_registry.py
-│   ├── persistence.py
-│   ├── hooks.py
-│   ├── subagent.py
-│   └── prompt_assembly.py
-├── references/
-│   ├── architecture-principles.md
-│   └── concurrency-and-safety.md
-└── evals/
-    └── evals.json
+│   ├── AGENTS.md
+│   ├── feature_list.json
+│   ├── feature-list.schema.json
+│   ├── progress.md
+│   ├── session-handoff.md
+│   ├── init.sh
+│   ├── init.ps1
+│   └── (Python modules)
+└── references/
+    ├── architecture-principles.md
+    ├── nine-components.md
+    ├── nine-components.vi.md
+    ├── tool-registry-and-safety.md
+    ├── context-and-memory.md
+    ├── lifecycle-and-hooks.md
+    └── gotchas.md
 ```
 
 ## Boundaries
 
-This skill is for harness runtime implementation and execution loop engineering. It is not for general application logic, complex multi-agent frameworks (e.g., LangGraph), or prompt tuning in isolation. Keep project-specific facts in the target repository.
+This skill is for harness runtime engineering — the bounded loop, tool safety, persistence, and the documents that bind an agent's session. It is not for general application logic, multi-agent frameworks like LangGraph, or prompt tuning in isolation. Keep project-specific facts in the target repository, not in the skill.

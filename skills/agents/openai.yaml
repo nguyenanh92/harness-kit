@@ -1,7 +1,7 @@
 interface:
   display_name: "Harness Kit"
-  short_description: "Scaffold and validate standard-library-only Python agent harnesses"
-  default_prompt: "Use $harness-kit to scaffold, validate, or audit a zero-dependency Python Agent Harness for this repository."
+  short_description: "Scaffold, score, and benchmark a zero-dependency Python agent harness."
+  default_prompt: "Use $harness-kit to scaffold or audit the Python agent harness in this repository (governance files at root, code under harness/)."
 
 policy:
   allow_implicit_invocation: true

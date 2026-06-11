@@ -1,59 +1,66 @@
-# Architecture Principles of a Resilient Agent Harness
+# Architecture Principles
 
-This document outlines the core architectural principles that govern the design of a lightweight, highly resilient Agent Harness.
+Load when you are deciding what *not* to add to the harness. These three invariants are load-bearing; everything else is negotiable.
 
----
+## 1. Zero external dependencies
 
-## 1. Zero-Dependency & Pure Standard Library
+The harness modules under `harness/` import only the Python standard library. No `requests`, no `langchain`, no `pydantic`.
 
-AI Agents operate in diverse environments. Requiring external packages like `langchain`, `langgraph`, or `requests` introduces several critical risks:
-- **Dependency bloat**: Increases initial sandbox startup latency.
-- **Security vulnerabilities**: Pulling third-party packages dynamically can lead to supply chain attacks.
-- **API breakage**: External frameworks change rapidly, breaking older agents.
+**Why this is non-negotiable.** Sandboxes pull and audit dependencies at startup; every third-party package is a supply-chain surface, a version-drift risk, and a cold-start cost. The harness must work in any Python 3.8+ environment with nothing pre-installed.
 
-### The Standard Library Constraint
-By using Python's built-in standard library modules exclusively, the harness is guaranteed to work in any basic Python sandbox (version 3.8+):
-- `subprocess` / `os` / `sys`: Operating system interactions and shell execution.
-- `json` / `pathlib`: Structured configuration and robust, cross-platform file paths.
-- `re`: Match patterns and parse shell commands.
-- `typing` / `dataclasses`: Strong typing for data structures.
+**What you may use.**
+- `subprocess`, `os`, `sys`, `signal` — process and shell.
+- `json`, `pathlib`, `re`, `argparse` — config and parsing.
+- `dataclasses`, `typing`, `enum` — typed data structures.
+- `http.client`, `urllib`, `ssl` — network when an LLM call is needed (no `httpx`).
 
----
+**Bright line.** If a feature requires a third-party package, push it behind a thin adapter in the *caller's* code, not into `harness/`.
 
-## 2. While Loop Centrality
+## 2. The while loop is the program
 
-A harness is fundamentally an orchestrator of a single, bounded loop. Every file in the system exists solely to supply resources to or execute actions decided inside this loop.
+A harness is a bounded orchestrator of one loop. Every other module exists to feed it inputs or execute its decisions. The canonical step order:
 
 ```
 +-------------------------------------------------------------+
 |                        WHILE LOOP                           |
-|  1. Assemble System Prompt (prompt_assembly.py)             |
-|  2. Compact Context if near limit (context_manager.py)      |
-|  3. Call LLM (mock / real API)                              |
-|  4. Parse tool call from response                           |
-|  5. Run Hook -> Pre-tool intercept (hooks.py)               |
-|  6. Check Permissions & Safety (tool_registry.py)           |
-|  7. Execute Tool & Capture exit code                        |
-|  8. Run Hook -> Post-tool audit (hooks.py)                  |
-|  9. Append event to Log file (persistence.py)               |
-| 10. Repeat until Done or Limit (iteration cap) reached       |
+|  1. Assemble system prompt   (prompt_assembly.py)           |
+|  2. Compact if near budget   (context_manager.py)           |
+|  3. Call model               (live or mock)                 |
+|  4. Parse tool call          (harness.py)                   |
+|  5. Pre-tool hook            (hooks.py)                     |
+|  6. Permission check         (tool_registry.py)             |
+|  7. Execute tool             (tool_registry.py)             |
+|  8. Post-tool hook           (hooks.py)                     |
+|  9. Append event             (persistence.py)               |
+| 10. Continue until done or iteration cap hit                |
 +-------------------------------------------------------------+
 ```
 
-### Constraints:
-- **Iteration Cap**: An agent must never run endlessly. A hard limit (e.g., 30 iterations) must be enforced.
-- **Timeout Management**: If a tool hangs (e.g., a test suite waiting for input), it must be terminated after a timeout (e.g., 30 seconds).
+**Mandatory constraints.**
+- **Iteration cap** (default 10–30). No unbounded loops, ever.
+- **Per-tool timeout** (default 30s on shell). Hung commands must be killable.
+- **Single re-entry point.** Only `harness.py::Harness.run()` drives the loop. Sub-agents reuse the same loop with a restricted registry; they do not invent their own.
 
----
+## 3. Durability via append-only JSONL
 
-## 3. Durability via Append-Only Logging
+Every iteration appends one JSON object per event to `.harness/<session>.jsonl` and flushes immediately. The log *is* the session.
 
-When working on complex, multi-turn tasks, sessions can crash due to network drops, CPU throttling, or terminal terminations. If state is stored in memory, all work is lost.
+**Why append-only.**
+- **Crash recovery.** A killed terminal or a power cut leaves a partial line at most; everything up to that line is intact.
+- **Replay.** Resuming a session means re-reading the log top-to-bottom and reconstructing context, iteration count, and active feature. No external state store is required.
+- **Concurrency safety.** Two readers never collide; if you ever fork the harness, each fork writes to its own log file (never a shared one).
 
-### Why Append-Only JSON Lines?
-- **Immediate flush**: Every event (message, tool call, compaction, user confirmation) is appended to a file (typically `session.jsonl`) and immediately flushed to disk.
-- **Replayability**: To resume a session, the harness replays the log line-by-line, reconstructing:
-  1. The cumulative context.
-  2. The current active feature or task state.
-  3. The number of iterations already spent.
-- **Concurrency safe**: Two processes sharing a read-only view of the log won't overwrite each other's historical lines.
+**What an event must include.**
+- `ts` — ISO-8601 timestamp.
+- `type` — e.g., `tool_call`, `tool_result`, `compaction`, `hook_block`.
+- `iteration` — current loop iteration.
+- `data` — payload (tool name, args, exit code, summary, etc.).
+
+If an event cannot be serialized to JSON, the harness must fail loudly — silent log corruption is the worst failure mode.
+
+## Related references
+
+- [Nine components](nine-components.md) — concrete mapping from these principles to modules.
+- [Context and memory](context-and-memory.md) — what to compact and how to keep prefix caching intact.
+- [Lifecycle and hooks](lifecycle-and-hooks.md) — bootstrap stages and trust gates around the loop.
+- [Gotchas](gotchas.md) — failure modes these principles exist to prevent.

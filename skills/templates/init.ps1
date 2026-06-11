@@ -2,13 +2,14 @@ $ErrorActionPreference = 'Stop'
 
 Write-Host "[init] verifying workspace (build, lint, compile, test)..."
 
-# Static check: compile Python harness modules
-$pyFiles = Get-ChildItem -Filter *.py -ErrorAction SilentlyContinue
-if ($pyFiles) {
-    foreach ($f in $pyFiles) { py -m py_compile $f.FullName }
+$HarnessDir = "{{HARNESS_DIR}}"
+
+# Static check: compile harness modules if present.
+if (Test-Path $HarnessDir) {
+    py -m compileall -q $HarnessDir
 }
 
-# Test stage: pytest if available, else unittest discover
+# Test stage: pytest if available, else unittest discover.
 if (Test-Path tests) {
     $pytest = Get-Command pytest -ErrorAction SilentlyContinue
     if ($pytest) {

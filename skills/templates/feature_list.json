@@ -4,16 +4,18 @@
     {
       "id": "F-001",
       "name": "Bootstrap harness",
-      "description": "Scaffold the standard-library Python harness into the workspace and confirm baseline modules import cleanly.",
+      "description": "Scaffold the zero-dependency Python harness into the workspace and confirm baseline modules compile cleanly.",
       "status": "in_progress",
-      "dependencies": []
+      "dependencies": [],
+      "evidence": ""
     },
     {
       "id": "F-002",
       "name": "Wire verification",
-      "description": "Flesh out init.sh / init.ps1 so build, lint, compile, and test stages all run and fail fast.",
+      "description": "Ensure init.sh / init.ps1 compile every harness module and run any tests/ suite, failing fast on error.",
       "status": "pending",
-      "dependencies": ["F-001"]
+      "dependencies": ["F-001"],
+      "evidence": ""
     }
   ]
 }

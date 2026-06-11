@@ -1,195 +1,113 @@
 ---
 name: harness-kit
 description: >-
-  Thiết kế, khởi tạo và đánh giá các bộ khung Harness tác nhân Python chỉ dùng thư viện chuẩn theo 9 thành phần cốt lõi:
-  vòng lặp while, nén ngữ cảnh, bộ đăng ký công cụ, tác nhân con, nguyên bản, lưu trữ phiên,
-  lắp ghép prompt hệ thống, lifecycle hooks, và cổng phân quyền shell.
+  Thiết kế, khởi tạo và đánh giá bộ harness tác nhân Python chỉ dùng thư viện
+  chuẩn, theo 9 thành phần cốt lõi: vòng lặp while, nén ngữ cảnh, tool registry,
+  sub-agent, primitive, persistence, lắp ráp prompt, lifecycle hook, và cổng
+  phân quyền shell.
 license: MIT
 ---
 
 # Harness Kit
 
-Sử dụng kỹ năng này để thiết kế, khởi tạo (scaffold) và đánh giá một bộ khung Harness tác nhân AI bằng Python siêu nhẹ, chỉ sử dụng thư viện chuẩn. Điều này đảm bảo vòng lặp thực thi của tác nhân luôn gọn nhẹ, bền bỉ và tương thích với mọi môi trường chạy (như Cursor, Codex, Claude Code và Antigravity).
+Dùng skill này để biến repository thành nơi mọi coding agent (Claude Code, Cursor, Codex, Windsurf, Antigravity) có thể khởi động nhanh, ở trong scope, tự xác minh kết quả và phục hồi giữa các phiên — dựa trên một harness Python không phụ thuộc.
 
-Không phù hợp cho các framework đa tác nhân phức tạp (như LangGraph), cấu trúc ứng dụng chung, hoặc thiết kế giao diện người dùng.
-
-## Cài đặt
-
-Để thêm kỹ năng này vào không gian làm việc của dự án, chạy lệnh sau bằng Skills CLI:
-
-```bash
-npx skills add nguyenanh92/harness-kit --skill harness-kit
-```
-
-Hoặc sao chép thư mục `skills/` thủ công vào thư mục `skills/` trong dự án của bạn.
+Không dùng cho framework đa-agent nặng, kiến trúc ứng dụng tổng quát, hay thiết kế UI front-end.
 
 ## Mô hình Cốt lõi
 
-Mỗi bộ Harness Python chỉ dùng thư viện chuẩn sẽ ánh xạ 9 thành phần cốt lõi vào 5 phân hệ chính sau:
+Harness có 9 thành phần nội bộ ánh xạ vào 5 subsystem bên ngoài. Bộ chấm điểm chấm theo subsystem; template ship theo thành phần.
 
-| Phân hệ (Subsystem) | Tệp mẫu tương ứng | Mục đích |
-|---|---|---|
-| Instructions (Chỉ dẫn) | `prompt_assembly.py` | Quét thư mục cha để tìm chỉ dẫn (`CLAUDE.md`) và bảo toàn bộ nhớ đệm cache. |
-| State (Trạng thái) | `persistence.py`, `context_manager.py` | Ghi log sự kiện dạng append-only; kiểm soát token và tự động nén lịch sử. |
-| Verification (Xác minh) | Các công cụ cơ bản | Chạy kiểm tra biên dịch cú pháp và các tiến trình con kiểm thử để xác minh tác vụ. |
-| Scope (Phạm vi) | `tool_registry.py`, `subagent.py` | Giới hạn công cụ, phân loại động lệnh shell, khởi tạo tác nhân con đơn cấp cô lập. |
-| Lifecycle (Vòng đời) | `harness.py`, `hooks.py` | Điều phối vòng lặp `while` chính, gọi các hàm hook trước/sau khi chạy công cụ. |
+| Subsystem    | Artifact tối thiểu                              | Mục đích |
+|--------------|-------------------------------------------------|----------|
+| Instructions | `AGENTS.md` (hoặc `CLAUDE.md`)                  | Quy trình khởi động, working rules, Definition of Done |
+| State        | `feature_list.json`, `progress.md`              | Feature đang chạy, trạng thái, bằng chứng, bước tiếp |
+| Verification | `init.sh` / `init.ps1`                          | Test, compile, lint — fail nhanh trước khi tuyên bố done |
+| Scope        | Phụ thuộc feature + Definition of Done          | Một feature mỗi lần; không có việc dở dang |
+| Lifecycle    | `session-handoff.md`, quy trình kết thúc phiên  | Khiến phiên kế tiếp khởi động lại được |
+
+Code module (`harness.py`, `tool_registry.py`, `persistence.py`, ...) nằm trong `harness/`. File governance (`AGENTS.md`, `feature_list.json`, ...) nằm ở thư mục gốc dự án.
 
 ## Khởi đầu (First Move)
 
-1. **Đánh giá môi trường**: Kiểm tra phiên bản Python và tính sẵn sàng của câu lệnh chạy (`py` hoặc `python3`).
-2. **Chọn thư mục Harness**: Xác định thư mục đích (ví dụ: `harness/`) để khởi tạo các tệp mã nguồn Python mẫu.
-3. **Ánh xạ hoạt động**: Xác định các tệp tin tác nhân cần đọc/ghi và các câu lệnh shell yêu cầu người dùng xác nhận trực tiếp.
+1. Kiểm tra cái đã có: file instruction, danh sách feature, init script, thư mục harness nếu có.
+2. Chỉ hỏi context không thể suy luận: tên file agent (AGENTS.md vs CLAUDE.md), tên thư mục harness, có được ghi đè không.
+3. Scaffold tối thiểu trước. Hook, sub-agent hoặc benchmarking chỉ thêm khi bài toán của người dùng cần đến.
 
 ## Các Tác vụ Thường gặp
 
-### Khởi tạo một Harness Tùy chỉnh (Scaffold)
+Tất cả script dùng thư viện chuẩn Python. Dùng `py` trên Windows, `python3` ở nơi khác.
 
-Khởi tạo bộ tệp tin mẫu Harness Python không phụ thuộc vào dự án của bạn:
-
-- **Trường hợp 1: Cài đặt qua CLI (Nằm trong thư mục `.agents/skills/harness-kit`)**
-  Chạy lệnh từ thư mục gốc của dự án (ví dụ `vinfast/`):
-  ```bash
-  # Trên Windows
-  py .agents/skills/harness-kit/scripts/scaffold_harness.py --target harness
-
-  # Trên macOS/Linux
-  python3 .agents/skills/harness-kit/scripts/scaffold_harness.py --target harness
-  ```
-
-- **Trường hợp 2: Copy thủ công thư mục `skills` vào gốc dự án**
-  Chạy lệnh từ thư mục gốc của dự án:
-  ```bash
-  # Trên Windows
-  py -m skills.scripts.scaffold_harness --target harness
-
-  # Trên macOS/Linux
-  python3 -m skills.scripts.scaffold_harness --target harness
-  ```
-
-- **Trường hợp 3: Chạy từ bên trong thư mục `harness-kit`**
-  ```bash
-  # Trên Windows
-  py scripts/scaffold_harness.py --target ../../../harness
-
-  # Trên macOS/Linux
-  python3 scripts/scaffold_harness.py --target ../../../harness
-  ```
-
-Các tham số tùy chọn:
-- `--target DIR`: Thư mục đích để ghi các tệp Harness (mặc định: `harness`).
-- `--force`: Ghi đè lên các tệp tin đã tồn tại trong thư mục đích.
-
-### Đánh giá và Kiểm tra một Harness Hiện có (Validate)
-
-Đánh giá và chấm điểm cấu trúc bộ Harness dự án của bạn trên 5 phân hệ (Instructions, State, Verification, Scope, Lifecycle):
-
-- **Trường hợp 1: Cài đặt qua CLI (Nằm trong thư mục `.agents/skills/harness-kit`)**
-  Chạy lệnh từ thư mục gốc của dự án:
-  ```bash
-  # Trên Windows
-  py .agents/skills/harness-kit/scripts/validate_harness.py --target harness
-
-  # Trên macOS/Linux
-  python3 .agents/skills/harness-kit/scripts/validate_harness.py --target harness
-  ```
-
-- **Trường hợp 2: Copy thủ công thư mục `skills` vào gốc dự án**
-  Chạy lệnh từ thư mục gốc của dự án:
-  ```bash
-  # Trên Windows
-  py -m skills.scripts.validate_harness --target harness
-
-  # Trên macOS/Linux
-  python3 -m skills.scripts.validate_harness --target harness
-  ```
-
-- **Trường hợp 3: Chạy từ bên trong thư mục `harness-kit`**
-  ```bash
-  # Trên Windows
-  py scripts/validate_harness.py --target ../../../harness
-
-  # Trên macOS/Linux
-  python3 scripts/validate_harness.py --target ../../../harness
-  ```
-
-Các tham số tùy chọn:
-- `--json`: Xuất kết quả chi tiết dưới định dạng JSON.
-- `--html FILE`: Biên dịch và xuất báo cáo HTML trực quan ra đường dẫn tệp được chỉ định.
-- `--min-score SCORE`: Trả về mã lỗi thoát nếu điểm đánh giá dưới ngưỡng tối thiểu (mặc định: 70).
-
-### Biên dịch Kiểm tra Cú pháp
-
-Đảm bảo tất cả các tệp Python mẫu không chứa lỗi cú pháp trước khi chạy vòng lặp:
+### Scaffold một harness
 
 ```bash
-# Trên Windows (PowerShell)
-Get-ChildItem -Path "skills/templates/*.py" | ForEach-Object { py -m py_compile $_.FullName }
-
-# Trên macOS/Linux
-python3 -m py_compile skills/templates/*.py
+python3 skills/scripts/scaffold_harness.py --target /duong/dan/du/an
 ```
 
-### Chạy Giả lập Vòng lặp chính (Mock Mode)
+Tham số:
 
-Chạy thử nghiệm Harness trong chế độ giả lập để kiểm tra hoạt động của vòng lặp, pre/post hooks, nén ngữ cảnh và tác nhân con:
+- `--harness-dir harness` — nơi đặt 9 module Python (mặc định: `harness`).
+- `--agent-file CLAUDE.md` — viết `CLAUDE.md` thay vì `AGENTS.md`.
+- `--governance-only` — chỉ tạo file governance, không scaffold code.
+- `--force` — ghi đè file đã có (xác nhận với người dùng trước).
+
+Sau khi scaffold, thư mục gốc có `AGENTS.md`, `feature_list.json`, `progress.md`, `session-handoff.md`, `init.sh`, `init.ps1`, `feature-list.schema.json`. Thư mục harness có 7 module Python và `__init__.py`.
+
+### Đánh giá một harness
 
 ```bash
-# Trên Windows
-py -m skills.templates.harness --mock --goal "Create a simple calculator class"
-
-# Trên macOS/Linux
-python3 -m skills.templates.harness --mock --goal "Create a simple calculator class"
+python3 skills/scripts/validate_harness.py --target /duong/dan/du/an
 ```
 
-### Dọn dẹp Logs Giả lập
+Báo cáo điểm tổng (0–100), subsystem yếu nhất ("bottleneck") và pass/fail cho 25 check cấu trúc. Dùng `--json` cho output máy đọc, `--html report.html` cho báo cáo HTML.
 
-Xóa bỏ các thư mục và tệp tin tạm tạo ra trong phiên chạy giả lập:
+Hãy coi subsystem yếu nhất là *ứng viên* bottleneck. Xác nhận bằng task lỗi hoặc session log trước khi kết luận nhân quả.
+
+### Sinh báo cáo benchmark
 
 ```bash
-# Windows
-Remove-Item -Path "calculator.py" -Force -ErrorAction SilentlyContinue
-Remove-Item -Path ".harness" -Recurse -Force -ErrorAction SilentlyContinue
-
-# macOS / Linux
-rm -f calculator.py
-rm -rf .harness
+python3 skills/scripts/run_benchmark.py --target /duong/dan/du/an --html report.html
 ```
 
-## Khi nào cần đọc Tài liệu Tham khảo
+Kết hợp điểm cấu trúc với độ phủ eval (`evals/evals.json`) và đưa ra khuyến nghị. Đầu ra là cấu trúc — hiệu quả thực tế vẫn cần kiểm chứng bằng phiên agent trước/sau.
 
-Chỉ nạp các tài liệu tham khảo khi gặp các bài toán thiết kế cụ thể:
+### Chỉ render HTML đánh giá
 
-- Khởi chạy, điều phối vòng lặp và ghi logs append-only: [Architecture Principles](references/architecture-principles.md)
-- Phân loại câu lệnh shell, cấp quyền an toàn và tác nhân con: [Concurrency & Safety](references/concurrency-and-safety.md)
-- Tìm hiểu chuyên sâu về 9 thành phần cốt lõi và cách ánh xạ sang 5 phân hệ: [Tìm hiểu về Agent Harness](references/agent-harness-deep-dive.vi.md)
+```bash
+python3 skills/scripts/render_assessment_html.py --target /duong/dan/du/an --output report.html
+```
 
-## Quy tắc Làm việc cho AI Agent (Working Rules for AI Agents)
+## Khi nào đọc tài liệu Reference
 
-Khi bất kỳ AI Agent nào (như Claude Code, Cursor, Windsurf, Antigravity) tải skill này và làm việc trong dự án, tác nhân phải tuân thủ nghiêm ngặt các bước sau để đảm bảo không phá hỏng mã nguồn:
+Chỉ nạp reference cần cho bài toán cụ thể:
 
-1. **Đọc tài liệu chỉ dẫn đầu tiên**: Đọc tệp `AGENTS.md` hoặc `CLAUDE.md` ở thư mục gốc để hiểu các quy định chung của dự án.
-2. **Kiểm tra và giới hạn phạm vi (Scope)**: Đọc `feature_list.json` để biết tính năng nào đang được triển khai. Chỉ tập trung giải quyết MỘT tính năng tại một thời điểm (One-feature-at-a-time). Tuyệt đối không sửa các file ngoài phạm vi tính năng đó.
-3. **Cập nhật trạng thái**: Ghi nhận chi tiết những gì đã làm, trạng thái hiện tại và bước tiếp theo vào tệp `progress.md` trước khi kết thúc phiên làm việc.
-4. **Bắt buộc xác minh (Mandatory Verification)**: Trước khi báo cáo hoàn thành tác vụ, bắt buộc phải chạy lệnh kiểm thử tự động (ví dụ chạy `./init.sh` hoặc chạy script đánh giá `py .agents/skills/harness-kit/scripts/validate_harness.py --target harness`) và đính kèm bằng chứng/kết quả kiểm thử vào phản hồi.
+- Invariant cấp cao (zero-dep, vòng lặp có giới hạn, log append-only): [Architecture Principles](references/architecture-principles.md)
+- Mỗi module làm gì và mở rộng ở đâu: [Nine Components](references/nine-components.vi.md)
+- Phân quyền, classify, fork sub-agent: [Tool Registry and Safety](references/tool-registry-and-safety.md)
+- Nén context, prefix cache, persistence JSONL: [Context and Memory](references/context-and-memory.md)
+- Bootstrap, hook, hợp đồng restart: [Lifecycle and Hooks](references/lifecycle-and-hooks.md)
+- Các kiểu lỗi phi-hiển-nhiên (đánh số): [Gotchas](references/gotchas.md)
 
-## Quy chuẩn Thiết kế (Design Rules)
+## Quy chuẩn Thiết kế
 
-- **Không sử dụng Thư viện Ngoài**: Tuyệt đối không import các thư viện bên thứ ba trong các module cốt lõi của Harness. Chỉ sử dụng thư viện chuẩn của Python.
-- **Tối ưu hóa Prompt Caching**: Ghép phần prompt tĩnh trước, prompt chỉ dẫn động ghép sau để tránh làm hỏng cache của LLM.
-- **Ghi Logs dạng Append-only**: Ghi trực tiếp các sự kiện xuống đĩa (flush) ngay lập tức. Đọc tuần tự các dòng log để khôi phục trạng thái khi bị gián đoạn.
-- **Ranh giới Tác nhân con đơn cấp**: Cấm các Sub-agent con tự tạo Sub-agent của riêng mình (loại bỏ công cụ `spawn_subagent` trong registry của con).
-- **Hành động Nguy hiểm phải thông qua người dùng**: Mặc định yêu cầu xác nhận trực tiếp từ người dùng (`input()`) đối với các câu lệnh shell chứa từ khóa nguy hiểm (`rm`, `sudo`, `curl`).
+- **Không phụ thuộc ngoài** trong các module harness cốt lõi. Chỉ thư viện chuẩn.
+- **Giữ prefix cache**: prompt tĩnh trước, nội dung động append sau; không viết lại prefix.
+- **Logging append-only**: flush mỗi event ngay; replay tái dựng context, không tái chạy side-effect.
+- **Fork sub-agent đơn cấp**: con không được phép sinh tiếp.
+- **Cổng quyền fail-closed**: lệnh lạ phải leo thang; trust là toàn-bộ-hoặc-không-có theo workspace.
+- **Một feature đang chạy**: ép bằng `feature_list.json`, không bằng hy vọng.
+- **Không giấu hành vi phá hủy trong script**: `--force` phải bật chủ động; hỏi trước khi ghi đè.
 
-## Danh sách Bàn giao (Deliverable Checklist)
+## Danh sách Bàn giao
 
-Khi xây dựng hoặc đánh giá một bộ Harness Python, đảm bảo thư mục dự án đích có đủ:
+Một harness dùng được để lại cho project đích:
 
-- [ ] `harness.py` — vòng lặp chính điều phối
-- [ ] `context_manager.py` — theo dõi token và nén
-- [ ] `tool_registry.py` — bộ đăng ký công cụ và phân quyền shell
-- [ ] `persistence.py` — ghi logs append-only dạng JSON Line
-- [ ] `hooks.py` — các hàm chặn trước/sau khi gọi công cụ
-- [ ] `subagent.py` — chạy tác nhân con cô lập
-- [ ] `prompt_assembly.py` — tự động lắp ráp prompt tối ưu cache
-- [ ] Thư mục `.harness/` chứa nhật ký hoạt động phiên làm việc hiện tại
+- [ ] `AGENTS.md` (hoặc `CLAUDE.md`) — startup, scope, Definition of Done, end-of-session
+- [ ] `feature_list.json` + `feature-list.schema.json` — feature có id/name/description/status/dependencies
+- [ ] `progress.md` — Current State, What I Did, Verification Evidence, Recommended Next Step
+- [ ] `session-handoff.md` — Blockers, Files, Next Session
+- [ ] `init.sh` / `init.ps1` — xác minh fail-fast (compile + test)
+- [ ] `<harness-dir>/` chứa `harness.py`, `context_manager.py`, `tool_registry.py`, `persistence.py`, `hooks.py`, `subagent.py`, `prompt_assembly.py`
+- [ ] Thư mục `.harness/` được tạo lần chạy đầu bởi `SessionLogger`
+
+Nếu không thể tạo file, output nội dung file và lệnh tương ứng để người dùng tự chạy.

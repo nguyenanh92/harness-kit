@@ -1,42 +1,41 @@
 # Progress Log
 
-**Last Updated:** 2026-06-11
+Single source of truth for the active feature. Append, do not rewrite history.
+
+**Last Updated:** YYYY-MM-DD HH:MM
 
 ## Current Objective
 
-Implement the feature whose `status` is `in_progress` in `feature_list.json`.
+Short statement of what is being attempted right now (one feature, one sentence).
 
 ## Current State
 
-Workspace was scaffolded from the harness-kit skill. The Python harness modules
-(`harness.py`, `tool_registry.py`, `persistence.py`, ...) and governance files
-(`AGENTS.md`, `feature_list.json`, `session-handoff.md`, `init.sh`, `init.ps1`)
-are in place.
+Where the work stands: files that exist, last passing verification, any known-broken paths.
 
 ## What I Did
 
-- Ran `scaffold_harness.py --target <dir>` to create the harness scaffold.
-- Verified the workspace boots with `./init.sh` (or `./init.ps1` on Windows).
+- Concrete actions, in order, since the last entry.
+- Reference commits, files, or commands where useful.
 
 ## Verification Evidence
 
-Record the command and output of the latest verification run here:
+The command and its output, pasted verbatim:
 
 ```
 $ ./init.sh
-... (paste stdout/stderr) ...
+[init] verifying workspace (build, lint, compile, test)...
+... output ...
+[init] OK
 ```
-
-## Next Step
-
-Pick the feature whose `status` is `in_progress` in `feature_list.json` and implement it.
 
 ## Recommended Next Step
 
-If this session ended mid-feature, the next agent should resume from the `What I Did`
-list above and continue toward the `Definition of Done` in `AGENTS.md`.
+The single action the next agent (or future you) should take. Be specific: file, function, command.
 
 ## Blockers
 
-None. Files touched this session and the Next Session plan are recorded in
-`session-handoff.md`.
+Anything that prevents progress: missing credentials, unresolved decisions, broken upstream. Empty if none.
+
+## Notes for Next Session
+
+Free-form context that doesn't belong elsewhere but will save time on restart.
