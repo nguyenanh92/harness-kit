@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harness Kit — Use Cases</title>
+  <meta name="description" content="Eight real-world scenarios for using the harness-kit skill, from cold-start scaffolding to CI gating, live LLM adapters, and sub-agent forking.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%234F46E5'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='system-ui'>HE</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070913;
+      --bg-slate: #0d1224;
+      --bg-card: rgba(20, 27, 54, 0.55);
+      --bg-card-hover: rgba(28, 38, 75, 0.75);
+      --bg-code: #0a0f1f;
+      --border: rgba(99, 102, 241, 0.18);
+      --border-active: rgba(6, 182, 212, 0.45);
+      --primary: #6366f1;
+      --secondary: #06b6d4;
+      --accent: #a855f7;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #f43f5e;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-faint: #64748b;
+      --font-sans: 'Outfit', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(99,102,241,0.10) 0%, transparent 42%),
+        radial-gradient(circle at 88% 82%, rgba(6,182,212,0.10) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(168,85,247,0.05) 0%, transparent 55%);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body.lang-vi [lang="en"] { display: none !important; }
+    body.lang-en [lang="vi"] { display: none !important; }
+
+    a { color: var(--secondary); text-decoration: none; transition: color .2s; }
+    a:hover { color: var(--accent); }
+
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    /* ============== NAV ============== */
+    nav.topbar {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(7, 9, 19, 0.75);
+      border-bottom: 1px solid var(--border);
+    }
+    nav.topbar .wrap {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px; max-width: 1080px; margin: 0 auto; gap: 16px;
+    }
+    .brand {
+      font-family: var(--font-mono); font-weight: 600;
+      color: var(--text); font-size: 15px; letter-spacing: -.01em;
+    }
+    .brand .dot { color: var(--secondary); }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links a {
+      padding: 6px 12px; border-radius: 6px; font-size: 14px;
+      color: var(--text-muted);
+    }
+    .nav-links a:hover { color: var(--text); background: var(--bg-card); }
+    .lang-toggle {
+      display: flex; border: 1px solid var(--border); border-radius: 8px;
+      overflow: hidden; font-family: var(--font-mono); font-size: 12px;
+    }
+    .lang-toggle button {
+      background: none; border: none; color: var(--text-muted);
+      padding: 6px 12px; cursor: pointer; transition: all .2s;
+      font-family: inherit; font-size: inherit;
+    }
+    .lang-toggle button.active {
+      background: var(--primary); color: white;
+    }
+    .lang-toggle button:hover:not(.active) {
+      color: var(--text); background: var(--bg-card);
+    }
+
+    /* ============== HERO ============== */
+    .hero { padding: 80px 0 48px; text-align: center; }
+    .hero .eyebrow {
+      display: inline-block; font-family: var(--font-mono); font-size: 12px;
+      color: var(--secondary); letter-spacing: .15em; text-transform: uppercase;
+      padding: 4px 12px; border: 1px solid var(--border-active); border-radius: 999px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 52px); font-weight: 700; line-height: 1.15;
+      letter-spacing: -.02em; margin-bottom: 16px;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--primary), var(--secondary) 50%, var(--accent));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      max-width: 680px; margin: 0 auto; color: var(--text-muted);
+      font-size: 17px;
+    }
+
+    /* ============== TOC ============== */
+    .toc {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px; margin: 32px auto 64px; max-width: 920px;
+    }
+    .toc a {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text); font-size: 14px; font-weight: 500;
+      transition: all .2s;
+    }
+    .toc a:hover {
+      background: var(--bg-card-hover); border-color: var(--border-active);
+      transform: translateY(-2px);
+    }
+    .toc-num {
+      flex: 0 0 26px; height: 26px; border-radius: 6px;
+      background: rgba(99,102,241,0.15); color: var(--secondary);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    }
+
+    /* ============== USE CASE CARD ============== */
+    .case {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 32px;
+      margin-bottom: 28px; scroll-margin-top: 80px;
+    }
+    .case-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+    .case-num {
+      flex: 0 0 44px; height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-weight: 700; font-size: 18px;
+    }
+    .case h2 {
+      font-size: 24px; font-weight: 700; letter-spacing: -.01em;
+      margin-bottom: 4px;
+    }
+    .case .tag {
+      display: inline-block; font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-muted); letter-spacing: .05em;
+    }
+
+    .pain {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 14px 18px; margin: 0 0 24px;
+      background: rgba(244, 63, 94, 0.06);
+      border-left: 3px solid var(--danger);
+      border-radius: 6px;
+    }
+    .pain .label {
+      flex: 0 0 64px;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--danger); letter-spacing: .1em; padding-top: 2px;
+    }
+    .pain .text { color: var(--text); font-size: 15px; }
+
+    .step-list { list-style: none; counter-reset: step; padding-left: 0; }
+    .step-list > li {
+      counter-increment: step;
+      position: relative; padding: 0 0 24px 44px;
+      border-left: 2px solid var(--border); margin-left: 14px;
+    }
+    .step-list > li:last-child { border-left-color: transparent; padding-bottom: 0; }
+    .step-list > li::before {
+      content: counter(step);
+      position: absolute; left: -16px; top: -4px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--bg-slate); border: 2px solid var(--primary);
+      color: var(--secondary); font-family: var(--font-mono);
+      font-size: 12px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-list > li > h3 {
+      font-size: 16px; font-weight: 600; margin-bottom: 8px;
+      color: var(--text);
+    }
+    .step-list > li > p {
+      color: var(--text-muted); font-size: 14px; margin-bottom: 12px;
+    }
+
+    pre.code {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-family: var(--font-mono); font-size: 13px;
+      line-height: 1.55;
+      color: #cbd5e1;
+      overflow-x: auto;
+      margin: 8px 0;
+    }
+    pre.code .c { color: var(--text-faint); font-style: italic; }
+    pre.code .k { color: var(--accent); }
+    pre.code .s { color: var(--success); }
+    pre.code .n { color: var(--warning); }
+    pre.code .v { color: var(--secondary); }
+    .filename {
+      display: inline-block;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-muted); letter-spacing: .05em;
+      padding: 4px 10px; background: rgba(99,102,241,0.08);
+      border-radius: 4px; margin-bottom: 4px;
+    }
+
+    .result {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 14px 18px; margin-top: 8px;
+      background: rgba(16, 185, 129, 0.07);
+      border-left: 3px solid var(--success);
+      border-radius: 6px;
+    }
+    .result .label {
+      flex: 0 0 64px;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--success); letter-spacing: .1em; padding-top: 2px;
+    }
+    .result .text { color: var(--text); font-size: 14px; }
+
+    code.inline {
+      font-family: var(--font-mono); font-size: 12.5px;
+      background: rgba(99,102,241,0.12);
+      padding: 2px 6px; border-radius: 4px;
+      color: var(--secondary);
+    }
+
+    /* ============== FOOTER ============== */
+    footer {
+      margin-top: 96px; padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      text-align: center; color: var(--text-faint); font-size: 13px;
+    }
+    footer a { color: var(--text-muted); }
+
+    @media (max-width: 640px) {
+      .case { padding: 24px 20px; }
+      .case-head { flex-wrap: wrap; }
+      .step-list > li { padding-left: 36px; }
+      pre.code { font-size: 12px; padding: 12px; }
+    }
+  </style>
+</head>
+<body class="lang-vi">
+  <nav class="topbar">
+    <div class="wrap">
+      <div class="brand">harness<span class="dot">·</span>kit / use-cases</div>
+      <div class="nav-links">
+        <a href="index.html">← Home</a>
+        <a href="https://github.com/nguyenanh92/harness-kit" target="_blank">GitHub</a>
+        <div class="lang-toggle">
+          <button data-lang="vi" class="active">VI</button>
+          <button data-lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container">
+    <div class="eyebrow" lang="vi">8 tình huống thực tế</div>
+    <div class="eyebrow" lang="en">8 real-world scenarios</div>
+
+    <h1 lang="vi">
+      Dùng harness-kit <span class="grad">trong thực tế</span> như thế nào?
+    </h1>
+    <h1 lang="en">
+      How to use harness-kit <span class="grad">in real projects</span>
+    </h1>
+
+    <p lang="vi">
+      Mỗi tình huống bắt đầu bằng <em>nỗi đau cụ thể</em>, đi qua các bước copy-paste được, kết thúc bằng <em>kết quả nhìn thấy được</em>. Không lý thuyết thừa.
+    </p>
+    <p lang="en">
+      Each scenario starts with a <em>concrete pain</em>, walks through copy-paste-ready steps, and ends with a <em>visible outcome</em>. No filler theory.
+    </p>
+  </header>
+
+  <main class="container">
+
+    <div class="toc">
+      <a href="#case-1"><span class="toc-num">1</span><span lang="vi">Khởi tạo project mới</span><span lang="en">Cold-start a new project</span></a>
+      <a href="#case-2"><span class="toc-num">2</span><span lang="vi">Audit project đang lộn xộn</span><span lang="en">Audit a messy project</span></a>
+      <a href="#case-3"><span class="toc-num">3</span><span lang="vi">Gate CI theo điểm harness</span><span lang="en">Gate CI on harness score</span></a>
+      <a href="#case-4"><span class="toc-num">4</span><span lang="vi">Khôi phục sau crash</span><span lang="en">Resume after a crash</span></a>
+      <a href="#case-5"><span class="toc-num">5</span><span lang="vi">Thêm tool tuỳ chỉnh</span><span lang="en">Add a custom tool</span></a>
+      <a href="#case-6"><span class="toc-num">6</span><span lang="vi">Wire LLM thật (Claude/OpenAI)</span><span lang="en">Wire a real LLM adapter</span></a>
+      <a href="#case-7"><span class="toc-num">7</span><span lang="vi">Fork sub-agent cho task con</span><span lang="en">Fork a focused sub-agent</span></a>
+      <a href="#case-8"><span class="toc-num">8</span><span lang="vi">Đổi AGENTS.md ↔ CLAUDE.md</span><span lang="en">Switch AGENTS.md ↔ CLAUDE.md</span></a>
+    </div>
+
+
+    <!-- CASE 1 -->
+    <section class="case" id="case-1">
+      <div class="case-head">
+        <div class="case-num">01</div>
+        <div>
+          <h2 lang="vi">Khởi tạo harness cho project mới</h2>
+          <h2 lang="en">Cold-start a new project</h2>
+          <span class="tag">cold-start · scaffold · 2 minutes</span>
+        </div>
+      </div>
+
+      <div class="pain">
+        <div class="label">PAIN</div>
+        <div class="text">
+          <span lang="vi">Bạn vừa mở một repo trống. Claude Code / Cursor đoán mò file, sửa lung tung, không biết khi nào "xong". Bạn cần governance tối thiểu trước khi gọi agent.</span>
+          <span lang="en">You just opened an empty repo. Claude Code / Cursor are guessing at files, drifting, with no "done" gate. You need minimal governance before letting an agent run.</span>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          <h3 lang="vi">Clone hoặc vendor harness-kit</h3>
+          <h3 lang="en">Clone or vendor harness-kit</h3>
+          <p lang="vi">Không cần npm/pip — chỉ cần Python 3.8+.</p>
+          <p lang="en">No npm/pip needed — Python 3.8+ is the only requirement.</p>
+<pre class="code"><span class="c"># once per machine</span>
+<span class="k">git clone</span> https://github.com/nguyenanh92/harness-kit.git ~/tools/harness-kit</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Scaffold vào project của bạn</h3>
+          <h3 lang="en">Scaffold into your project</h3>
+          <p lang="vi">Governance lên thư mục gốc, 7 module Python vào <code class="inline">harness/</code>.</p>
+          <p lang="en">Governance lands at the project root; the seven Python modules land in <code class="inline">harness/</code>.</p>
+<pre class="code"><span class="k">cd</span> ~/work/my-project
+<span class="k">py</span> ~/tools/harness-kit/skills/scripts/scaffold_harness.py <span class="n">--target</span> .</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Điền 1 feature đầu tiên vào <code class="inline">feature_list.json</code></h3>
+          <h3 lang="en">Fill in the first feature in <code class="inline">feature_list.json</code></h3>
+          <p lang="vi">Đặt <code class="inline">active_feature</code> và <code class="inline">status: "in_progress"</code> cho duy nhất 1 feature.</p>
+          <p lang="en">Set <code class="inline">active_feature</code> and <code class="inline">status: "in_progress"</code> for exactly one feature.</p>
+<div class="filename">feature_list.json</div>
+<pre class="code">{
+  <span class="s">"active_feature"</span>: <span class="s">"F-001"</span>,
+  <span class="s">"features"</span>: [
+    {
+      <span class="s">"id"</span>: <span class="s">"F-001"</span>,
+      <span class="s">"name"</span>: <span class="s">"Auth login flow"</span>,
+      <span class="s">"description"</span>: <span class="s">"Email + password, no OAuth yet"</span>,
+      <span class="s">"status"</span>: <span class="s">"in_progress"</span>,
+      <span class="s">"dependencies"</span>: []
+    }
+  ]
+}</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Chạy verification entrypoint</h3>
+          <h3 lang="en">Run the verification entrypoint</h3>
+<pre class="code"><span class="k">./init.sh</span>      <span class="c"># POSIX</span>
+<span class="k">./init.ps1</span>     <span class="c"># Windows</span></pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Mở Claude Code / Cursor và bắt đầu</h3>
+          <h3 lang="en">Open Claude Code / Cursor and start</h3>
+          <p lang="vi">Agent đọc <code class="inline">AGENTS.md</code> trước, biết cách restart, biết khi nào dừng.</p>
+          <p lang="en">The agent reads <code class="inline">AGENTS.md</code> first — it now knows how to restart and when to stop.</p>
+        </li>
+      </ol>
+
+      <div class="result">
+        <div class="label">RESULT</div>
+        <div class="text">
+          <span lang="vi">Một harness 100/100 ngay từ commit đầu tiên. Agent không lạc scope; có Definition of Done rõ ràng và <code class="inline">progress.md</code> đầy đủ để bàn giao giữa các phiên.</span>
+          <span lang="en">A 100/100 harness from the first commit. The agent stays in scope, has a clear Definition of Done, and a populated <code class="inline">progress.md</code> for session-to-session handoff.</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CASE 2 -->
+    <section class="case" id="case-2">
+      <div class="case-head">
+        <div class="case-num">02</div>
+        <div>
+          <h2 lang="vi">Audit project đang lộn xộn</h2>
+          <h2 lang="en">Audit an existing chaotic project</h2>
+          <span class="tag">audit · score · bottleneck</span>
+        </div>
+      </div>
+
+      <div class="pain">
+        <div class="label">PAIN</div>
+        <div class="text">
+          <span lang="vi">Đội đã dùng AI agent 3 tháng nhưng output ngày càng lỗi, scope rộng, sửa fix-fix-fix. Bạn nghi ngờ harness yếu nhưng không biết yếu chỗ nào.</span>
+          <span lang="en">Your team has used AI agents for 3 months but quality is degrading, scope creeps, fixes pile on fixes. You suspect harness drift but don't know where.</span>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          <h3 lang="vi">Chấm điểm cấu trúc</h3>
+          <h3 lang="en">Score the structure</h3>
+<pre class="code"><span class="k">py</span> skills/scripts/validate_harness.py <span class="n">--target</span> /path/to/project</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Đọc <code class="inline">Bottleneck</code> trước tiên</h3>
+          <h3 lang="en">Read the <code class="inline">Bottleneck</code> first</h3>
+          <p lang="vi">Output mẫu:</p>
+          <p lang="en">Sample output:</p>
+<pre class="code">Overall: 64/100
+Bottleneck: <span class="n">verification</span>
+
+instructions: 4/5 (4/5)
+  PASS Agent instruction file exists
+  PASS Startup workflow documented
+  FAIL Verification commands discoverable    <span class="c">&lt;-- AGENTS.md thiếu init.sh</span>
+
+verification: 1/5 (1/5)
+  PASS Verification entrypoint exists
+  FAIL Verification fails fast               <span class="c">&lt;-- thiếu set -e</span>
+  FAIL Test command documented
+  FAIL Static / build check documented
+  FAIL Verification evidence is recorded</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Sinh report HTML để share team</h3>
+          <h3 lang="en">Render an HTML report to share with the team</h3>
+<pre class="code"><span class="k">py</span> skills/scripts/render_assessment_html.py \
+    <span class="n">--target</span> /path/to/project \
+    <span class="n">--output</span> harness-audit-$(date +%Y%m%d).html</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Sửa subsystem yếu nhất TRƯỚC — đừng rải rác</h3>
+          <h3 lang="en">Fix the lowest subsystem FIRST — don't spread the work</h3>
+          <p lang="vi">Mỗi check FAIL là một ticket. Đừng cố lên 100 ngay — kéo bottleneck từ 1→4 đã tạo khác biệt lớn nhất.</p>
+          <p lang="en">Each FAIL line is a ticketable sentence. Don't aim for 100 immediately — pulling the bottleneck from 1→4 makes the biggest real-world difference.</p>
+        </li>
+
+        <li>
+          <h3 lang="vi">Re-score sau khi sửa</h3>
+          <h3 lang="en">Re-score after the fix</h3>
+<pre class="code"><span class="k">py</span> skills/scripts/validate_harness.py <span class="n">--target</span> . <span class="n">--json</span> | jq <span class="s">'.overall'</span></pre>
+        </li>
+      </ol>
+
+      <div class="result">
+        <div class="label">RESULT</div>
+        <div class="text">
+          <span lang="vi">Một con số trước/sau có thể bảo vệ trước lead. Bottleneck rõ, ticket cụ thể. Score là <em>cấu trúc</em> — kết hợp với 1-2 phiên agent thật trước/sau là đủ để biết harness có thực sự khoẻ hơn.</span>
+          <span lang="en">A before/after number you can defend to your lead. Clear bottleneck, ticketable checks. The score is <em>structural</em>; pair with 1-2 real before/after agent sessions to confirm the harness is genuinely healthier.</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CASE 3 -->
+    <section class="case" id="case-3">
+      <div class="case-head">
+        <div class="case-num">03</div>
+        <div>
+          <h2 lang="vi">Gate CI theo điểm harness (chống drift)</h2>
+          <h2 lang="en">Gate CI on the harness score (anti-drift)</h2>
+          <span class="tag">ci · github-actions · regression</span>
+        </div>
+      </div>
+
+      <div class="pain">
+        <div class="label">PAIN</div>
+        <div class="text">
+          <span lang="vi">Sau vài tuần, ai đó xoá <code class="inline">Definition of Done</code> trong AGENTS.md, ai khác xoá <code class="inline">set -e</code> trong init.sh. Harness âm thầm trôi. CI hiện tại không phát hiện được.</span>
+          <span lang="en">After a few weeks, someone deletes <code class="inline">Definition of Done</code> from AGENTS.md and another removes <code class="inline">set -e</code> from init.sh. The harness silently drifts. Your CI catches none of it.</span>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          <h3 lang="vi">Vendor scripts vào repo</h3>
+          <h3 lang="en">Vendor the scripts into your repo</h3>
+<pre class="code"><span class="k">cp -r</span> ~/tools/harness-kit/skills/scripts ./.harness-scripts
+<span class="k">git add</span> .harness-scripts
+<span class="k">git commit -m</span> <span class="s">"vendor harness validation scripts"</span></pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Thêm workflow GitHub Actions</h3>
+          <h3 lang="en">Add a GitHub Actions workflow</h3>
+<div class="filename">.github/workflows/harness.yml</div>
+<pre class="code"><span class="k">name</span>: <span class="s">Harness regression gate</span>
+<span class="k">on</span>: [<span class="s">push</span>, <span class="s">pull_request</span>]
+<span class="k">jobs</span>:
+  <span class="k">audit</span>:
+    <span class="k">runs-on</span>: <span class="s">ubuntu-latest</span>
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: <span class="s">actions/checkout@v4</span>
+      - <span class="k">uses</span>: <span class="s">actions/setup-python@v5</span>
+        <span class="k">with</span>: { <span class="k">python-version</span>: <span class="s">"3.12"</span> }
+      - <span class="k">run</span>: <span class="s">python .harness-scripts/validate_harness.py --target . --min-score 90</span></pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Cài <code class="inline">--min-score</code> theo độ chín của project</h3>
+          <h3 lang="en">Calibrate <code class="inline">--min-score</code> to project maturity</h3>
+          <p lang="vi">Project mới: 70. Stable: 85. Production: 90+. Đừng pin 100 — một edit nhỏ cũng làm fail CI vì lý do không quan trọng.</p>
+          <p lang="en">New project: 70. Stable: 85. Production: 90+. Don't pin 100 — trivial edits will fail CI for the wrong reasons.</p>
+        </li>
+
+        <li>
+          <h3 lang="vi">(Tuỳ chọn) Upload HTML report làm artifact</h3>
+          <h3 lang="en">(Optional) Upload the HTML report as an artifact</h3>
+<pre class="code">      - <span class="k">run</span>: <span class="s">python .harness-scripts/render_assessment_html.py --target . --output audit.html</span>
+        <span class="k">if</span>: <span class="s">always()</span>
+      - <span class="k">uses</span>: <span class="s">actions/upload-artifact@v4</span>
+        <span class="k">with</span>: { <span class="k">name</span>: <span class="s">harness-audit</span>, <span class="k">path</span>: <span class="s">audit.html</span> }</pre>
+        </li>
+      </ol>
+
+      <div class="result">
+        <div class="label">RESULT</div>
+        <div class="text">
+          <span lang="vi">PR nào kéo điểm xuống dưới ngưỡng sẽ đỏ. Reviewer thấy ngay <em>check nào fail</em>, không phải đoán "AGENTS.md có còn ổn không."</span>
+          <span lang="en">Any PR that drops the score below the threshold goes red. Reviewers see <em>which checks failed</em> immediately, no guessing whether "AGENTS.md still looks OK."</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CASE 4 -->
+    <section class="case" id="case-4">
+      <div class="case-head">
+        <div class="case-num">04</div>
+        <div>
+          <h2 lang="vi">Khôi phục agent sau khi crash giữa chừng</h2>
+          <h2 lang="en">Resume an agent that crashed mid-feature</h2>
+          <span class="tag">durability · jsonl · replay</span>
+        </div>
+      </div>
+
+      <div class="pain">
+        <div class="label">PAIN</div>
+        <div class="text">
+          <span lang="vi">Agent đang chạy iteration 18/30, terminal tắt đột ngột. Lịch sử chat trong IDE biến mất. Bạn không muốn bắt đầu lại từ đầu.</span>
+          <span lang="en">An agent was on iteration 18/30 when the terminal died. The IDE's chat history is gone. You don't want to restart from scratch.</span>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          <h3 lang="vi">Kiểm tra JSONL còn nguyên</h3>
+          <h3 lang="en">Check the JSONL log survived</h3>
+<pre class="code"><span class="k">ls</span> .harness/
+<span class="c"># main_session.jsonl  <-- mỗi dòng = 1 event được flush ngay xuống đĩa</span>
+<span class="k">tail -3</span> .harness/main_session.jsonl</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Mở <code class="inline">progress.md</code> để có trạng thái human-readable</h3>
+          <h3 lang="en">Open <code class="inline">progress.md</code> for the human-readable state</h3>
+          <p lang="vi">JSONL là cho replay máy. <code class="inline">progress.md</code> là cho mắt người.</p>
+          <p lang="en">JSONL is for machine replay. <code class="inline">progress.md</code> is for human eyes.</p>
+        </li>
+
+        <li>
+          <h3 lang="vi">Chạy lại harness với cùng <code class="inline">session-id</code></h3>
+          <h3 lang="en">Re-run the harness with the same <code class="inline">session-id</code></h3>
+<pre class="code"><span class="k">py</span> harness/harness.py \
+    <span class="n">--session-id</span> main_session \
+    <span class="n">--adapter</span> my_app.adapters:claude_turn \
+    <span class="n">--goal</span> <span class="s">"continue F-001"</span></pre>
+          <p lang="vi">Harness replay JSONL, dựng lại history, đếm iteration đã dùng. Side-effect (file đã ghi, lệnh đã chạy) <em>không</em> chạy lại.</p>
+          <p lang="en">The harness replays the JSONL, reconstructs history, and counts iterations spent. Side effects (files written, commands run) are <em>not</em> re-executed.</p>
+        </li>
+
+        <li>
+          <h3 lang="vi">Luôn cập nhật <code class="inline">session-handoff.md</code> trước khi tắt máy</h3>
+          <h3 lang="en">Always update <code class="inline">session-handoff.md</code> before shutting down</h3>
+          <p lang="vi">Lần crash sau, đó là thứ giúp bạn (hoặc đồng đội) khởi động trong 30 giây thay vì 30 phút.</p>
+          <p lang="en">Next crash, that's what gets you (or a teammate) restarted in 30 seconds instead of 30 minutes.</p>
+        </li>
+      </ol>
+
+      <div class="result">
+        <div class="label">RESULT</div>
+        <div class="text">
+          <span lang="vi">Phiên mới bắt đầu từ iteration 19, không phải iteration 1. Không phải gõ lại "ngữ cảnh hôm qua chúng ta đang sửa..." — đã có sẵn trong log và markdown.</span>
+          <span lang="en">The new session starts at iteration 19, not iteration 1. No need to retype "yesterday we were fixing…" — it's all in the log and the markdown.</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CASE 5 -->
+    <section class="case" id="case-5">
+      <div class="case-head">
+        <div class="case-num">05</div>
+        <div>
+          <h2 lang="vi">Thêm tool tuỳ chỉnh (ví dụ: query DB)</h2>
+          <h2 lang="en">Add a custom tool (e.g. query DB)</h2>
+          <span class="tag">extension · tool-registry · permission</span>
+        </div>
+      </div>
+
+      <div class="pain">
+        <div class="label">PAIN</div>
+        <div class="text">
+          <span lang="vi">Agent cần đọc 1 bảng read-only trong staging DB để debug. Bạn không muốn dạy nó dùng <code class="inline">psql</code> qua <code class="inline">run_shell</code> (rủi ro inject quá lớn).</span>
+          <span lang="en">The agent needs to read one staging-DB table to debug. You don't want it shelling out to <code class="inline">psql</code> via <code class="inline">run_shell</code> — injection risk is too high.</span>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          <h3 lang="vi">Viết handler trong <code class="inline">harness/extensions.py</code></h3>
+          <h3 lang="en">Write the handler in <code class="inline">harness/extensions.py</code></h3>
+<div class="filename">harness/extensions.py</div>
+<pre class="code"><span class="k">import</span> sqlite3
+<span class="k">from</span> tool_registry <span class="k">import</span> Tool
+
+<span class="k">def</span> query_db_handler(args):
+    sql = args.get(<span class="s">"sql"</span>, <span class="s">""</span>).strip()
+    <span class="c"># Hard whitelist: read-only SELECTs only</span>
+    <span class="k">if</span> <span class="k">not</span> sql.lower().startswith(<span class="s">"select"</span>):
+        <span class="k">return</span> <span class="s">"Error: only SELECT allowed"</span>
+    conn = sqlite3.connect(<span class="s">"staging.db"</span>)
+    rows = conn.execute(sql).fetchmany(<span class="n">50</span>)
+    <span class="k">return</span> <span class="s">"\n"</span>.join(str(r) <span class="k">for</span> r <span class="k">in</span> rows)
+
+QUERY_DB_TOOL = Tool(
+    name=<span class="s">"query_db"</span>,
+    description=<span class="s">"Run a read-only SQL SELECT. Args: {'sql': str}"</span>,
+    required_permission=<span class="s">"READ_ONLY"</span>,
+    handler=query_db_handler,
+)</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Đăng ký lúc khởi tạo harness</h3>
+          <h3 lang="en">Register at harness init</h3>
+<pre class="code"><span class="k">from</span> harness.harness <span class="k">import</span> Harness
+<span class="k">from</span> harness.extensions <span class="k">import</span> QUERY_DB_TOOL
+
+h = Harness(workspace_dir=<span class="s">"."</span>, model_turn=my_adapter)
+h.registry.register(QUERY_DB_TOOL)
+h.run(goal=<span class="s">"debug missing user record"</span>)</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Document tool trong AGENTS.md</h3>
+          <h3 lang="en">Document the tool in AGENTS.md</h3>
+          <p lang="vi">Agent chỉ biết tool nếu được mô tả trong system prompt. Thêm vào section "Available Tools".</p>
+          <p lang="en">The agent only knows about a tool if it appears in the system prompt. Add to the "Available Tools" section.</p>
+        </li>
+
+        <li>
+          <h3 lang="vi">Thêm eval case</h3>
+          <h3 lang="en">Add an eval case</h3>
+          <p lang="vi">Mỗi tool mới = 1 eval mới trong <code class="inline">evals/evals.json</code> để CI giữ tool chạy đúng.</p>
+          <p lang="en">Every new tool = one new case in <code class="inline">evals/evals.json</code> so CI keeps it honest.</p>
+        </li>
+      </ol>
+
+      <div class="result">
+        <div class="label">RESULT</div>
+        <div class="text">
+          <span lang="vi">Agent có quyền đọc DB nhưng không có quyền viết — invariant nằm trong code (whitelist <code class="inline">SELECT</code>) chứ không phải trong system prompt mà LLM có thể "quên".</span>
+          <span lang="en">The agent has DB read access but cannot write — the invariant lives in code (the <code class="inline">SELECT</code>-only whitelist), not in a system prompt the LLM can "forget."</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CASE 6 -->
+    <section class="case" id="case-6">
+      <div class="case-head">
+        <div class="case-num">06</div>
+        <div>
+          <h2 lang="vi">Wire LLM thật (Claude / OpenAI)</h2>
+          <h2 lang="en">Wire a real LLM adapter (Claude / OpenAI)</h2>
+          <span class="tag">live-mode · adapter · zero-dep core</span>
+        </div>
+      </div>
+
+      <div class="pain">
+        <div class="label">PAIN</div>
+        <div class="text">
+          <span lang="vi">Bạn đã chơi mock đủ rồi. Muốn harness chạy với Claude thật, nhưng không muốn <code class="inline">anthropic</code> SDK xâm nhập vào module harness cốt lõi.</span>
+          <span lang="en">Done playing with mock mode. You want the harness to drive real Claude calls, but you don't want the <code class="inline">anthropic</code> SDK to leak into the core harness module.</span>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          <h3 lang="vi">Viết adapter trong code của caller (KHÔNG trong harness/)</h3>
+          <h3 lang="en">Write the adapter in the caller's code (NOT in harness/)</h3>
+<div class="filename">my_app/adapters.py</div>
+<pre class="code"><span class="k">import</span> anthropic
+
+client = anthropic.Anthropic()  <span class="c"># reads ANTHROPIC_API_KEY</span>
+
+<span class="k">def</span> claude_turn(messages):
+    system = next((m[<span class="s">"content"</span>] <span class="k">for</span> m <span class="k">in</span> messages
+                   <span class="k">if</span> m[<span class="s">"role"</span>] == <span class="s">"system"</span>), <span class="s">""</span>)
+    convo = [m <span class="k">for</span> m <span class="k">in</span> messages <span class="k">if</span> m[<span class="s">"role"</span>] != <span class="s">"system"</span>]
+
+    resp = client.messages.create(
+        model=<span class="s">"claude-opus-4-7"</span>,
+        max_tokens=<span class="n">2048</span>,
+        system=system,
+        messages=convo,
+        tools=[ <span class="c"># expose harness tools here</span> ],
+    )
+
+    <span class="c"># Convert Anthropic response to harness contract</span>
+    <span class="k">for</span> block <span class="k">in</span> resp.content:
+        <span class="k">if</span> block.type == <span class="s">"tool_use"</span>:
+            <span class="k">return</span> {<span class="s">"role"</span>: <span class="s">"assistant"</span>, <span class="s">"content"</span>: <span class="s">""</span>,
+                    <span class="s">"tool_call"</span>: {<span class="s">"name"</span>: block.name, <span class="s">"args"</span>: block.input}}
+    <span class="k">return</span> {<span class="s">"role"</span>: <span class="s">"assistant"</span>,
+            <span class="s">"content"</span>: resp.content[<span class="n">0</span>].text,
+            <span class="s">"tool_call"</span>: <span class="k">None</span>}  <span class="c"># no tool_call = "done"</span></pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Chạy từ CLI</h3>
+          <h3 lang="en">Run from the CLI</h3>
+<pre class="code"><span class="k">export</span> ANTHROPIC_API_KEY=<span class="s">"sk-ant-..."</span>
+<span class="k">py</span> harness/harness.py \
+    <span class="n">--goal</span> <span class="s">"implement F-001 login flow"</span> \
+    <span class="n">--adapter</span> my_app.adapters:claude_turn \
+    <span class="n">--max-iterations</span> <span class="n">30</span></pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">…hoặc nhúng vào ứng dụng của bạn</h3>
+          <h3 lang="en">…or embed in your application</h3>
+<pre class="code"><span class="k">from</span> harness.harness <span class="k">import</span> Harness
+<span class="k">from</span> my_app.adapters <span class="k">import</span> claude_turn
+
+Harness(workspace_dir=<span class="s">"."</span>,
+        model_turn=claude_turn,
+        max_iterations=<span class="n">30</span>).run(goal=<span class="s">"..."</span>)</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Đối xử adapter như external service</h3>
+          <h3 lang="en">Treat the adapter like any external service</h3>
+          <p lang="vi">Retry, rate-limit, structured logging — đều ở phía adapter, không ở phía harness. Harness phải tiếp tục chạy được trong sandbox không có mạng.</p>
+          <p lang="en">Retries, rate limiting, structured logging — all live in the adapter, not in the harness. The harness must still run in network-less sandboxes.</p>
+        </li>
+      </ol>
+
+      <div class="result">
+        <div class="label">RESULT</div>
+        <div class="text">
+          <span lang="vi">Harness modules vẫn zero-dep (chạy được trong sandbox Python trống). Đổi từ Claude sang OpenAI = đổi adapter, không đụng vào harness. Mock test vẫn chạy đầy đủ cho CI.</span>
+          <span lang="en">The harness modules stay dep-free (still run in an empty Python sandbox). Switching Claude → OpenAI = swap the adapter, no harness changes. Mock tests still cover the loop for CI.</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CASE 7 -->
+    <section class="case" id="case-7">
+      <div class="case-head">
+        <div class="case-num">07</div>
+        <div>
+          <h2 lang="vi">Fork sub-agent cho task con</h2>
+          <h2 lang="en">Fork a focused sub-agent for a sub-task</h2>
+          <span class="tag">multi-agent · isolation · single-level</span>
+        </div>
+      </div>
+
+      <div class="pain">
+        <div class="label">PAIN</div>
+        <div class="text">
+          <span lang="vi">Agent chính đang implement feature lớn, cần một "explorer" đi kiểm tra schema DB nhưng không muốn nó nhiễm bẩn context chính bằng 200 dòng output lan man.</span>
+          <span lang="en">The main agent is implementing a large feature and needs an "explorer" to inspect the DB schema — without polluting the main context with 200 lines of stream-of-thought.</span>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          <h3 lang="vi">Agent chính gọi tool <code class="inline">spawn_subagent</code></h3>
+          <h3 lang="en">The main agent calls the <code class="inline">spawn_subagent</code> tool</h3>
+<pre class="code">{
+  <span class="s">"name"</span>: <span class="s">"schema-explorer"</span>,
+  <span class="s">"task"</span>: <span class="s">"List columns of users + sessions tables"</span>,
+  <span class="s">"allowed_tools"</span>: [<span class="s">"read_file"</span>, <span class="s">"query_db"</span>],
+  <span class="s">"system_prompt"</span>: <span class="s">"Probe the schema. Return at most 20 lines."</span>,
+  <span class="s">"max_iterations"</span>: <span class="n">5</span>
+}</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Single-level invariant tự enforce</h3>
+          <h3 lang="en">The single-level invariant enforces itself</h3>
+          <p lang="vi">Child registry copy chỉ các tool được liệt kê. <code class="inline">spawn_subagent</code> luôn bị strip. Không cần runtime check — không gọi được vì không có trong registry.</p>
+          <p lang="en">The child registry copies only the listed tools. <code class="inline">spawn_subagent</code> is unconditionally stripped. No runtime check needed — it's just absent.</p>
+        </li>
+
+        <li>
+          <h3 lang="vi">Child viết JSONL riêng</h3>
+          <h3 lang="en">The child writes its own JSONL</h3>
+<pre class="code">.harness/
+├── main_session.jsonl
+└── main_session/
+    └── schema-explorer.jsonl    <span class="c"># child's own log</span></pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Parent chỉ nhận summary string</h3>
+          <h3 lang="en">The parent only receives the summary string</h3>
+          <p lang="vi">Hết task, child return <em>một</em> string. 200 dòng tool-call trung gian không vào context của parent. Token budget được bảo vệ.</p>
+          <p lang="en">When done, the child returns <em>one</em> summary string. Its 200 lines of intermediate tool calls never enter the parent's context. Token budget protected.</p>
+        </li>
+      </ol>
+
+      <div class="result">
+        <div class="label">RESULT</div>
+        <div class="text">
+          <span lang="vi">Parent giữ context sạch và tập trung. Sub-agent có ranh giới rõ ràng (tool list + iteration cap). Lỡ child loop chạy hỏng cũng không kéo theo parent.</span>
+          <span lang="en">The parent keeps a clean focused context. The sub-agent has hard boundaries (tool list + iteration cap). A runaway child can't drag the parent down with it.</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CASE 8 -->
+    <section class="case" id="case-8">
+      <div class="case-head">
+        <div class="case-num">08</div>
+        <div>
+          <h2 lang="vi">Đổi qua lại giữa AGENTS.md ↔ CLAUDE.md</h2>
+          <h2 lang="en">Switch between AGENTS.md and CLAUDE.md</h2>
+          <span class="tag">cross-tool · convention · zero-rewrite</span>
+        </div>
+      </div>
+
+      <div class="pain">
+        <div class="label">PAIN</div>
+        <div class="text">
+          <span lang="vi">Project đang dùng <code class="inline">CLAUDE.md</code> nhưng team mới chuyển sang Cursor/Windsurf — chúng kỳ vọng <code class="inline">AGENTS.md</code>. Bạn không muốn duy trì 2 file đồng bộ thủ công.</span>
+          <span lang="en">Your project uses <code class="inline">CLAUDE.md</code>, but the team is moving to Cursor/Windsurf — which expect <code class="inline">AGENTS.md</code>. You don't want to manually keep two files in sync.</span>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          <h3 lang="vi">Scaffold lại với cờ <code class="inline">--agent-file</code></h3>
+          <h3 lang="en">Re-scaffold with the <code class="inline">--agent-file</code> flag</h3>
+<pre class="code"><span class="c"># Đặt CLAUDE.md là file canonical:</span>
+<span class="k">py</span> skills/scripts/scaffold_harness.py \
+    <span class="n">--target</span> . \
+    <span class="n">--agent-file</span> CLAUDE.md \
+    <span class="n">--governance-only</span></pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Thêm symlink (POSIX) hoặc symbolic link (Windows admin)</h3>
+          <h3 lang="en">Add a symlink (POSIX) or symbolic link (Windows admin)</h3>
+<pre class="code"><span class="c"># POSIX</span>
+<span class="k">ln -s</span> CLAUDE.md AGENTS.md
+<span class="k">git add</span> AGENTS.md && <span class="k">git commit -m</span> <span class="s">"alias AGENTS.md -> CLAUDE.md"</span>
+
+<span class="c"># Windows (PowerShell, admin)</span>
+<span class="k">New-Item</span> <span class="n">-ItemType</span> SymbolicLink <span class="n">-Path</span> AGENTS.md <span class="n">-Target</span> CLAUDE.md</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Nếu không dùng symlink: stub 3 dòng</h3>
+          <h3 lang="en">If symlinks aren't viable: a 3-line stub</h3>
+<div class="filename">AGENTS.md</div>
+<pre class="code"><span class="c"># Agent Instructions</span>
+
+This project's instructions live in [CLAUDE.md](./CLAUDE.md).
+Read that file end-to-end before writing any code.</pre>
+        </li>
+
+        <li>
+          <h3 lang="vi">Validate vẫn chấm đúng — scorer hiểu cả hai</h3>
+          <h3 lang="en">Validate still scores correctly — the scorer accepts either</h3>
+<pre class="code"><span class="k">py</span> skills/scripts/validate_harness.py <span class="n">--target</span> .
+<span class="c"># instructions: 5/5  PASS Agent instruction file exists</span></pre>
+        </li>
+      </ol>
+
+      <div class="result">
+        <div class="label">RESULT</div>
+        <div class="text">
+          <span lang="vi">Một document canonical, hai tên file. Cả Claude Code và Cursor đều tìm được instructions. Không có drift giữa hai bản — đó là symlink, hoặc stub trỏ về source duy nhất.</span>
+          <span lang="en">One canonical document, two filenames. Both Claude Code and Cursor find the instructions. No drift between copies — it's a symlink, or a stub that points to the single source.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div lang="vi">
+      Tài liệu chi tiết hơn ở <a href="https://github.com/nguyenanh92/harness-kit/tree/main/skills/references" target="_blank">skills/references/</a>.
+      Gặp lỗi? Mở issue trên <a href="https://github.com/nguyenanh92/harness-kit/issues" target="_blank">GitHub</a>.
+    </div>
+    <div lang="en">
+      Deeper docs at <a href="https://github.com/nguyenanh92/harness-kit/tree/main/skills/references" target="_blank">skills/references/</a>.
+      Found a bug? Open an issue on <a href="https://github.com/nguyenanh92/harness-kit/issues" target="_blank">GitHub</a>.
+    </div>
+    <div style="margin-top: 12px; font-size: 12px;">MIT · Standard library only · Python 3.8+</div>
+  </footer>
+
+  <script>
+    (function () {
+      const body = document.body;
+      const buttons = document.querySelectorAll('.lang-toggle button');
+      const saved = localStorage.getItem('hk-lang');
+      const initial = saved || (navigator.language.startsWith('en') ? 'en' : 'vi');
+      setLang(initial);
+
+      buttons.forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+
+      function setLang(lang) {
+        body.classList.toggle('lang-vi', lang === 'vi');
+        body.classList.toggle('lang-en', lang === 'en');
+        body.lang = lang;
+        buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+        localStorage.setItem('hk-lang', lang);
+      }
+    })();
+  </script>
+</body>
+</html>
