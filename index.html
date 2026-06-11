@@ -1620,6 +1620,11 @@ py skills/scripts/validate_harness.py --target test_run</pre>
 
     <!-- Claude Code -->
     <div class="setup-content-box active" id="ide-claude-content">
+      <p class="setup-step-desc" style="margin-bottom: 18px; padding: 10px 14px; background: rgba(99, 102, 241, 0.08); border-left: 3px solid var(--color-primary); border-radius: 4px;">
+        <strong><span lang="vi">Yêu cầu:</span><span lang="en">Prerequisite:</span></strong>
+        <span lang="vi"> Claude Code đã cài (<code>npm install -g @anthropic-ai/claude-code</code>) và đã đăng nhập bằng <code>claude</code>. Xem <a href="https://docs.claude.com/en/docs/claude-code" target="_blank">docs.claude.com/en/docs/claude-code</a>.</span>
+        <span lang="en"> Claude Code installed (<code>npm install -g @anthropic-ai/claude-code</code>) and authenticated via <code>claude</code>. See <a href="https://docs.claude.com/en/docs/claude-code" target="_blank">docs.claude.com/en/docs/claude-code</a>.</span>
+      </p>
       <div class="setup-step">
         <div class="setup-step-num">Step 1</div>
         <h3 class="setup-step-title">
@@ -1644,12 +1649,12 @@ cp -r skills ./.claude/skills/harness-kit</pre>
       <div class="setup-step">
         <div class="setup-step-num">Step 2</div>
         <h3 class="setup-step-title">
-          <span lang="vi">Khởi động lại phiên Claude Code</span>
-          <span lang="en">Restart the Claude Code session</span>
+          <span lang="vi">Kích hoạt skill trong chat</span>
+          <span lang="en">Activate the skill from chat</span>
         </h3>
         <p class="setup-step-desc">
-          <span lang="vi">Sau khi mở lại, skill <code>harness-kit</code> sẽ xuất hiện trong danh sách. Gõ một trigger như <em>"use harness-kit to scaffold a Python agent harness"</em> để kích hoạt.</span>
-          <span lang="en">After restart, <code>harness-kit</code> appears in the available skills list. Trigger it with a prompt like <em>"use harness-kit to scaffold a Python agent harness"</em>.</span>
+          <span lang="vi">Claude Code tự phát hiện skill ngay trong phiên hiện tại — không cần restart (chỉ cần restart nếu thư mục <code>skills/</code> được tạo mới hoàn toàn). Gõ trigger như <em>"use harness-kit to scaffold a Python agent harness"</em>.</span>
+          <span lang="en">Claude Code auto-discovers the skill within the current session — no restart needed (only required if the top-level <code>skills/</code> directory didn't exist at session start). Trigger with a prompt like <em>"use harness-kit to scaffold a Python agent harness"</em>.</span>
         </p>
       </div>
       <div class="setup-step">
@@ -1670,6 +1675,11 @@ cp -r skills ./.claude/skills/harness-kit</pre>
 
     <!-- Cursor -->
     <div class="setup-content-box" id="ide-cursor-content">
+      <p class="setup-step-desc" style="margin-bottom: 18px; padding: 10px 14px; background: rgba(99, 102, 241, 0.08); border-left: 3px solid var(--color-primary); border-radius: 4px;">
+        <strong><span lang="vi">Yêu cầu:</span><span lang="en">Prerequisite:</span></strong>
+        <span lang="vi"> Cursor IDE đã cài (tải tại <a href="https://cursor.com/download" target="_blank">cursor.com/download</a> hoặc <code>winget install Cursor.Cursor</code> / <code>brew install --cask cursor</code>) và đã đăng nhập.</span>
+        <span lang="en"> Cursor IDE installed (download from <a href="https://cursor.com/download" target="_blank">cursor.com/download</a>, or <code>winget install Cursor.Cursor</code> / <code>brew install --cask cursor</code>) and signed in.</span>
+      </p>
       <div class="setup-step">
         <div class="setup-step-num">Step 1</div>
         <h3 class="setup-step-title">
@@ -1697,14 +1707,24 @@ cp skills/SKILL.md .cursor/rules/harness-kit.mdc</pre>
           <span lang="en">Set the rule's scope</span>
         </h3>
         <p class="setup-step-desc">
-          <span lang="vi">Mở <code>.cursor/rules/harness-kit.mdc</code> và bổ sung frontmatter chuẩn Cursor để rule luôn được áp dụng:</span>
-          <span lang="en">Open <code>.cursor/rules/harness-kit.mdc</code> and add Cursor frontmatter so the rule applies automatically:</span>
+          <span lang="vi">Mở <code>.cursor/rules/harness-kit.mdc</code> và bổ sung frontmatter chuẩn Cursor. Khi <code>alwaysApply: true</code>, Cursor sẽ bỏ qua <code>globs</code> và <code>description</code> — rule áp dụng mọi lúc:</span>
+          <span lang="en">Open <code>.cursor/rules/harness-kit.mdc</code> and add the Cursor frontmatter. With <code>alwaysApply: true</code>, Cursor ignores <code>globs</code> and <code>description</code> — the rule applies in every context:</span>
         </p>
         <div class="setup-code-container">
           <pre class="code-block">---
 description: Standard-library-only Python agent harness conventions
-globs: ["**/*.py", "AGENTS.md", "feature_list.json", "progress.md"]
 alwaysApply: true
+---</pre>
+        </div>
+        <p class="setup-step-desc" style="margin-top: 12px;">
+          <span lang="vi">Nếu muốn scope theo file thay vì luôn bật, đặt <code>alwaysApply: false</code> và dùng <code>globs</code> dạng chuỗi phân tách bằng dấu phẩy (không phải YAML array):</span>
+          <span lang="en">To scope by file type instead of always-on, set <code>alwaysApply: false</code> and use <code>globs</code> as a comma-separated string (not a YAML array):</span>
+        </p>
+        <div class="setup-code-container">
+          <pre class="code-block">---
+description: Standard-library-only Python agent harness conventions
+globs: **/*.py, AGENTS.md, feature_list.json, progress.md
+alwaysApply: false
 ---</pre>
         </div>
       </div>
@@ -1726,15 +1746,20 @@ alwaysApply: true
 
     <!-- Antigravity -->
     <div class="setup-content-box" id="ide-antigravity-content">
+      <p class="setup-step-desc" style="margin-bottom: 18px; padding: 10px 14px; background: rgba(99, 102, 241, 0.08); border-left: 3px solid var(--color-primary); border-radius: 4px;">
+        <strong><span lang="vi">Yêu cầu:</span><span lang="en">Prerequisite:</span></strong>
+        <span lang="vi"> Antigravity đã cài (tải tại <a href="https://antigravity.google" target="_blank">antigravity.google</a>, có bản cho Windows / macOS / Linux) và đã đăng nhập bằng tài khoản Google.</span>
+        <span lang="en"> Antigravity installed (download from <a href="https://antigravity.google" target="_blank">antigravity.google</a> for Windows / macOS / Linux) and signed in with a Google account.</span>
+      </p>
       <div class="setup-step">
         <div class="setup-step-num">Step 1</div>
         <h3 class="setup-step-title">
-          <span lang="vi">Scaffold trực tiếp vào gốc dự án</span>
-          <span lang="en">Scaffold straight into the project root</span>
+          <span lang="vi">Scaffold AGENTS.md vào gốc dự án</span>
+          <span lang="en">Scaffold AGENTS.md into the project root</span>
         </h3>
         <p class="setup-step-desc">
-          <span lang="vi">Antigravity (Google) tự đọc <code>AGENTS.md</code> ở gốc dự án để lấy luật cho agent. Scaffold đặt <code>AGENTS.md</code>, <code>feature_list.json</code>, <code>progress.md</code>, <code>init.sh</code>/<code>init.ps1</code> ngay ở root:</span>
-          <span lang="en">Antigravity (Google) auto-loads <code>AGENTS.md</code> from the project root as its primary rule file. Scaffold puts <code>AGENTS.md</code>, <code>feature_list.json</code>, <code>progress.md</code>, and <code>init.sh</code>/<code>init.ps1</code> right at the root:</span>
+          <span lang="vi">Antigravity (Google, convention 2026) đọc <code>AGENTS.md</code> ở gốc dự án (chuẩn cross-tool, dùng chung với Cursor / Claude Code / Codex). Scaffold đặt sẵn <code>AGENTS.md</code>, <code>feature_list.json</code>, <code>progress.md</code>, <code>init.sh</code>/<code>init.ps1</code> ngay ở root:</span>
+          <span lang="en">Antigravity (Google, 2026 convention) reads <code>AGENTS.md</code> at the project root as the cross-tool standard (shared with Cursor / Claude Code / Codex). The scaffolder drops <code>AGENTS.md</code>, <code>feature_list.json</code>, <code>progress.md</code>, and <code>init.sh</code>/<code>init.ps1</code> there:</span>
         </p>
         <div class="setup-code-container">
           <pre class="code-block">py skills/scripts/scaffold_harness.py --target .</pre>
@@ -1743,13 +1768,22 @@ alwaysApply: true
       <div class="setup-step">
         <div class="setup-step-num">Step 2</div>
         <h3 class="setup-step-title">
-          <span lang="vi">Mở project trong Antigravity</span>
-          <span lang="en">Open the project in Antigravity</span>
+          <span lang="vi">Bật skill native qua <code>.agents/skills/</code></span>
+          <span lang="en">Enable native skills via <code>.agents/skills/</code></span>
         </h3>
         <p class="setup-step-desc">
-          <span lang="vi">Antigravity tự phát hiện <code>AGENTS.md</code> và inject vào system prompt của agent. Không cần cài thêm.</span>
-          <span lang="en">Antigravity detects <code>AGENTS.md</code> and injects it into the agent's system prompt automatically — no extra wiring needed.</span>
+          <span lang="vi">Antigravity còn hỗ trợ thư mục native <code>.agents/</code> gồm <code>agents.md</code> (persona), <code>skills/*.md</code>, và <code>workflows/*.md</code>. Symlink hoặc copy skill harness-kit vào <code>.agents/skills/</code> để agent có thể gọi như một slash-skill:</span>
+          <span lang="en">Antigravity also supports a native <code>.agents/</code> folder containing <code>agents.md</code> (persona), <code>skills/*.md</code>, and <code>workflows/*.md</code>. Link or copy harness-kit into <code>.agents/skills/</code> so the agent can invoke it as a slash-skill:</span>
         </p>
+        <div class="setup-code-container">
+          <pre class="code-block"># Windows
+New-Item -ItemType Directory -Force .agents\skills | Out-Null
+Copy-Item -Recurse skills .agents\skills\harness-kit
+
+# macOS / Linux
+mkdir -p .agents/skills
+cp -r skills .agents/skills/harness-kit</pre>
+        </div>
       </div>
       <div class="setup-step">
         <div class="setup-step-num">Step 3</div>
@@ -1758,28 +1792,46 @@ alwaysApply: true
           <span lang="en">Verify the workflow</span>
         </h3>
         <p class="setup-step-desc">
-          <span lang="vi">Yêu cầu agent: "<em>Đọc AGENTS.md và thực thi feature đang in_progress trong feature_list.json</em>". Agent sẽ chạy <code>init.ps1</code>/<code>init.sh</code> để verify trước khi đánh dấu done.</span>
-          <span lang="en">Prompt the agent: "<em>Read AGENTS.md and execute the in_progress feature from feature_list.json</em>". It will run <code>init.ps1</code>/<code>init.sh</code> for verification before flipping the status to done.</span>
+          <span lang="vi">Mở project trong Antigravity, yêu cầu agent: "<em>Đọc AGENTS.md và thực thi feature đang in_progress trong feature_list.json</em>". Agent sẽ chạy <code>init.ps1</code>/<code>init.sh</code> để verify trước khi đánh dấu done.</span>
+          <span lang="en">Open the project in Antigravity and prompt: "<em>Read AGENTS.md and execute the in_progress feature from feature_list.json</em>". It will run <code>init.ps1</code>/<code>init.sh</code> for verification before flipping the status to done.</span>
         </p>
       </div>
     </div>
 
-    <!-- VS Code Codex -->
+    <!-- OpenAI Codex -->
     <div class="setup-content-box" id="ide-codex-content">
+      <p class="setup-step-desc" style="margin-bottom: 18px; padding: 10px 14px; background: rgba(99, 102, 241, 0.08); border-left: 3px solid var(--color-primary); border-radius: 4px;">
+        <strong><span lang="vi">Yêu cầu:</span><span lang="en">Prerequisite:</span></strong>
+        <span lang="vi"> Codex chưa có IDE riêng — Step 1 sẽ cài CLI / extension (đây cũng là consumer đọc skill).</span>
+        <span lang="en"> Codex has no dedicated IDE — Step 1 installs the CLI / extension, which is also the consumer that reads the skill.</span>
+      </p>
       <div class="setup-step">
         <div class="setup-step-num">Step 1</div>
         <h3 class="setup-step-title">
-          <span lang="vi">Cài Codex CLI / Extension</span>
-          <span lang="en">Install Codex CLI / Extension</span>
+          <span lang="vi">Cài Codex CLI hoặc IDE Extension</span>
+          <span lang="en">Install the Codex CLI or IDE Extension</span>
         </h3>
         <p class="setup-step-desc">
-          <span lang="vi">OpenAI Codex (CLI và VS Code extension) đều đọc <code>AGENTS.md</code> ở root project hoặc <code>~/.codex/AGENTS.md</code> ở global.</span>
-          <span lang="en">OpenAI Codex (both the CLI and the VS Code extension) reads <code>AGENTS.md</code> from the project root, or <code>~/.codex/AGENTS.md</code> globally.</span>
+          <span lang="vi">OpenAI Codex đọc <code>AGENTS.md</code> ở gốc dự án (và merge cascade từ các thư mục cha), cùng <code>~/.codex/AGENTS.md</code> cho ghi chú cá nhân toàn cục. Cấu hình runtime nằm ở <code>~/.codex/config.toml</code> (tách biệt). Extension chính thức của OpenAI hỗ trợ VS Code, Cursor, và Windsurf.</span>
+          <span lang="en">OpenAI Codex reads <code>AGENTS.md</code> at the project root (cascading from parent dirs), plus <code>~/.codex/AGENTS.md</code> for personal global notes. Runtime config lives separately at <code>~/.codex/config.toml</code>. OpenAI's official IDE extension supports VS Code, Cursor, and Windsurf.</span>
         </p>
         <div class="setup-code-container">
           <pre class="code-block">npm install -g @openai/codex
-# or install the "Codex" extension in VS Code Marketplace</pre>
+
+# Khởi động và đăng nhập bằng ChatGPT Plus / Pro / API key
+# Launch and authenticate via ChatGPT Plus / Pro / API key
+codex login
+
+# Hoặc cài extension chính thức từ marketplace của:
+# Or install the official extension from the marketplace of:
+#   - VS Code     (Visual Studio Code Marketplace)
+#   - Cursor      (Open VSX)
+#   - Windsurf    (Open VSX)</pre>
         </div>
+        <p class="setup-step-desc" style="margin-top: 8px;">
+          <span lang="vi">Tham khảo thêm tại <a href="https://developers.openai.com/codex/cli" target="_blank">developers.openai.com/codex/cli</a>.</span>
+          <span lang="en">See <a href="https://developers.openai.com/codex/cli" target="_blank">developers.openai.com/codex/cli</a> for full setup details.</span>
+        </p>
       </div>
       <div class="setup-step">
         <div class="setup-step-num">Step 2</div>
