@@ -58,7 +58,18 @@ The harness must not install packages at runtime. A `pip install` event during a
 
 Mixing `os.path.join(...)` with `pathlib.Path(...)` on Windows yields `C:/repo\harness/file.py`-style frankenpaths that *work* but break exact-match logic (cache keys, log paths, log indexes). Pick `pathlib` everywhere in new code and resolve with `.resolve()` at module boundaries.
 
-## 15. Definition of Done is a documentation file, not a check
+## 15. `init.sh` may not be executable after scaffolding on Windows
+
+Scaffolding from Windows writes `init.sh` without an executable bit (NTFS has no concept of one). When a teammate clones the repo on Linux/macOS, `./init.sh` fails with permission denied. Fix at clone time:
+
+```bash
+chmod +x init.sh
+git update-index --chmod=+x init.sh && git commit -m "make init.sh executable"
+```
+
+The Python scaffolder calls `make_executable` after writing, but the effect is a no-op on Windows. Commit the executable bit explicitly via Git.
+
+## 16. Definition of Done is a documentation file, not a check
 
 `AGENTS.md` says "tests pass." That is enforced by *the agent*, not by the harness. If you need a hard gate, wire it into `init.sh` so a non-zero exit code blocks the agent from declaring done. The validation score will tell you the *file says* tests must pass; only the verification script can tell you *whether* they did.
 

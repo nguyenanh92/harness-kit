@@ -12,11 +12,14 @@ Tài liệu này hướng dẫn cách scaffold, audit và chạy thử bộ harn
 
 ## 2. Cài đặt skill
 
+Clone repo hoặc vendor làm submodule:
+
 ```bash
-npx skills add nguyenanh92/harness-kit --skill harness-kit
+git clone https://github.com/nguyenanh92/harness-kit.git
+# hoặc copy thư mục skills/ vào skill path của bạn
 ```
 
-Hoặc copy thư mục `skills/` vào skill path của bạn.
+Mọi thứ chạy trực tiếp từ `skills/` — không cần `pip install` hay `npm install`.
 
 ## 3. Scaffold một harness mới
 

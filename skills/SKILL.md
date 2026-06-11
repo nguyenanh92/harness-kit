@@ -63,6 +63,8 @@ Reports an overall score (0–100), the lowest-scoring subsystem (the "bottlenec
 
 Treat the lowest score as a *candidate* bottleneck. Confirm with failing tasks or session logs before claiming causality.
 
+For CI, raise the threshold: `--min-score 90` is realistic for a maintained harness; the default `70` is starter-friendly and lets early-stage projects pass.
+
 ### Produce a benchmark report
 
 ```bash

@@ -1,0 +1,65 @@
+name: Skill regression suite
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: test on ${{ matrix.os }} / py${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.8", "3.11", "3.12"]
+        exclude:
+          # 3.8 ships with Ubuntu 20; runners are 22+ so skip that combination.
+          - os: ubuntu-latest
+            python: "3.8"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Show Python version
+        run: python --version
+
+      - name: Compile every Python file
+        shell: bash
+        run: |
+          set -e
+          find skills -name "*.py" -not -path "*/__pycache__/*" -print0 \
+            | xargs -0 python -m py_compile
+
+      - name: Run regression suite
+        shell: bash
+        env:
+          PYTHONIOENCODING: utf-8
+        run: |
+          # test_skill.py launches subprocesses via `py` (Windows) or `python3`
+          # (POSIX). On CI we only have `python`, so symlink/alias it.
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            echo "Using py launcher..."
+            py --version
+          else
+            ln -sf "$(command -v python)" /usr/local/bin/python3 || true
+            python3 --version
+          fi
+          python test_skill.py
+
+      - name: Score this repo's harness state
+        shell: bash
+        run: |
+          python skills/scripts/validate_harness.py \
+            --target . \
+            --harness-dir skills \
+            --min-score 0 \
+            --json
+        continue-on-error: true

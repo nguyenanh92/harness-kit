@@ -63,6 +63,8 @@ Báo cáo điểm tổng (0–100), subsystem yếu nhất ("bottleneck") và pa
 
 Hãy coi subsystem yếu nhất là *ứng viên* bottleneck. Xác nhận bằng task lỗi hoặc session log trước khi kết luận nhân quả.
 
+Cho CI hãy nâng ngưỡng: `--min-score 90` là phù hợp với harness đã ổn định; mức mặc định `70` chỉ thân thiện cho project mới khởi tạo.
+
 ### Sinh báo cáo benchmark
 
 ```bash

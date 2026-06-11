@@ -6,11 +6,14 @@ It helps a repository give AI coding agents (Claude Code, Cursor, Codex, Windsur
 
 ## Install
 
+Clone or vendor the repo; everything runs out of `skills/` with the Python standard library only.
+
 ```bash
-npx skills add nguyenanh92/harness-kit --skill harness-kit
+git clone https://github.com/nguyenanh92/harness-kit.git
+# or copy the skills/ directory into your existing skill path
 ```
 
-Or copy `skills/` into your skill path.
+Python 3.8+ is the only requirement. No `pip install`, no `npm install`.
 
 ## Use
 

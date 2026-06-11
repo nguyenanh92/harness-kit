@@ -53,15 +53,37 @@ Thành phần 3, 5, 9 cùng nằm trong `tool_registry.py` vì chúng dùng chun
 
 ## Hình dạng adapter cho LLM thật
 
-`harness.py::Harness.run()` đi kèm một bộ sinh mock turn. Điểm tích hợp là một method duy nhất:
+`harness.py::Harness.run()` có sẵn cả mock generator (`--mock`) lẫn seam live — một điểm tích hợp tên `_model_turn`. Có 3 cách wire LLM thật:
+
+**1. Truyền callable vào constructor** (khuyến nghị — giữ module harness zero-dep):
 
 ```python
-def _model_turn(self, messages: list[dict]) -> dict:
-    """Return {'role': 'assistant', 'content': str, 'tool_call': dict | None}."""
-    ...
+from harness.harness import Harness
+
+def my_model_turn(messages: list[dict]) -> dict:
+    # gọi Anthropic / OpenAI ở đây, trả về một turn
+    return {"role": "assistant", "content": "...", "tool_call": None}
+
+Harness(workspace_dir=".", model_turn=my_model_turn).run(goal="...")
 ```
 
-Cung cấp method đó (hoặc override qua subclass) thì mọi thứ khác — nén, cổng quyền, log — vẫn chạy không cần thay đổi. Giữ adapter trong code của caller, không phải trong module harness, để harness vẫn không có dependency.
+**2. Subclass và override** (khi adapter cần state riêng):
+
+```python
+class LiveHarness(Harness):
+    def _model_turn(self, messages):
+        ...
+```
+
+**3. Wire từ CLI** qua dotted path:
+
+```bash
+py harness/harness.py --goal "..." --adapter my_app.adapters:claude_turn
+```
+
+Callable nhận message list hiện tại, trả về `{"role": "assistant", "content": str, "tool_call": dict | None}`. Khi `tool_call` là `None`, loop coi là "done" và thoát sạch. Mọi thứ khác — compaction, permission gate, JSONL log, hook — chạy nguyên không đổi.
+
+Giữ adapter trong code của *caller*, không phải module harness, để harness vẫn zero-dependency.
 
 ## Liên quan
 

@@ -53,15 +53,37 @@ Components 3, 5, and 9 all live in `tool_registry.py` because they share state: 
 
 ## Adapter shape for a real LLM
 
-`harness.py::Harness.run()` ships with a mock turn generator. The integration point is a single method:
+`harness.py::Harness.run()` ships with both a scripted mock generator (`--mock`) and a live seam — a single integration point named `_model_turn`. Two ways to wire a real LLM in:
+
+**1. Pass a callable to the constructor** (recommended; keeps the harness module dependency-free):
 
 ```python
-def _model_turn(self, messages: list[dict]) -> dict:
-    """Return {'role': 'assistant', 'content': str, 'tool_call': dict | None}."""
-    ...
+from harness.harness import Harness
+
+def my_model_turn(messages: list[dict]) -> dict:
+    # call Anthropic / OpenAI here, return one turn
+    return {"role": "assistant", "content": "...", "tool_call": None}
+
+Harness(workspace_dir=".", model_turn=my_model_turn).run(goal="...")
 ```
 
-Provide that method (or override it via a subclass) and everything else — compaction, permission gating, logging — works unchanged. Keep the adapter in the caller's code, not in the harness module, so the harness stays dependency-free.
+**2. Subclass and override** (when you need state on the adapter):
+
+```python
+class LiveHarness(Harness):
+    def _model_turn(self, messages):
+        ...
+```
+
+**3. Wire it from the CLI** via dotted path:
+
+```bash
+py harness/harness.py --goal "..." --adapter my_app.adapters:claude_turn
+```
+
+The callable receives the current message list and must return `{"role": "assistant", "content": str, "tool_call": dict | None}`. When `tool_call` is `None`, the loop treats the turn as "done" and exits cleanly. Everything else — compaction, permission gating, JSONL logging, hooks — runs unchanged.
+
+Keep the adapter in the *caller's* code, not in the harness module, so the harness stays dependency-free.
 
 ## Related references
 
