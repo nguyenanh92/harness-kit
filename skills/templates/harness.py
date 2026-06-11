@@ -214,10 +214,10 @@ class Harness:
             # Third turn: Execute a shell command to test syntax (dynamic evaluation)
             # This triggers a command classification check (safe vs unsafe)
             return (
-                "run_shell", 
+                "run_shell",
                 {
-                    "command": "python -m py_compile calculator.py"
-                }, 
+                    "command": f'"{sys.executable}" -m py_compile calculator.py'
+                },
                 False
             )
         else:

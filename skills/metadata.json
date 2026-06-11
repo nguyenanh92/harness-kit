@@ -51,7 +51,13 @@
       "templates/persistence.py",
       "templates/hooks.py",
       "templates/subagent.py",
-      "templates/prompt_assembly.py"
+      "templates/prompt_assembly.py",
+      "templates/AGENTS.md",
+      "templates/feature_list.json",
+      "templates/progress.md",
+      "templates/session-handoff.md",
+      "templates/init.sh",
+      "templates/init.ps1"
     ]
   }
 }

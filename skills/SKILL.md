@@ -185,6 +185,8 @@ When any AI Agent (e.g., Claude Code, Cursor, Windsurf, Antigravity) loads this 
 
 When building or auditing a Python-based harness, ensure the target repository includes:
 
+**Code modules:**
+
 - [ ] `harness.py` — orchestrator loop
 - [ ] `context_manager.py` — token tracking and compaction
 - [ ] `tool_registry.py` — permission checks and primitives
@@ -192,4 +194,12 @@ When building or auditing a Python-based harness, ensure the target repository i
 - [ ] `hooks.py` — pre-tool and post-tool lifecycle callbacks
 - [ ] `subagent.py` — isolated sub-agent context
 - [ ] `prompt_assembly.py` — caching-friendly instructions aggregator
-- [ ] A local `.harness/` directory containing session logs
+
+**Governance artifacts (required for `validate_harness.py` to score correctly):**
+
+- [ ] `AGENTS.md` — startup workflow, scope rules, definition of done, end-of-session procedure
+- [ ] `feature_list.json` — features with `id`, `name`, `description`, `status`, `dependencies`
+- [ ] `progress.md` — `Current State`, `What`, `Next`, `Verification Evidence`, `Recommended Next Step`
+- [ ] `session-handoff.md` — `Blockers`, `Files`, `Next Session` template
+- [ ] `init.sh` / `init.ps1` — fail-fast verification entrypoint (build, lint, compile, test)
+- [ ] A local `.harness/` directory containing session logs (created by `SessionLogger` on first run)

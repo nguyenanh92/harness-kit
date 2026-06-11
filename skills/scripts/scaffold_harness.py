@@ -23,7 +23,7 @@ def main():
     
     print(f"Scaffolding Python Harness into: {target_dir}")
     
-    templates = [
+    code_templates = [
         "harness.py",
         "context_manager.py",
         "tool_registry.py",
@@ -32,10 +32,19 @@ def main():
         "subagent.py",
         "prompt_assembly.py"
     ]
-    
+    governance_templates = [
+        "AGENTS.md",
+        "feature_list.json",
+        "progress.md",
+        "session-handoff.md",
+        "init.sh",
+        "init.ps1"
+    ]
+    templates = code_templates + governance_templates
+
     copied_count = 0
     skipped_count = 0
-    
+
     for filename in templates:
         src_file = templates_dir / filename
         dest_file = target_dir / filename

@@ -1,0 +1,19 @@
+{
+  "active_feature": "F-001",
+  "features": [
+    {
+      "id": "F-001",
+      "name": "Bootstrap harness",
+      "description": "Scaffold the standard-library Python harness into the workspace and confirm baseline modules import cleanly.",
+      "status": "in_progress",
+      "dependencies": []
+    },
+    {
+      "id": "F-002",
+      "name": "Wire verification",
+      "description": "Flesh out init.sh / init.ps1 so build, lint, compile, and test stages all run and fail fast.",
+      "status": "pending",
+      "dependencies": ["F-001"]
+    }
+  ]
+}
