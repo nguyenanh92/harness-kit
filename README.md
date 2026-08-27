@@ -51,15 +51,32 @@ What gets created in your project:
 > Use `--agent-file CLAUDE.md` if your tool reads `CLAUDE.md` instead of `AGENTS.md`.  
 > Use `--full` to also install the Python runtime (agent loop, sub-agents, hooks) — needed for programmatic automation.
 
-**Day-to-day with `hk.py`** (works from any IDE terminal, no plugin required):
+## Two ways to work
+
+**1 — Talk to your AI agent** (primary workflow)
+
+Once installed, just open Claude Code, Cursor, or any agent and describe what you need:
+
+> *"Read AGENTS.md and implement the active feature in feature_list.json."*  
+> *"Add a new feature for the Settings screen and start working on it."*  
+> *"We're done with F-003 — run init.sh, update progress.md, and move to the next feature."*
+
+The agent reads `AGENTS.md` on startup, picks up the active feature from `feature_list.json`, and follows the Definition of Done automatically. No extra commands needed.
+
+**2 — Use `hk.py` from the terminal** (CLI / CI / automation)
+
+`hk.py` ships with every project. Run from any subdirectory — it auto-discovers `feature_list.json`.
 
 ```bash
 py hk.py feature "Settings screen"   # add a feature
 py hk.py start F-001                  # set it active
-py hk.py status                       # see queue + next tip
-py hk.py done                         # verify then mark done
-py hk.py audit                        # score the harness
+py hk.py status                       # see queue + next step tip
+py hk.py done                         # run init script then mark done
+py hk.py audit                        # score the harness (0–100)
+py hk.py audit --html report.html     # export full HTML report
 ```
+
+Use `hk.py` when you want to manage the queue from a shell script, a CI step, or without opening a chat session.
 
 ---
 

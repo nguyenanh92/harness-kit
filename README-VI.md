@@ -51,15 +51,32 @@ Những file được tạo trong project của bạn:
 > Dùng `--agent-file CLAUDE.md` nếu tool của bạn đọc `CLAUDE.md` thay vì `AGENTS.md`.  
 > Dùng `--full` để cài thêm Python runtime (agent loop, sub-agent, hooks) — cần thiết khi muốn điều khiển agent theo cách lập trình.
 
-**Làm việc hàng ngày với `hk.py`** (chạy từ terminal trong bất kỳ IDE nào, không cần plugin):
+## Hai cách làm việc
+
+**1 — Nói chuyện với AI agent** (workflow chính)
+
+Sau khi cài xong, mở Claude Code, Cursor, hay bất kỳ agent nào và mô tả việc cần làm:
+
+> *"Đọc AGENTS.md và implement feature đang active trong feature_list.json."*  
+> *"Thêm một feature mới cho màn hình Settings và bắt đầu làm."*  
+> *"F-003 xong rồi — chạy init.sh, cập nhật progress.md, chuyển sang feature tiếp theo."*
+
+Agent tự đọc `AGENTS.md` khi khởi động, lấy feature đang active từ `feature_list.json`, và tự theo Definition of Done. Không cần lệnh gì thêm.
+
+**2 — Dùng `hk.py` từ terminal** (CLI / CI / automation)
+
+`hk.py` đi kèm mọi project. Chạy từ bất kỳ thư mục con nào — tự tìm `feature_list.json`.
 
 ```bash
 py hk.py feature "Màn hình cài đặt"  # thêm feature
 py hk.py start F-001                  # đặt làm active
 py hk.py status                       # xem hàng đợi + tip tiếp theo
-py hk.py done                         # verify rồi đánh dấu done
-py hk.py audit                        # chấm điểm harness
+py hk.py done                         # chạy init script rồi đánh dấu done
+py hk.py audit                        # chấm điểm harness (0–100)
+py hk.py audit --html report.html     # xuất báo cáo HTML đầy đủ
 ```
+
+Dùng `hk.py` khi muốn quản lý queue từ shell script, CI step, hoặc không muốn mở chat session.
 
 ---
 
