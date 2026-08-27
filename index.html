@@ -1103,26 +1103,27 @@
         </div>
         <div class="terminal-body">
           <div class="terminal-line">
-            <span class="t-prompt">$</span>
-            <span class="t-cmd">git clone https://github.com/nguyenanh92/harness-kit.git</span>
+            <span class="t-prompt">PS&gt;</span>
+            <span class="t-cmd">irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex</span>
           </div>
-          <div class="t-out"><span lang="vi">Đã thêm skill 'nguyenanh92/harness-kit' thành công.</span><span lang="en">Added skill 'nguyenanh92/harness-kit' successfully.</span></div>
+          <div class="t-out"><span lang="vi">Khởi tạo governance files...
+Đã tạo: AGENTS.md, feature_list.json, progress.md
+Đã tạo: session-handoff.md, init.ps1, hk.py</span><span lang="en">Scaffolding governance files...
+Created: AGENTS.md, feature_list.json, progress.md
+Created: session-handoff.md, init.ps1, hk.py</span>
+<span class="t-ok"><span lang="vi">Hoàn thành. 6 tệp đã được tạo.</span><span lang="en">Done. 6 files written.</span></span></div>
           <div class="terminal-line" style="margin-top:6px">
-            <span class="t-prompt">$</span>
-            <span class="t-cmd">py -m skills.scripts.scaffold_harness --target harness</span>
+            <span class="t-prompt">PS&gt;</span>
+            <span class="t-cmd">py hk.py feature "User authentication"</span>
           </div>
-          <div class="t-out">Scaffolding Python Harness into: .\harness-kit\harness
-Created: harness.py, context_manager.py, tool_registry.py
-Created: persistence.py, hooks.py, subagent.py, prompt_assembly.py
-<span class="t-ok"><span lang="vi">Hoàn thành khởi tạo. Đã sao chép 7 tệp mẫu.</span><span lang="en">Scaffolding complete. Copied: 7 templates.</span></span></div>
+          <div class="t-out"><span class="t-ok">[+] F-001: User authentication</span></div>
           <div class="terminal-line" style="margin-top:6px">
-            <span class="t-prompt">$</span>
-            <span class="t-cmd">py -m harness.harness --mock --goal "Create Calculator"</span>
+            <span class="t-prompt">PS&gt;</span>
+            <span class="t-cmd">py hk.py start F-001</span>
           </div>
-          <div class="t-out">Initializing Agent Harness in mock mode...
-[Pre-Hook] Intercepting call: spawn_subagent
-[SUB-AGENT] 'explorer' successfully completed task.
-<span class="t-ok">[Agent] Goal achieved! Exiting loop.</span></div>
+          <div class="t-out"><span class="t-ok"><span lang="vi">[→] Active: F-001 — User authentication
+    Nói với AI: "Đọc AGENTS.md và implement feature đang active."</span><span lang="en">[→] Active: F-001 — User authentication
+    Tell your AI: "Read AGENTS.md and implement the active feature."</span></span></div>
         </div>
       </div>
     </div>
