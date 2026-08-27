@@ -1041,7 +1041,7 @@
       </div>
       <div class="nav-links">
         <a href="#subsystems"><span lang="vi">Tính năng</span><span lang="en">Features</span></a>
-        <a href="#setup-cli"><span lang="vi">Trình tạo CLI</span><span lang="en">CLI Builder</span></a>
+        <a href="#setup-cli"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
         <a href="#how-it-works"><span lang="vi">Luồng hoạt động</span><span lang="en">How it Works</span></a>
         <a href="#installation"><span lang="vi">Cài đặt</span><span lang="en">Installation</span></a>
         <a href="#ide-setup"><span lang="vi">Tích hợp IDE</span><span lang="en">IDE Integration</span></a>
@@ -1082,8 +1082,8 @@
 
       <div class="hero-actions">
         <a href="#setup-cli" class="btn btn-primary">
-          <span lang="vi">Dùng Trình tạo CLI</span>
-          <span lang="en">Use CLI Builder</span>
+          <span lang="vi">Bắt đầu ngay</span>
+          <span lang="en">Get Started</span>
         </a>
         <a href="#subsystems" class="btn btn-secondary">
           <span lang="vi">Tìm hiểu các thành phần</span>
@@ -1222,17 +1222,17 @@ Created: persistence.py, hooks.py, subagent.py, prompt_assembly.py
     </div>
   </section>
 
-  <!-- CLI Builder -->
+  <!-- Workflow section -->
   <section class="section" id="setup-cli">
     <div class="container">
       <div class="section-head">
         <div class="section-label">
-          <span lang="vi">Trình dựng CLI</span>
-          <span lang="en">CLI Builder</span>
+          <span lang="vi">Bắt đầu</span>
+          <span lang="en">Getting Started</span>
         </div>
         <h2 class="section-title">
-          <span lang="vi">Sinh Câu Lệnh Thiết Lập Dự Án Động</span>
-          <span lang="en">Generate Setup Commands Dynamically</span>
+          <span lang="vi">Ba bước đầu tiên</span>
+          <span lang="en">Three steps to get going</span>
         </h2>
       </div>
 
@@ -1241,84 +1241,55 @@ Created: persistence.py, hooks.py, subagent.py, prompt_assembly.py
 
           <div class="builder-form">
             <h3 class="builder-form-title">
-              <span lang="vi">Cấu hình tham số</span>
-              <span lang="en">Configure Parameters</span>
+              <span lang="vi">Chọn nền tảng của bạn</span>
+              <span lang="en">Pick your platform</span>
             </h3>
             <p class="builder-form-desc">
-              <span lang="vi">Thay đổi các lựa chọn bên dưới để sinh lệnh chạy mẫu chính xác cho nền tảng của bạn.</span>
-              <span lang="en">Adjust configuration variables below to generate commands mapped to your workspace.</span>
+              <span lang="vi"><code class="inline">hk.py</code> đi kèm mọi project sau khi cài. Chạy được từ bất kỳ thư mục con nào — tự tìm <code class="inline">feature_list.json</code>. Không cần plugin hay extension.</span>
+              <span lang="en"><code class="inline">hk.py</code> ships with every project after install. Run it from any subdirectory — it auto-discovers <code class="inline">feature_list.json</code>. No plugin or extension needed.</span>
             </p>
 
             <div class="form-group">
-              <label>
-                <span lang="vi">Hệ Điều Hành (OS)</span>
-                <span lang="en">Operating System (OS)</span>
-              </label>
+              <label>OS</label>
               <div class="os-pill-group">
                 <button class="os-pill active" id="os-win" onclick="setOS('win')">Windows (py)</button>
                 <button class="os-pill" id="os-nix" onclick="setOS('nix')">macOS / Linux</button>
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="input-target">
-                <span lang="vi">Thư mục đích (--target)</span>
-                <span lang="en">Target directory (--target)</span>
-              </label>
-              <input type="text" id="input-target" class="form-control" value="harness" placeholder="harness">
-            </div>
-
-            <div class="form-group">
-              <label class="form-checkbox-group">
-                <input type="checkbox" id="input-force" class="form-checkbox">
-                <span>
-                  <span lang="vi">Ghi đè file nếu đã có sẵn (--force)</span>
-                  <span lang="en">Force overwrite existing files (--force)</span>
-                </span>
-              </label>
-            </div>
-
-            <div class="form-group">
-              <label for="input-min-score">
-                <span lang="vi">Điểm đánh giá sàn để đạt (--min-score)</span>
-                <span lang="en">Minimum pass score threshold (--min-score)</span>
-              </label>
-              <input type="number" id="input-min-score" class="form-control" value="70" min="0" max="100">
-            </div>
-
-            <div class="form-group">
-              <label class="form-checkbox-group">
-                <input type="checkbox" id="input-html" class="form-checkbox" onchange="toggleHtmlPath(this)">
-                <span>
-                  <span lang="vi">Lưu báo cáo định dạng HTML (--html)</span>
-                  <span lang="en">Save HTML score report (--html)</span>
-                </span>
-              </label>
-            </div>
-
-            <div class="form-group" id="html-path-group" style="display:none">
-              <label for="input-html-path">
-                <span lang="vi">Đường dẫn file báo cáo HTML</span>
-                <span lang="en">HTML report file path</span>
-              </label>
-              <input type="text" id="input-html-path" class="form-control" value="report.html" placeholder="report.html">
+            <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display:flex; gap:10px; align-items:center; font-size:13px; color:var(--text-muted);">
+                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;">1</span>
+                <span lang="vi">Cài vào thư mục gốc dự án (chạy 1 lần)</span>
+                <span lang="en">Install into your project root (once)</span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center; font-size:13px; color:var(--text-muted);">
+                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;">2</span>
+                <span lang="vi">Thêm feature và bắt đầu làm</span>
+                <span lang="en">Add a feature and start working</span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center; font-size:13px; color:var(--text-muted);">
+                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;">3</span>
+                <span lang="vi">Kiểm tra điểm harness bất kỳ lúc nào</span>
+                <span lang="en">Audit the harness score anytime</span>
+              </div>
             </div>
           </div>
 
           <div class="builder-display">
             <div>
               <div class="tabs-header">
-                <button class="tab-btn active" onclick="switchActionTab('scaffold')">
-                  <span lang="vi">1. Khởi Tạo (Scaffold)</span>
-                  <span lang="en">1. Scaffold</span>
+                <button class="tab-btn active" onclick="switchActionTab('install')">
+                  <span lang="vi">1. Cài đặt</span>
+                  <span lang="en">1. Install</span>
                 </button>
-                <button class="tab-btn" onclick="switchActionTab('validate')">
-                  <span lang="vi">2. Đánh Giá (Validate)</span>
-                  <span lang="en">2. Validate</span>
+                <button class="tab-btn" onclick="switchActionTab('workflow')">
+                  <span lang="vi">2. Thêm &amp; bắt đầu</span>
+                  <span lang="en">2. Add &amp; start</span>
                 </button>
-                <button class="tab-btn" onclick="switchActionTab('run')">
-                  <span lang="vi">3. Chạy Thử (Mock Run)</span>
-                  <span lang="en">3. Mock Run</span>
+                <button class="tab-btn" onclick="switchActionTab('audit')">
+                  <span lang="vi">3. Kiểm tra điểm</span>
+                  <span lang="en">3. Audit score</span>
                 </button>
               </div>
 
@@ -1849,25 +1820,25 @@ codex login
 
   <script>
     let currentOS = 'win';
-    let currentTab = 'scaffold';
+    let currentTab = 'install';
     let currentLang = 'vi';
 
     const translations = {
       vi: {
         title: "Harness Kit - Bộ Khung Tác Nhân AI Bền Bỉ, Không Thư Viện Ngoài",
         desc: "Trang giới thiệu và hướng dẫn cài đặt bộ khung Harness tác nhân AI bằng Python siêu nhẹ, chỉ sử dụng thư viện chuẩn. Tương thích với Cursor, Claude Code, Antigravity.",
-        infoScaffold: 'Lệnh này sao chép toàn bộ các tệp mã nguồn mẫu trong thư mục templates của kỹ năng vào thư mục bạn đã thiết lập.',
-        infoValidate: 'Lệnh này thực hiện quét cấu trúc thư mục đích để chấm điểm 5 phân hệ an toàn & vận hành của tác nhân AI.',
-        infoRun: 'Chạy thử nghiệm vòng lặp chính của harness ở chế độ giả lập (mock simulation loop) để tự kiểm nghiệm hoạt động.',
+        infoInstall: 'Chạy lệnh này từ thư mục gốc dự án. Sau khi cài xong bạn có: AGENTS.md, feature_list.json, progress.md, hk.py và init.sh/init.ps1.',
+        infoWorkflow: 'Sau khi cài, dùng hk.py để thêm feature và bắt đầu làm việc. Chạy từ bất kỳ terminal nào trong mọi IDE — không cần plugin.',
+        infoAudit: 'Xem trạng thái feature đang chạy và hàng đợi. Thêm --html report.html để xuất báo cáo chi tiết.',
         copied: 'Đã Copy!',
         copyBtn: 'Copy'
       },
       en: {
         title: "Harness Kit - Standard-Library-Only Resilient AI Agent Harness",
         desc: "Introduction and setup guide for a zero-dependency, standard-library-only Python Agent Harness. Compatible with Cursor, Claude Code, and Antigravity.",
-        infoScaffold: 'This command copies all template source files from the skill templates directory into your configured target directory.',
-        infoValidate: 'This command audits the target directory structure to score the 5 safety and lifecycle subsystems of the AI agent.',
-        infoRun: 'Runs the harness main loop in mock simulation mode to showcase the execution loop, compaction, and hooks.',
+        infoInstall: 'Run this from your project root. After install you get: AGENTS.md, feature_list.json, progress.md, hk.py, and init.sh/init.ps1.',
+        infoWorkflow: 'After install, use hk.py to add features and start working. Runs from any terminal in any IDE — no plugin needed.',
+        infoAudit: 'Show the active feature and queue. Add --html report.html to export a full scored report.',
         copied: 'Copied!',
         copyBtn: 'Copy'
       }
@@ -1902,40 +1873,26 @@ codex login
       updateBuilderCode();
     }
 
-    function toggleHtmlPath(checkbox) {
-      document.getElementById('html-path-group').style.display = checkbox.checked ? 'block' : 'none';
-      updateBuilderCode();
-    }
-
-    document.getElementById('input-target').addEventListener('input', updateBuilderCode);
-    document.getElementById('input-force').addEventListener('change', updateBuilderCode);
-    document.getElementById('input-min-score').addEventListener('input', updateBuilderCode);
-    document.getElementById('input-html-path').addEventListener('input', updateBuilderCode);
-
     function updateBuilderCode() {
-      const targetDir = document.getElementById('input-target').value.trim() || 'harness';
-      const forceFlag = document.getElementById('input-force').checked;
-      const minScore = document.getElementById('input-min-score').value || '70';
-      const useHtml = document.getElementById('input-html').checked;
-      const htmlPath = document.getElementById('input-html-path').value.trim() || 'report.html';
-
       const pyCmd = currentOS === 'win' ? 'py' : 'python3';
       let output = '';
       let infoText = '';
 
-      if (currentTab === 'scaffold') {
-        infoText = translations[currentLang].infoScaffold;
-        output = `${pyCmd} .agents/skills/harness-kit/scripts/scaffold_harness.py --target ${targetDir}${forceFlag ? ' --force' : ''}`;
-      } else if (currentTab === 'validate') {
-        infoText = translations[currentLang].infoValidate;
-        let flags = `--target ${targetDir} --min-score ${minScore}`;
-        if (useHtml) flags += ` --html ${htmlPath}`;
-        output = `${pyCmd} .agents/skills/harness-kit/scripts/validate_harness.py ${flags}`;
-      } else if (currentTab === 'run') {
-        infoText = translations[currentLang].infoRun;
+      if (currentTab === 'install') {
+        infoText = translations[currentLang].infoInstall;
         output = currentOS === 'win'
-          ? `py -m skills.templates.harness --mock --goal "Create Calculator"`
-          : `python3 -m skills.templates.harness --mock --goal "Create Calculator"`;
+          ? `irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex`
+          : `curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh`;
+      } else if (currentTab === 'workflow') {
+        infoText = translations[currentLang].infoWorkflow;
+        if (currentLang === 'vi') {
+          output = `${pyCmd} hk.py feature "Tên màn hình mới"\n${pyCmd} hk.py start F-001\n\n# ... AI làm việc ...\n\n${pyCmd} hk.py done`;
+        } else {
+          output = `${pyCmd} hk.py feature "New screen name"\n${pyCmd} hk.py start F-001\n\n# ... AI does the work ...\n\n${pyCmd} hk.py done`;
+        }
+      } else if (currentTab === 'audit') {
+        infoText = translations[currentLang].infoAudit;
+        output = `${pyCmd} hk.py status\n${pyCmd} hk.py audit\n${pyCmd} hk.py audit --html report.html`;
       }
 
       document.getElementById('generated-code').textContent = output;
