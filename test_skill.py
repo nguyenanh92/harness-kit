@@ -24,6 +24,7 @@ GOVERNANCE_FILES = (
     "feature-list.schema.json",
     "progress.md",
     "session-handoff.md",
+    "hk.py",
 )
 
 
@@ -139,6 +140,27 @@ def test_validate_scaffolded_dir_above_threshold() -> None:
 
 
 # ---------------------------------------------------------------------------
+# hk.py CLI tests
+# ---------------------------------------------------------------------------
+
+
+def test_scaffold_creates_hk_cli() -> None:
+    """hk.py is scaffolded and py hk.py status exits cleanly."""
+    with tempfile.TemporaryDirectory() as tmp:
+        r = run([str(SCAFFOLD), "--target", tmp, "--governance-only"])
+        check(r.returncode == 0, f"scaffold exits 0  stderr={r.stderr[:300]!r}")
+        hk = Path(tmp) / "hk.py"
+        check(hk.is_file(), "hk.py created by scaffold")
+        r2 = subprocess.run(
+            [sys.executable, str(hk), "status"],
+            capture_output=True,
+            text=True,
+            cwd=tmp,
+        )
+        check(r2.returncode == 0, f"py hk.py status exits 0  stderr={r2.stderr[:300]!r}")
+
+
+# ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
 
@@ -152,6 +174,7 @@ TESTS = [
     test_validate_min_score_zero_passes,
     test_validate_min_score_100_fails_on_empty,
     test_validate_scaffolded_dir_above_threshold,
+    test_scaffold_creates_hk_cli,
 ]
 
 

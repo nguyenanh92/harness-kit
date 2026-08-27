@@ -46,6 +46,21 @@ Before ending:
 2. Update `session-handoff.md` — note `Blockers`, `Files` touched, `Next Session` plan.
 3. Leave the workspace in a clean, restartable state. The next agent (or future you) should be able to resume from `progress.md` + `session-handoff.md` alone.
 
+## Workflow CLI
+
+`hk.py` is a zero-dependency Python CLI (stdlib, 3.8+) that ships with this harness. Run it from any subdirectory — it walks up to find `feature_list.json` automatically.
+
+```bash
+py hk.py feature "Settings page" --desc "User preferences screen"
+py hk.py start F-003          # set feature as active
+py hk.py status               # show active feature + queue
+py hk.py done                 # run init script, then mark done
+py hk.py audit                # score the harness (requires validate_harness.py)
+py hk.py audit --html r.html  # write HTML report
+```
+
+Use `hk.py` from any shell, terminal inside your IDE, CI step, or agent subprocess — it requires no special plugin or extension.
+
 ## Harness Code Location
 
 The zero-dependency Python harness modules live in `{{HARNESS_DIR}}/`:

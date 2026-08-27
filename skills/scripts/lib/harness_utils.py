@@ -52,6 +52,7 @@ GOVERNANCE_TEMPLATES: Tuple[str, ...] = (
     "session-handoff.md",
     "init.sh",
     "init.ps1",
+    "hk.py",
 )
 
 
