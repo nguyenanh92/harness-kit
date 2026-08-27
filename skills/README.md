@@ -6,11 +6,23 @@ It helps a repository give AI coding agents (Claude Code, Cursor, Codex, Windsur
 
 ## Install
 
-Clone or vendor the repo; everything runs out of `skills/` with the Python standard library only.
+Run this one-liner from the **project root** — governance files only (any language/stack):
+
+```bash
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh
+
+# Windows (PowerShell)
+irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex
+```
+
+Add `--full` to also scaffold the Python runtime (agent loop, sub-agents, hooks).
+
+Or clone and run scripts directly:
 
 ```bash
 git clone https://github.com/nguyenanh92/harness-kit.git
-# or copy the skills/ directory into your existing skill path
+python3 skills/scripts/scaffold_harness.py --target /path/to/project
 ```
 
 Python 3.8+ is the only requirement. No `pip install`, no `npm install`.
@@ -18,17 +30,24 @@ Python 3.8+ is the only requirement. No `pip install`, no `npm install`.
 ## Use
 
 ```bash
-python3 skills/scripts/scaffold_harness.py --target /path/to/project
+# via hk.py (ships with every project after install)
+py hk.py feature "New screen"   # add a feature
+py hk.py start F-001            # set active
+py hk.py status                 # show queue + next tip
+py hk.py done                   # verify then mark done
+py hk.py audit                  # score the harness
+
+# or invoke scripts directly
 python3 skills/scripts/validate_harness.py --target /path/to/project
 python3 skills/scripts/run_benchmark.py    --target /path/to/project --html report.html
 python3 skills/scripts/render_assessment_html.py --target /path/to/project
 ```
 
-On Windows use `py` instead of `python3`. Every script uses the standard library only; copy the skill into another repo and it works.
+On Windows use `py` instead of `python3`.
 
 ## What It Creates
 
-The scaffold writes governance files at the project root and code modules under `harness/`:
+The scaffold writes governance files at the project root and code modules under `harness/` (with `--full`):
 
 Project root (governance):
 
@@ -37,6 +56,7 @@ Project root (governance):
 - `progress.md` — Current State, What I Did, Verification Evidence, Recommended Next Step
 - `session-handoff.md` — Blockers, Files, Next Session
 - `init.sh` / `init.ps1` — fail-fast verification (compile + test)
+- `hk.py` — stdlib-only CLI (feature / start / status / done / audit)
 
 `<harness-dir>/` (code, default `harness/`):
 
@@ -73,6 +93,8 @@ The score is structural — it confirms the harness is *coherent*, not that an a
 - [x] Mock simulation loop in `harness.py`
 - [x] 10 eval cases
 - [x] Vietnamese references (`README-VI.md`, `SKILL.md.vi`, `nine-components.vi.md`)
+- [x] One-liner install scripts (`install.sh` / `install.ps1`) with `--full` flag
+- [x] `hk.py` — universal workflow CLI shipped with every scaffolded project
 
 ## Files
 
@@ -103,6 +125,7 @@ skills/
 │   ├── session-handoff.md
 │   ├── init.sh
 │   ├── init.ps1
+│   ├── hk.py
 │   └── (Python modules)
 └── references/
     ├── architecture-principles.md

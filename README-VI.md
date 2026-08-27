@@ -46,8 +46,20 @@ Những file được tạo trong project của bạn:
 | `progress.md` | AI ghi tiến độ sau mỗi session |
 | `init.sh` / `init.ps1` | Script kiểm tra (tests, lint, build) |
 | `session-handoff.md` | Ngữ cảnh cho session tiếp theo |
+| `hk.py` | CLI workflow — thêm feature, theo dõi tiến độ, chấm điểm harness |
 
-> Dùng `--agent-file CLAUDE.md` nếu tool của bạn đọc `CLAUDE.md` thay vì `AGENTS.md`.
+> Dùng `--agent-file CLAUDE.md` nếu tool của bạn đọc `CLAUDE.md` thay vì `AGENTS.md`.  
+> Dùng `--full` để cài thêm Python runtime (agent loop, sub-agent, hooks) — cần thiết khi muốn điều khiển agent theo cách lập trình.
+
+**Làm việc hàng ngày với `hk.py`** (chạy từ terminal trong bất kỳ IDE nào, không cần plugin):
+
+```bash
+py hk.py feature "Màn hình cài đặt"  # thêm feature
+py hk.py start F-001                  # đặt làm active
+py hk.py status                       # xem hàng đợi + tip tiếp theo
+py hk.py done                         # verify rồi đánh dấu done
+py hk.py audit                        # chấm điểm harness
+```
 
 ---
 

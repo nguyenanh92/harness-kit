@@ -46,8 +46,20 @@ What gets created in your project:
 | `progress.md` | AI writes progress here after each session |
 | `init.sh` / `init.ps1` | Verification script (tests, lint, build) |
 | `session-handoff.md` | Context for the next session |
+| `hk.py` | Workflow CLI — add features, track progress, audit score |
 
-> Use `--agent-file CLAUDE.md` if your tool reads `CLAUDE.md` instead of `AGENTS.md`.
+> Use `--agent-file CLAUDE.md` if your tool reads `CLAUDE.md` instead of `AGENTS.md`.  
+> Use `--full` to also install the Python runtime (agent loop, sub-agents, hooks) — needed for programmatic automation.
+
+**Day-to-day with `hk.py`** (works from any IDE terminal, no plugin required):
+
+```bash
+py hk.py feature "Settings screen"   # add a feature
+py hk.py start F-001                  # set it active
+py hk.py status                       # see queue + next tip
+py hk.py done                         # verify then mark done
+py hk.py audit                        # score the harness
+```
 
 ---
 
