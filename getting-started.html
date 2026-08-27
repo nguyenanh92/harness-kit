@@ -9,389 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg:            #080c18;
-      --bg-raised:     #0d1220;
-      --bg-card:       #0f1320;
-      --bg-code:       #080e1a;
-      --border:        rgba(255,255,255,0.07);
-      --border-hover:  rgba(99,102,241,0.35);
-      --primary:       #6366f1;
-      --primary-dim:   rgba(99,102,241,0.12);
-      --amber:         #f59e0b;
-      --amber-dim:     rgba(245,158,11,0.12);
-      --success:       #10b981;
-      --success-dim:   rgba(16,185,129,0.12);
-      --text:          #f1f5f9;
-      --text-muted:    #94a3b8;
-      --text-faint:    #4b5563;
-      --font-sans:     'Plus Jakarta Sans', sans-serif;
-      --font-mono:     'Fira Code', monospace;
-      --radius:        10px;
-      --transition:    0.2s ease;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font-sans);
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    body.lang-vi [lang="en"] { display: none !important; }
-    body.lang-en [lang="vi"] { display: none !important; }
-
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 4px; }
-
-    a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
-    a:hover { color: var(--amber); }
-    button { font-family: inherit; cursor: pointer; border: none; background: none; }
-
-    .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
-
-    /* ── NAV ── */
-    header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(8,12,24,0.88);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-    .header-nav {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 0;
-    }
-    .brand {
-      display: flex; align-items: center; gap: 10px;
-      font-family: var(--font-mono); font-weight: 600; font-size: 15px;
-      color: var(--text); letter-spacing: -0.01em;
-    }
-    .brand svg { width: 22px; height: 22px; }
-    .brand .dot { color: var(--primary); }
-
-    .nav-links { display: flex; align-items: center; gap: 4px; }
-    .nav-links a:not(.btn-github) {
-      padding: 6px 10px; border-radius: 6px;
-      font-size: 13.5px; font-weight: 500; color: var(--text-muted);
-      transition: color var(--transition), background var(--transition);
-    }
-    .nav-links a:not(.btn-github):hover { color: var(--text); background: rgba(255,255,255,0.05); }
-    .nav-links a.active-page { color: var(--primary); }
-
-    .btn-github {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 7px; font-size: 13px; font-weight: 600;
-      color: var(--text); border: 1px solid var(--border);
-      transition: all var(--transition); margin-left: 4px;
-    }
-    .btn-github:hover { color: var(--text); border-color: var(--border-hover); background: var(--primary-dim); }
-
-    .lang-switch {
-      display: inline-flex; align-items: center;
-      border: 1px solid var(--border); border-radius: 7px; overflow: hidden;
-      font-family: var(--font-mono); font-size: 11.5px; margin-left: 8px;
-    }
-    .lang-btn {
-      padding: 6px 11px; color: var(--text-muted);
-      transition: all var(--transition); font-family: inherit; font-size: inherit; font-weight: 600;
-    }
-    .lang-btn.active { background: var(--primary); color: #fff; }
-    .lang-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.05); }
-
-    /* ── HERO ── */
-    .gs-hero {
-      padding: 72px 0 48px;
-      border-bottom: 1px solid var(--border);
-    }
-    .gs-label {
-      display: inline-flex; align-items: center; gap: 7px;
-      border: 1px solid var(--border); border-radius: 999px;
-      padding: 5px 14px; font-size: 11px; font-weight: 700;
-      color: var(--text-muted); letter-spacing: 0.1em;
-      text-transform: uppercase; font-family: var(--font-mono);
-      margin-bottom: 20px;
-    }
-    .gs-label span:first-child { width: 6px; height: 6px; border-radius: 50%; background: var(--success); display: inline-block; flex-shrink: 0; }
-    .gs-hero h1 {
-      font-size: clamp(28px, 5vw, 42px); font-weight: 800;
-      line-height: 1.15; letter-spacing: -0.03em;
-      margin-bottom: 14px;
-    }
-    .gs-hero h1 em { font-style: normal; color: var(--primary); }
-    .gs-hero p {
-      font-size: 16px; color: var(--text-muted); max-width: 540px;
-      margin-bottom: 28px;
-    }
-    .time-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--success-dim); border: 1px solid rgba(16,185,129,0.25);
-      border-radius: 8px; padding: 8px 16px;
-      font-size: 13px; font-weight: 600; color: var(--success);
-      font-family: var(--font-mono);
-    }
-
-    /* ── PROGRESS BAR ── */
-    .gs-progress {
-      display: flex; align-items: center; gap: 0;
-      padding: 28px 0 0; overflow-x: auto;
-    }
-    .gs-progress-step {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      min-width: 80px; cursor: pointer;
-    }
-    .gs-progress-dot {
-      width: 30px; height: 30px; border-radius: 50%;
-      background: var(--bg-card); border: 2px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; color: var(--text-faint);
-      font-family: var(--font-mono);
-      transition: all var(--transition);
-    }
-    .gs-progress-step.done .gs-progress-dot {
-      background: var(--success-dim); border-color: var(--success); color: var(--success);
-    }
-    .gs-progress-step.active .gs-progress-dot {
-      background: var(--primary-dim); border-color: var(--primary); color: var(--primary);
-    }
-    .gs-progress-label {
-      font-size: 10px; font-weight: 600; color: var(--text-faint);
-      text-align: center; white-space: nowrap;
-      font-family: var(--font-mono); letter-spacing: 0.04em;
-    }
-    .gs-progress-step.active .gs-progress-label { color: var(--primary); }
-    .gs-progress-line {
-      flex: 1; height: 1px; background: var(--border); min-width: 20px; margin-bottom: 22px;
-    }
-
-    /* ── MAIN LAYOUT ── */
-    .gs-body { padding: 20px 0 80px; }
-
-    @media (max-width: 720px) {
-      .nav-links a:not(.btn-github):not(.active-page) { display: none; }
-      .gs-step { grid-template-columns: 40px 1fr; gap: 0 16px; }
-      .step-num { width: 30px; height: 30px; font-size: 12px; }
-    }
-
-    /* ── STEP ── */
-    .gs-step {
-      display: grid; grid-template-columns: 56px 1fr;
-      gap: 0 24px; padding: 40px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .gs-step:last-child { border-bottom: none; }
-
-    .step-num-col {
-      display: flex; flex-direction: column; align-items: center;
-      padding-top: 4px;
-    }
-    .step-num {
-      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
-      background: var(--primary-dim); border: 1.5px solid var(--primary);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 800; color: var(--primary);
-      font-family: var(--font-mono);
-    }
-    .step-line {
-      flex: 1; width: 1px; background: var(--border);
-      margin-top: 8px; min-height: 20px;
-    }
-
-    .step-content { min-width: 0; }
-    .step-tag {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; font-family: var(--font-mono);
-      color: var(--primary); margin-bottom: 6px;
-    }
-    .step-title {
-      font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
-      margin-bottom: 10px; line-height: 1.25;
-    }
-    .step-desc {
-      font-size: 14px; color: var(--text-muted); margin-bottom: 20px;
-      max-width: 600px;
-    }
-
-    /* ── CODE BLOCK ── */
-    .code-wrap {
-      background: var(--bg-code); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden; position: relative;
-      margin-bottom: 16px;
-    }
-    .code-wrap pre {
-      font-family: var(--font-mono); font-size: 13px; line-height: 1.7;
-      color: #c9d1d9; padding: 18px 20px; overflow-x: auto;
-      white-space: pre;
-    }
-    .code-label {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
-      text-transform: uppercase; font-family: var(--font-mono);
-      color: var(--text-faint); padding: 10px 16px 0; display: block;
-    }
-    .btn-copy-inline {
-      position: absolute; top: 10px; right: 10px;
-      display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-      border-radius: 6px; padding: 5px 10px;
-      font-size: 11px; font-weight: 600; color: var(--text-muted);
-      transition: all var(--transition); font-family: var(--font-mono);
-    }
-    .btn-copy-inline:hover { color: var(--text); background: rgba(255,255,255,0.1); }
-
-    /* ── OS TOGGLE ── */
-    .os-toggle {
-      display: inline-flex; align-items: center;
-      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
-      margin-bottom: 14px; font-family: var(--font-mono); font-size: 12px;
-    }
-    .os-btn {
-      padding: 7px 16px; color: var(--text-muted); font-weight: 600;
-      transition: all var(--transition); font-family: inherit; font-size: inherit;
-    }
-    .os-btn.active { background: var(--primary); color: #fff; }
-    .os-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.05); }
-
-    /* ── FILE LIST ── */
-    .file-list { display: flex; flex-direction: column; gap: 8px; }
-    .file-row {
-      display: flex; align-items: flex-start; gap: 14px;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 14px 16px;
-      transition: border-color var(--transition);
-    }
-    .file-row:hover { border-color: var(--border-hover); }
-    .file-icon {
-      width: 32px; height: 32px; border-radius: 7px;
-      background: var(--primary-dim); border: 1px solid rgba(99,102,241,0.2);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .file-icon svg { width: 15px; height: 15px; stroke: var(--primary); }
-    .file-name {
-      font-family: var(--font-mono); font-size: 13px; font-weight: 600;
-      color: var(--text); margin-bottom: 2px;
-    }
-    .file-desc { font-size: 13px; color: var(--text-muted); }
-    .file-badge {
-      margin-left: auto; flex-shrink: 0;
-      font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
-      text-transform: uppercase; font-family: var(--font-mono);
-      padding: 3px 8px; border-radius: 5px;
-      background: var(--primary-dim); color: var(--primary);
-      border: 1px solid rgba(99,102,241,0.2);
-    }
-    .file-badge.amber {
-      background: var(--amber-dim); color: var(--amber);
-      border-color: rgba(245,158,11,0.2);
-    }
-
-    /* ── TWO MODES ── */
-    .modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-    @media (max-width: 600px) { .modes-grid { grid-template-columns: 1fr; } }
-
-    .mode-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 20px;
-      transition: border-color var(--transition);
-    }
-    .mode-card:hover { border-color: var(--border-hover); }
-    .mode-num {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; font-family: var(--font-mono);
-      color: var(--primary); margin-bottom: 8px;
-    }
-    .mode-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-    .mode-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
-
-    /* ── PROMPT EXAMPLES ── */
-    .prompt-list { display: flex; flex-direction: column; gap: 8px; }
-    .prompt-item {
-      background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);
-      border-radius: 8px; padding: 12px 14px;
-      font-size: 13px; color: var(--text-muted);
-      line-height: 1.5;
-    }
-    .prompt-item::before {
-      content: '"'; color: var(--primary); font-size: 16px; font-weight: 700; margin-right: 2px;
-    }
-    .prompt-item::after {
-      content: '"'; color: var(--primary); font-size: 16px; font-weight: 700; margin-left: 2px;
-    }
-
-    /* ── WORKFLOW STEPS ── */
-    .workflow { display: flex; flex-direction: column; gap: 0; }
-    .wf-row {
-      display: flex; gap: 16px; align-items: flex-start;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .wf-row:last-child { border-bottom: none; }
-    .wf-dot {
-      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-      background: var(--bg-card); border: 1.5px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; color: var(--text-faint);
-      font-family: var(--font-mono); margin-top: 2px;
-    }
-    .wf-body { min-width: 0; flex: 1; }
-    .wf-action { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .wf-cmd {
-      font-family: var(--font-mono); font-size: 12.5px;
-      color: var(--primary); background: var(--primary-dim);
-      border-radius: 5px; padding: 6px 10px; display: block;
-      margin-bottom: 6px; white-space: pre-wrap; overflow-x: auto;
-      word-break: break-all;
-    }
-    .wf-note { font-size: 12px; color: var(--text-muted); }
-
-    /* ── CALLOUT ── */
-    .callout {
-      display: flex; gap: 12px; align-items: flex-start;
-      border: 1px solid rgba(99,102,241,0.25);
-      background: rgba(99,102,241,0.06);
-      border-radius: var(--radius); padding: 14px 16px;
-      font-size: 13px; color: var(--text-muted);
-      margin-top: 16px;
-    }
-    .callout svg { width: 16px; height: 16px; stroke: var(--primary); flex-shrink: 0; margin-top: 2px; }
-
-    /* ── NEXT STEPS ── */
-    .next-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-    .next-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 18px;
-      transition: border-color var(--transition), background var(--transition);
-      display: block; color: var(--text);
-    }
-    .next-card:hover { border-color: var(--border-hover); background: rgba(99,102,241,0.04); color: var(--text); }
-    .next-card-icon { margin-bottom: 10px; }
-    .next-card-icon svg { width: 18px; height: 18px; stroke: var(--primary); }
-    .next-card-title { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
-    .next-card-desc { font-size: 12px; color: var(--text-muted); }
-
-    /* ── INLINE CODE ── */
-    code { font-family: var(--font-mono); font-size: 12.5px; color: var(--primary); background: var(--primary-dim); border-radius: 4px; padding: 1px 5px; }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 0;
-      font-size: 13px; color: var(--text-faint);
-    }
-    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-
-    /* ── HIGHLIGHT COLORS ── */
-    .t-green { color: var(--success); }
-    .t-purple { color: var(--primary); }
-    .t-amber { color: var(--amber); }
-    .t-muted { color: var(--text-muted); }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js"></script>
 </head>
 <body class="lang-vi">
 
@@ -426,14 +45,14 @@
 </header>
 
 <!-- ── HERO ── -->
-<section class="gs-hero">
+<section class="gs-hero" style="padding: 64px 0 48px; border-bottom: 1px solid var(--border); text-align: center;">
   <div class="container">
     <div class="gs-label"><span></span> <span lang="vi">Hướng dẫn từng bước</span><span lang="en">Step-by-step guide</span></div>
-    <h1>
-      <span lang="vi">Cài đặt Harness Kit <em>từ A đến Z</em></span>
-      <span lang="en">Set up Harness Kit <em>from A to Z</em></span>
+    <h1 style="font-size: clamp(26px, 5vw, 40px); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 14px;">
+      <span lang="vi">Cài đặt Harness Kit <em style="font-style:normal; color:var(--primary);">từ A đến Z</em></span>
+      <span lang="en">Set up Harness Kit <em style="font-style:normal; color:var(--primary);">from A to Z</em></span>
     </h1>
-    <p>
+    <p style="font-size: 16px; color: var(--text-muted); max-width: 560px; margin: 0 auto 24px;">
       <span lang="vi">Từ máy trống đến có harness đầu tiên — cài yêu cầu, chạy lệnh install, thêm feature đầu tiên và bắt đầu làm việc với AI.</span>
       <span lang="en">From a blank machine to your first harness — install prerequisites, run the install command, add your first feature, and start working with AI.</span>
     </p>
@@ -446,7 +65,7 @@
 </section>
 
 <!-- ── BODY ── -->
-<main class="gs-body">
+<main class="gs-body" style="padding: 20px 0 80px;">
   <div class="container">
 
     <!-- STEP 1: Prerequisites -->
@@ -609,36 +228,44 @@
           <span lang="en">Harness Kit supports both flows. Pick what fits your workflow — or use both.</span>
         </p>
 
-        <div class="modes-grid">
+        <div class="modes-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
           <!-- Mode A: Prompt AI -->
           <div class="mode-card">
-            <div class="mode-num"><span lang="vi">Cách A — Dành cho chat session</span><span lang="en">Mode A — For chat sessions</span></div>
-            <div class="mode-title"><span lang="vi">Prompt AI bằng ngôn ngữ tự nhiên</span><span lang="en">Prompt your AI in plain language</span></div>
-            <p class="mode-desc">
+            <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-family: var(--font-mono); color: var(--primary); margin-bottom: 8px;">
+              <span lang="vi">Cách A — Dành cho chat session</span><span lang="en">Mode A — For chat sessions</span>
+            </div>
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;">
+              <span lang="vi">Prompt AI bằng ngôn ngữ tự nhiên</span><span lang="en">Prompt your AI in plain language</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
               <span lang="vi">Mở Claude Code, Cursor, Codex... rồi nói với AI điều bạn muốn. Agent tự đọc <code>AGENTS.md</code>, tự biết feature nào đang active, tự chạy <code>init.sh</code> khi xong.</span>
               <span lang="en">Open Claude Code, Cursor, Codex... and tell the AI what you need. The agent reads <code>AGENTS.md</code> automatically, knows which feature is active, and runs <code>init.sh</code> when done.</span>
             </p>
-            <div class="prompt-list">
-              <div class="prompt-item">
-                <span lang="vi">Đọc AGENTS.md và implement feature đang active trong feature_list.json.</span>
-                <span lang="en">Read AGENTS.md and implement the active feature in feature_list.json.</span>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
+                <span lang="vi">"Đọc AGENTS.md và implement feature đang active trong feature_list.json."</span>
+                <span lang="en">"Read AGENTS.md and implement the active feature in feature_list.json."</span>
               </div>
-              <div class="prompt-item">
-                <span lang="vi">Thêm feature cho màn hình Settings và bắt đầu làm.</span>
-                <span lang="en">Add a new feature for the Settings screen and start working on it.</span>
+              <div style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
+                <span lang="vi">"Thêm feature cho màn hình Settings và bắt đầu làm."</span>
+                <span lang="en">"Add a new feature for the Settings screen and start working on it."</span>
               </div>
-              <div class="prompt-item">
-                <span lang="vi">Xong F-003 rồi — chạy init.sh, cập nhật progress.md, chuyển feature tiếp theo.</span>
-                <span lang="en">We're done with F-003 — run init.sh, update progress.md, move to the next feature.</span>
+              <div style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
+                <span lang="vi">"Xong F-003 rồi — chạy init.sh, cập nhật progress.md, chuyển feature tiếp theo."</span>
+                <span lang="en">"We're done with F-003 — run init.sh, update progress.md, move to the next feature."</span>
               </div>
             </div>
           </div>
 
           <!-- Mode B: hk.py CLI -->
           <div class="mode-card">
-            <div class="mode-num"><span lang="vi">Cách B — Dành cho terminal / CI</span><span lang="en">Mode B — For terminal / CI</span></div>
-            <div class="mode-title"><span lang="vi">Dùng hk.py từ terminal</span><span lang="en">Use hk.py from the terminal</span></div>
-            <p class="mode-desc">
+            <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-family: var(--font-mono); color: var(--primary); margin-bottom: 8px;">
+              <span lang="vi">Cách B — Dành cho terminal / CI</span><span lang="en">Mode B — For terminal / CI</span>
+            </div>
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;">
+              <span lang="vi">Dùng hk.py từ terminal</span><span lang="en">Use hk.py from the terminal</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
               <span lang="vi">Dùng khi bạn muốn quản lý hàng đợi feature từ shell, CI step, hay script mà không cần mở chat session. Chạy từ bất kỳ thư mục con nào.</span>
               <span lang="en">Use when you want to manage the feature queue from a shell, CI step, or script without opening a chat session. Runs from any subdirectory.</span>
             </p>
@@ -668,39 +295,39 @@ py hk.py audit</pre>
           <span lang="en">A complete example with a real feature — from adding it to marking it done.</span>
         </p>
 
-        <div class="workflow">
-          <div class="wf-row">
-            <div class="wf-dot">A</div>
-            <div class="wf-body">
-              <div class="wf-action"><span lang="vi">Thêm feature vào hàng đợi</span><span lang="en">Add a feature to the queue</span></div>
-              <code class="wf-cmd" id="wf-add">py hk.py feature "User authentication" --desc "Login, register, logout"</code>
-              <div class="wf-note"><span lang="vi">Tạo F-001 với trạng thái <em>pending</em>.</span><span lang="en">Creates F-001 with status <em>pending</em>.</span></div>
+        <div style="display: flex; flex-direction: column; gap: 0;">
+          <div style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--border);">
+            <div style="width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--bg-card); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--text-faint); font-family: var(--font-mono); margin-top: 2px;">A</div>
+            <div style="min-width: 0; flex: 1;">
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;"><span lang="vi">Thêm feature vào hàng đợi</span><span lang="en">Add a feature to the queue</span></div>
+              <code style="font-family: var(--font-mono); font-size: 12.5px; color: var(--primary); background: var(--primary-dim); border-radius: 5px; padding: 6px 10px; display: block; margin-bottom: 6px; white-space: pre-wrap; overflow-x: auto; word-break: break-all;" id="wf-add">py hk.py feature "User authentication" --desc "Login, register, logout"</code>
+              <div style="font-size: 12px; color: var(--text-muted);"><span lang="vi">Tạo F-001 với trạng thái <em>pending</em>.</span><span lang="en">Creates F-001 with status <em>pending</em>.</span></div>
             </div>
           </div>
-          <div class="wf-row">
-            <div class="wf-dot">B</div>
-            <div class="wf-body">
-              <div class="wf-action"><span lang="vi">Bật feature active</span><span lang="en">Set the feature active</span></div>
-              <code class="wf-cmd" id="wf-start">py hk.py start F-001</code>
-              <div class="wf-note"><span lang="vi">Chuyển F-001 sang <em>in-progress</em>. Agent sẽ biết cần làm gì.</span><span lang="en">Moves F-001 to <em>in-progress</em>. The agent knows what to work on.</span></div>
+          <div style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--border);">
+            <div style="width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--bg-card); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--text-faint); font-family: var(--font-mono); margin-top: 2px;">B</div>
+            <div style="min-width: 0; flex: 1;">
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;"><span lang="vi">Bật feature active</span><span lang="en">Set the feature active</span></div>
+              <code style="font-family: var(--font-mono); font-size: 12.5px; color: var(--primary); background: var(--primary-dim); border-radius: 5px; padding: 6px 10px; display: block; margin-bottom: 6px; white-space: pre-wrap; overflow-x: auto; word-break: break-all;" id="wf-start">py hk.py start F-001</code>
+              <div style="font-size: 12px; color: var(--text-muted);"><span lang="vi">Chuyển F-001 sang <em>in-progress</em>. Agent sẽ biết cần làm gì.</span><span lang="en">Moves F-001 to <em>in-progress</em>. The agent knows what to work on.</span></div>
             </div>
           </div>
-          <div class="wf-row">
-            <div class="wf-dot">C</div>
-            <div class="wf-body">
-              <div class="wf-action"><span lang="vi">Cho AI làm việc (chọn 1 trong 2)</span><span lang="en">Let the AI work (pick one)</span></div>
-              <div class="prompt-list" style="margin-bottom:8px">
-                <div class="prompt-item"><span lang="vi">Đọc AGENTS.md và implement feature đang active.</span><span lang="en">Read AGENTS.md and implement the active feature.</span></div>
+          <div style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--border);">
+            <div style="width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--bg-card); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--text-faint); font-family: var(--font-mono); margin-top: 2px;">C</div>
+            <div style="min-width: 0; flex: 1;">
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;"><span lang="vi">Cho AI làm việc (chọn 1 trong 2)</span><span lang="en">Let the AI work (pick one)</span></div>
+              <div style="margin-bottom:8px">
+                <div style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.5;"><span lang="vi">"Đọc AGENTS.md và implement feature đang active."</span><span lang="en">"Read AGENTS.md and implement the active feature."</span></div>
               </div>
-              <div class="wf-note"><span lang="vi">Hoặc dùng IDE / tool của bạn để implement trực tiếp.</span><span lang="en">Or use your IDE / tool to implement directly.</span></div>
+              <div style="font-size: 12px; color: var(--text-muted);"><span lang="vi">Hoặc dùng IDE / tool của bạn để implement trực tiếp.</span><span lang="en">Or use your IDE / tool to implement directly.</span></div>
             </div>
           </div>
-          <div class="wf-row">
-            <div class="wf-dot">D</div>
-            <div class="wf-body">
-              <div class="wf-action"><span lang="vi">Kiểm tra và mark done</span><span lang="en">Verify and mark done</span></div>
-              <code class="wf-cmd" id="wf-done">py hk.py done</code>
-              <div class="wf-note"><span lang="vi">Tự chạy <code>init.sh</code> / <code>init.ps1</code> trước. Nếu pass mới mark done. Chuyển feature tiếp theo tự động.</span><span lang="en">Runs <code>init.sh</code> / <code>init.ps1</code> first. Marks done only if verification passes. Moves to the next feature automatically.</span></div>
+          <div style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 0;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--bg-card); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--text-faint); font-family: var(--font-mono); margin-top: 2px;">D</div>
+            <div style="min-width: 0; flex: 1;">
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;"><span lang="vi">Kiểm tra và mark done</span><span lang="en">Verify and mark done</span></div>
+              <code style="font-family: var(--font-mono); font-size: 12.5px; color: var(--primary); background: var(--primary-dim); border-radius: 5px; padding: 6px 10px; display: block; margin-bottom: 6px; white-space: pre-wrap; overflow-x: auto; word-break: break-all;" id="wf-done">py hk.py done</code>
+              <div style="font-size: 12px; color: var(--text-muted);"><span lang="vi">Tự chạy <code>init.sh</code> / <code>init.ps1</code> trước. Nếu pass mới mark done. Chuyển feature tiếp theo tự động.</span><span lang="en">Runs <code>init.sh</code> / <code>init.ps1</code> first. Marks done only if verification passes. Moves to the next feature automatically.</span></div>
             </div>
           </div>
         </div>
@@ -730,26 +357,26 @@ py hk.py audit --html report.html</pre>
         <!-- Next Steps -->
         <div style="margin-top:36px">
           <div class="step-tag" style="margin-bottom:16px"><span lang="vi">Bước tiếp theo</span><span lang="en">What's next</span></div>
-          <div class="next-cards">
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;">
             <a href="index.html#how-it-works" class="next-card">
-              <div class="next-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
-              <div class="next-card-title"><span lang="vi">Kiến trúc 9 thành phần</span><span lang="en">9-component architecture</span></div>
-              <div class="next-card-desc"><span lang="vi">Hiểu harness hoạt động như thế nào bên trong.</span><span lang="en">Understand how the harness works under the hood.</span></div>
+              <div style="margin-bottom: 10px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+              <div style="font-size: 14px; font-weight: 700; margin-bottom: 5px;"><span lang="vi">Kiến trúc 9 thành phần</span><span lang="en">9-component architecture</span></div>
+              <div style="font-size: 12px; color: var(--text-muted);"><span lang="vi">Hiểu harness hoạt động như thế nào bên trong.</span><span lang="en">Understand how the harness works under the hood.</span></div>
             </a>
             <a href="use-case.html" class="next-card">
-              <div class="next-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-              <div class="next-card-title"><span lang="vi">Use Cases thực tế</span><span lang="en">Real-world use cases</span></div>
-              <div class="next-card-desc"><span lang="vi">Xem harness dùng trong các dự án thực tế.</span><span lang="en">See harness applied to real projects.</span></div>
+              <div style="margin-bottom: 10px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <div style="font-size: 14px; font-weight: 700; margin-bottom: 5px;"><span lang="vi">Use Cases thực tế</span><span lang="en">Real-world use cases</span></div>
+              <div style="font-size: 12px; color: var(--text-muted);"><span lang="vi">Xem harness dùng trong các dự án thực tế.</span><span lang="en">See harness applied to real projects.</span></div>
             </a>
             <a href="index.html#installation" class="next-card">
-              <div class="next-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-              <div class="next-card-title"><span lang="vi">Cài với --full</span><span lang="en">Install with --full</span></div>
-              <div class="next-card-desc"><span lang="vi">Thêm Python runtime: harness loop, sub-agent, hooks.</span><span lang="en">Add the Python runtime: harness loop, sub-agents, hooks.</span></div>
+              <div style="margin-bottom: 10px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+              <div style="font-size: 14px; font-weight: 700; margin-bottom: 5px;"><span lang="vi">Cài với --full</span><span lang="en">Install with --full</span></div>
+              <div style="font-size: 12px; color: var(--text-muted);"><span lang="vi">Thêm Python runtime: harness loop, sub-agent, hooks.</span><span lang="en">Add the Python runtime: harness loop, sub-agents, hooks.</span></div>
             </a>
             <a href="https://github.com/nguyenanh92/harness-kit" target="_blank" class="next-card">
-              <div class="next-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></div>
-              <div class="next-card-title">GitHub</div>
-              <div class="next-card-desc"><span lang="vi">Source code, issues, đóng góp.</span><span lang="en">Source code, issues, and contributions.</span></div>
+              <div style="margin-bottom: 10px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></div>
+              <div style="font-size: 14px; font-weight: 700; margin-bottom: 5px;">GitHub</div>
+              <div style="font-size: 12px; color: var(--text-muted);"><span lang="vi">Source code, issues, đóng góp.</span><span lang="en">Source code, issues, and contributions.</span></div>
             </a>
           </div>
         </div>
@@ -764,7 +391,7 @@ py hk.py audit --html report.html</pre>
     <div class="footer-inner">
       <span lang="vi">&copy; 2026 Harness Kit. Phát hành dưới giấy phép MIT.</span>
       <span lang="en">&copy; 2026 Harness Kit. Released under the MIT License.</span>
-      <div style="display:flex; gap:16px">
+      <div class="footer-links">
         <a href="index.html"><span lang="vi">Tổng quan</span><span lang="en">Overview</span></a>
         <a href="use-case.html">Use Cases</a>
         <a href="https://github.com/nguyenanh92/harness-kit" target="_blank">GitHub</a>
@@ -790,63 +417,70 @@ py hk.py audit --html report.html</pre>
     },
   };
 
+  window.onLanguageChange = function (lang) {
+    currentLang = lang;
+    updateWorkflowCmds();
+  };
+
   function setOS(os) {
     currentOS = os;
-    document.getElementById('os-win').classList.toggle('active', os === 'win');
-    document.getElementById('os-nix').classList.toggle('active', os === 'nix');
-    document.getElementById('install-label').textContent = os === 'win' ? 'PowerShell' : 'bash';
-    document.getElementById('install-cmd').textContent = CMDS[os].install;
+    const winBtn = document.getElementById('os-win');
+    const nixBtn = document.getElementById('os-nix');
+    if (winBtn) winBtn.classList.toggle('active', os === 'win');
+    if (nixBtn) nixBtn.classList.toggle('active', os === 'nix');
+    
+    const labelElem = document.getElementById('install-label');
+    const cmdElem = document.getElementById('install-cmd');
+    if (labelElem) labelElem.textContent = os === 'win' ? 'PowerShell' : 'bash';
+    if (cmdElem) cmdElem.textContent = CMDS[os].install;
     updateHkCmds();
     updateWorkflowCmds();
   }
 
   function updateHkCmds() {
     const p = CMDS[currentOS].hk;
-    document.getElementById('hk-cmds').textContent =
-      `${p} hk.py feature "Settings screen"\n${p} hk.py start F-001\n${p} hk.py status\n${p} hk.py done\n${p} hk.py audit`;
+    const elem = document.getElementById('hk-cmds');
+    if (elem) {
+      elem.textContent = `${p} hk.py feature "Settings screen"\n${p} hk.py start F-001\n${p} hk.py status\n${p} hk.py done\n${p} hk.py audit`;
+    }
   }
 
   function updateWorkflowCmds() {
     const p = CMDS[currentOS].hk;
     const isVI = currentLang === 'vi';
     const desc = isVI ? '"Login, register, logout"' : '"Login, register, logout"';
-    document.getElementById('wf-add').textContent = `${p} hk.py feature "User authentication" --desc ${desc}`;
-    document.getElementById('wf-start').textContent = `${p} hk.py start F-001`;
-    document.getElementById('wf-done').textContent = `${p} hk.py done`;
-    document.getElementById('audit-cmd').textContent =
-      `${p} hk.py status\n${p} hk.py audit\n${p} hk.py audit --html report.html`;
+    const wfAdd = document.getElementById('wf-add');
+    const wfStart = document.getElementById('wf-start');
+    const wfDone = document.getElementById('wf-done');
+    const auditCmd = document.getElementById('audit-cmd');
+
+    if (wfAdd) wfAdd.textContent = `${p} hk.py feature "User authentication" --desc ${desc}`;
+    if (wfStart) wfStart.textContent = `${p} hk.py start F-001`;
+    if (wfDone) wfDone.textContent = `${p} hk.py done`;
+    if (auditCmd) auditCmd.textContent = `${p} hk.py status\n${p} hk.py audit\n${p} hk.py audit --html report.html`;
   }
 
   function copyInstall() {
     const text = document.getElementById('install-cmd').textContent;
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.querySelector('.btn-copy-inline');
-      const orig = btn.innerHTML;
-      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-      setTimeout(() => { btn.innerHTML = orig; }, 1800);
+      if (btn) {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+        setTimeout(() => { btn.innerHTML = orig; }, 1800);
+      }
     });
   }
 
-  function switchLang(lang) {
-    currentLang = lang;
-    document.body.className = `lang-${lang}`;
-    document.getElementById('lang-vi-btn').classList.toggle('active', lang === 'vi');
-    document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
-    localStorage.setItem('harness-kit-lang', lang);
-    updateWorkflowCmds();
-  }
-
-  window.onload = function () {
-    const saved = localStorage.getItem('harness-kit-lang');
-    switchLang(saved === 'en' ? 'en' : 'vi');
+  document.addEventListener('DOMContentLoaded', function () {
     const savedOS = localStorage.getItem('harness-kit-os') || 'win';
     setOS(savedOS);
-  };
 
-  document.querySelectorAll('.os-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const os = btn.id === 'os-win' ? 'win' : 'nix';
-      localStorage.setItem('harness-kit-os', os);
+    document.querySelectorAll('.os-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const os = btn.id === 'os-win' ? 'win' : 'nix';
+        localStorage.setItem('harness-kit-os', os);
+      });
     });
   });
 </script>

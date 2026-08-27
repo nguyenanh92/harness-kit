@@ -9,239 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:           #080c18;
-      --bg-card:      #0f1320;
-      --bg-code:      #080e1a;
-      --border:       rgba(255,255,255,0.07);
-      --border-hover: rgba(99,102,241,0.35);
-      --primary:      #6366f1;
-      --primary-dim:  rgba(99,102,241,0.12);
-      --amber:        #f59e0b;
-      --amber-dim:    rgba(245,158,11,0.12);
-      --success:      #10b981;
-      --success-dim:  rgba(16,185,129,0.12);
-      --danger:       #f43f5e;
-      --danger-dim:   rgba(244,63,94,0.10);
-      --text:         #f1f5f9;
-      --text-muted:   #94a3b8;
-      --text-faint:   #4b5563;
-      --font-sans:    'Plus Jakarta Sans', sans-serif;
-      --font-mono:    'Fira Code', monospace;
-      --radius:       10px;
-      --transition:   0.2s ease;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg); color: var(--text);
-      font-family: var(--font-sans); line-height: 1.65;
-      -webkit-font-smoothing: antialiased; overflow-x: hidden;
-    }
-    body.lang-vi [lang="en"] { display: none !important; }
-    body.lang-en [lang="vi"] { display: none !important; }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 4px; }
-    a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
-    a:hover { color: var(--amber); }
-    button { font-family: inherit; cursor: pointer; border: none; background: none; }
-    code { font-family: var(--font-mono); font-size: 12.5px; color: var(--primary); background: var(--primary-dim); border-radius: 4px; padding: 1px 5px; }
-    .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
-
-    /* NAV */
-    header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(8,12,24,0.88); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-    .header-nav { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; }
-    .brand {
-      display: flex; align-items: center; gap: 10px;
-      font-family: var(--font-mono); font-weight: 600; font-size: 15px;
-      color: var(--text); letter-spacing: -0.01em;
-    }
-    .brand svg { width: 22px; height: 22px; }
-    .brand .dot { color: var(--primary); }
-    .nav-links { display: flex; align-items: center; gap: 4px; }
-    .nav-links a:not(.btn-github) {
-      padding: 6px 10px; border-radius: 6px; font-size: 13.5px; font-weight: 500;
-      color: var(--text-muted); transition: color var(--transition), background var(--transition);
-    }
-    .nav-links a:not(.btn-github):hover { color: var(--text); background: rgba(255,255,255,0.05); }
-    .nav-links a.active-page { color: var(--primary); }
-    .btn-github {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 7px; font-size: 13px; font-weight: 600;
-      color: var(--text); border: 1px solid var(--border);
-      transition: all var(--transition); margin-left: 4px;
-    }
-    .btn-github:hover { color: var(--text); border-color: var(--border-hover); background: var(--primary-dim); }
-    .lang-switch {
-      display: inline-flex; align-items: center;
-      border: 1px solid var(--border); border-radius: 7px; overflow: hidden;
-      font-family: var(--font-mono); font-size: 11.5px; margin-left: 8px;
-    }
-    .lang-btn { padding: 6px 11px; color: var(--text-muted); transition: all var(--transition); font-family: inherit; font-size: inherit; font-weight: 600; }
-    .lang-btn.active { background: var(--primary); color: #fff; }
-    .lang-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.05); }
-
-    /* HERO */
-    .hero {
-      padding: 64px 0 48px;
-      border-bottom: 1px solid var(--border);
-    }
-    .page-label {
-      display: inline-flex; align-items: center; gap: 7px;
-      border: 1px solid var(--border); border-radius: 999px;
-      padding: 5px 14px; font-size: 11px; font-weight: 700;
-      color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase;
-      font-family: var(--font-mono); margin-bottom: 20px;
-    }
-    .page-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); display: inline-block; }
-    .hero h1 { font-size: clamp(26px, 5vw, 40px); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 12px; }
-    .hero h1 em { font-style: normal; color: var(--primary); }
-    .hero p { font-size: 15px; color: var(--text-muted); max-width: 560px; margin-bottom: 24px; }
-
-    /* CONCEPT BOX */
-    .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0; }
-    @media (max-width: 580px) { .concept-grid { grid-template-columns: 1fr; } }
-    .concept-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 18px 20px;
-    }
-    .concept-card.highlighted { border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.06); }
-    .concept-label {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-      font-family: var(--font-mono); color: var(--text-faint); margin-bottom: 6px;
-    }
-    .concept-label.amber { color: var(--amber); }
-    .concept-label.purple { color: var(--primary); }
-    .concept-title { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
-    .concept-desc { font-size: 13px; color: var(--text-muted); }
-
-    /* MAIN BODY */
-    .page-body { padding: 32px 0 80px; }
-
-    /* SECTION DIVIDER */
-    .ide-section { padding: 44px 0; border-bottom: 1px solid var(--border); }
-    .ide-section:last-child { border-bottom: none; }
-
-    .ide-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
-    .ide-icon {
-      width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-mono); font-size: 13px; font-weight: 800;
-    }
-    .ide-icon.claude { background: rgba(99,102,241,0.15); color: var(--primary); border: 1px solid rgba(99,102,241,0.25); }
-    .ide-icon.cursor { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
-    .ide-icon.ag { background: rgba(16,185,129,0.12); color: var(--success); border: 1px solid rgba(16,185,129,0.2); }
-    .ide-meta { min-width: 0; }
-    .ide-name { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3px; }
-    .ide-tagline { font-size: 13px; color: var(--text-muted); }
-
-    /* PREREQ */
-    .prereq {
-      display: flex; gap: 10px; align-items: flex-start;
-      background: rgba(244,63,94,0.07); border: 1px solid rgba(244,63,94,0.2);
-      border-radius: 8px; padding: 12px 14px;
-      font-size: 13px; color: var(--text-muted); margin-bottom: 24px;
-    }
-    .prereq svg { width: 15px; height: 15px; stroke: var(--danger); flex-shrink: 0; margin-top: 2px; }
-    .prereq strong { color: var(--danger); }
-
-    /* STEPS */
-    .steps { display: flex; flex-direction: column; gap: 0; }
-    .step {
-      display: grid; grid-template-columns: 44px 1fr;
-      gap: 0 18px; padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .step:last-child { border-bottom: none; }
-    .step-col { display: flex; flex-direction: column; align-items: center; padding-top: 2px; }
-    .step-num {
-      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-      background: var(--primary-dim); border: 1.5px solid var(--primary);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 800; color: var(--primary);
-      font-family: var(--font-mono);
-    }
-    .step-line { flex: 1; width: 1px; background: var(--border); margin-top: 6px; min-height: 16px; }
-    .step-body { min-width: 0; padding-top: 2px; }
-    .step-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-    .step-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
-    .step-desc:last-child { margin-bottom: 0; }
-
-    /* CODE */
-    .code-wrap {
-      background: var(--bg-code); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden; position: relative;
-      margin-bottom: 12px;
-    }
-    .code-wrap:last-child { margin-bottom: 0; }
-    .code-os {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
-      font-family: var(--font-mono); color: var(--text-faint);
-      padding: 9px 14px 0; display: block;
-    }
-    .code-wrap pre {
-      font-family: var(--font-mono); font-size: 13px; line-height: 1.7;
-      color: #c9d1d9; padding: 10px 16px 16px; overflow-x: auto; white-space: pre;
-    }
-    .btn-copy {
-      position: absolute; top: 8px; right: 8px;
-      display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-      border-radius: 6px; padding: 4px 9px;
-      font-size: 11px; font-weight: 600; color: var(--text-muted);
-      transition: all var(--transition); font-family: var(--font-mono);
-    }
-    .btn-copy:hover { color: var(--text); background: rgba(255,255,255,0.1); }
-
-    /* CALLOUT */
-    .callout {
-      display: flex; gap: 10px; align-items: flex-start;
-      border: 1px solid rgba(99,102,241,0.2);
-      background: rgba(99,102,241,0.06);
-      border-radius: 8px; padding: 12px 14px;
-      font-size: 13px; color: var(--text-muted); margin-top: 12px;
-    }
-    .callout svg { width: 15px; height: 15px; stroke: var(--primary); flex-shrink: 0; margin-top: 2px; }
-    .callout.success { border-color: rgba(16,185,129,0.2); background: rgba(16,185,129,0.06); }
-    .callout.success svg { stroke: var(--success); }
-
-    /* FRONTMATTER BLOCK */
-    .frontmatter {
-      background: var(--bg-code); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden; margin-bottom: 12px;
-    }
-    .frontmatter pre {
-      font-family: var(--font-mono); font-size: 13px; line-height: 1.7;
-      color: #c9d1d9; padding: 14px 16px; overflow-x: auto; white-space: pre;
-    }
-
-    /* CLONE PREREQ BOX */
-    .clone-box {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 20px; margin-bottom: 32px;
-    }
-    .clone-box-title {
-      font-size: 13px; font-weight: 700; margin-bottom: 4px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .clone-box-title svg { width: 15px; height: 15px; stroke: var(--amber); }
-    .clone-box-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
-
-    /* FOOTER */
-    footer { border-top: 1px solid var(--border); padding: 28px 0; font-size: 13px; color: var(--text-faint); }
-    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-
-    @media (max-width: 720px) {
-      .nav-links a:not(.btn-github):not(.active-page) { display: none; }
-      .concept-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js"></script>
 </head>
 <body class="lang-vi">
 
@@ -275,45 +44,59 @@
 </header>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" style="padding: 64px 0 48px; border-bottom: 1px solid var(--border); text-align: center;">
   <div class="container">
-    <div class="page-label"><span class="dot"></span> <span lang="vi">Nâng cao</span><span lang="en">Advanced</span></div>
-    <h1>
-      <span lang="vi">Cài harness-kit <em>như một Skill</em></span>
-      <span lang="en">Install harness-kit <em>as a Skill</em></span>
+    <div class="page-label"><span class="dot amber"></span> <span lang="vi">Nâng cao</span><span lang="en">Advanced</span></div>
+    <h1 style="font-size: clamp(26px, 5vw, 40px); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 12px;">
+      <span lang="vi">Cài harness-kit <em style="font-style:normal; color:var(--primary);">như một Skill</em></span>
+      <span lang="en">Install harness-kit <em style="font-style:normal; color:var(--primary);">as a Skill</em></span>
     </h1>
-    <p>
+    <p style="font-size: 15px; color: var(--text-muted); max-width: 560px; margin: 0 auto 24px;">
       <span lang="vi">Khi cài như skill, AI agent <strong>tự biết cách scaffold và validate</strong> harness — không cần giải thích lại mỗi lần. Trang này dành riêng cho luồng đó.</span>
       <span lang="en">When installed as a skill, the AI agent <strong>knows how to scaffold and validate</strong> harnesses automatically — no re-explaining each time. This page covers that flow.</span>
     </p>
 
     <div class="concept-grid">
       <div class="concept-card">
-        <div class="concept-label"><span lang="vi">Luồng cơ bản (one-liner)</span><span lang="en">Basic flow (one-liner)</span></div>
-        <div class="concept-title"><span lang="vi">Cài governance files vào project</span><span lang="en">Install governance files into a project</span></div>
-        <div class="concept-desc"><span lang="vi">Dùng <code>irm … | iex</code> → tạo AGENTS.md, hk.py và 4 file khác. AI đọc AGENTS.md tự nhiên. Không cần trang này.</span><span lang="en">Run <code>irm … | iex</code> → creates AGENTS.md, hk.py, and 4 more files. AI reads AGENTS.md naturally. You don't need this page.</span></div>
+        <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-family: var(--font-mono); color: var(--text-faint); margin-bottom: 6px;">
+          <span lang="vi">Luồng cơ bản (one-liner)</span><span lang="en">Basic flow (one-liner)</span>
+        </div>
+        <div style="font-size: 14px; font-weight: 700; margin-bottom: 5px;">
+          <span lang="vi">Cài governance files vào project</span><span lang="en">Install governance files into a project</span>
+        </div>
+        <div style="font-size: 13px; color: var(--text-muted);">
+          <span lang="vi">Dùng <code>irm … | iex</code> → tạo AGENTS.md, hk.py và 4 file khác. AI đọc AGENTS.md tự nhiên. Không cần trang này.</span>
+          <span lang="en">Run <code>irm … | iex</code> → creates AGENTS.md, hk.py, and 4 more files. AI reads AGENTS.md naturally. You don't need this page.</span>
+        </div>
       </div>
       <div class="concept-card highlighted">
-        <div class="concept-label amber"><span lang="vi">Luồng nâng cao (trang này)</span><span lang="en">Advanced flow (this page)</span></div>
-        <div class="concept-title"><span lang="vi">Cài như Skill — AI biết cả quy trình</span><span lang="en">Install as Skill — AI knows the full workflow</span></div>
-        <div class="concept-desc"><span lang="vi">Copy thư mục <code>skills/</code> vào IDE. Agent có thể tự scaffold harness mới, chạy validate, và audit mà không cần bạn giải thích lệnh.</span><span lang="en">Copy the <code>skills/</code> folder into the IDE. The agent can scaffold new harnesses, run validate, and audit without you explaining the commands.</span></div>
+        <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-family: var(--font-mono); color: var(--amber); margin-bottom: 6px;">
+          <span lang="vi">Luồng nâng cao (trang này)</span><span lang="en">Advanced flow (this page)</span>
+        </div>
+        <div style="font-size: 14px; font-weight: 700; margin-bottom: 5px;">
+          <span lang="vi">Cài như Skill — AI biết cả quy trình</span><span lang="en">Install as Skill — AI knows the full workflow</span>
+        </div>
+        <div style="font-size: 13px; color: var(--text-muted);">
+          <span lang="vi">Copy thư mục <code>skills/</code> vào IDE. Agent có thể tự scaffold harness mới, chạy validate, và audit mà không cần bạn giải thích lệnh.</span>
+          <span lang="en">Copy the <code>skills/</code> folder into the IDE. The agent can scaffold new harnesses, run validate, and audit without you explaining the commands.</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- BODY -->
-<main class="page-body">
+<main class="page-body" style="padding: 32px 0 80px;">
   <div class="container">
 
     <!-- Prerequisite: Clone -->
-    <div class="clone-box">
-      <div class="clone-box-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <div class="clone-box" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 32px;">
+      <div style="font-size: 13px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--amber)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         <span lang="vi">Bước chung bắt buộc — Clone repo trước</span>
         <span lang="en">Required first step — Clone the repo</span>
       </div>
-      <p class="clone-box-desc">
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
         <span lang="vi">Để cài như skill, bạn cần thư mục <code>skills/</code> từ repo harness-kit. Clone về một chỗ bất kỳ trên máy (không phải trong project của bạn):</span>
         <span lang="en">To install as a skill, you need the <code>skills/</code> folder from the harness-kit repo. Clone it anywhere on your machine (not inside your project):</span>
       </p>
@@ -330,21 +113,21 @@ cd harness-kit</pre>
     </div>
 
     <!-- ── CLAUDE CODE ── -->
-    <div class="ide-section">
-      <div class="ide-header">
-        <div class="ide-icon claude">CC</div>
-        <div class="ide-meta">
-          <div class="ide-name">Claude Code</div>
-          <div class="ide-tagline"><span lang="vi">Skill được phát hiện tự động qua <code>SKILL.md</code></span><span lang="en">Skill auto-discovered via <code>SKILL.md</code></span></div>
+    <div style="padding: 44px 0; border-bottom: 1px solid var(--border);">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 24px;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 13px; font-weight: 800; background: rgba(99,102,241,0.15); color: var(--primary); border: 1px solid rgba(99,102,241,0.25);">CC</div>
+        <div>
+          <div style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3px;">Claude Code</div>
+          <div style="font-size: 13px; color: var(--text-muted);"><span lang="vi">Skill được phát hiện tự động qua <code>SKILL.md</code></span><span lang="en">Skill auto-discovered via <code>SKILL.md</code></span></div>
         </div>
       </div>
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-col"><div class="step-num">1</div><div class="step-line"></div></div>
-          <div class="step-body">
-            <div class="step-title"><span lang="vi">Copy skill vào thư mục Claude Code</span><span lang="en">Copy the skill into the Claude Code directory</span></div>
-            <p class="step-desc">
+      <div style="display: flex; flex-direction: column; gap: 0;">
+        <div style="display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; padding: 20px 0; border-bottom: 1px solid var(--border);">
+          <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2px;"><div class="step-num">1</div><div class="step-line"></div></div>
+          <div style="min-width: 0; padding-top: 2px;">
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;"><span lang="vi">Copy skill vào thư mục Claude Code</span><span lang="en">Copy the skill into the Claude Code directory</span></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
               <span lang="vi">Cài user-level để dùng được từ mọi project. Hoặc cài project-level nếu chỉ dùng cho project hiện tại.</span>
               <span lang="en">Install user-level to use across every project. Or install project-level to scope to the current project only.</span>
             </p>
@@ -370,11 +153,11 @@ cp -r skills ./.claude/skills/harness-kit</pre>
           </div>
         </div>
 
-        <div class="step">
-          <div class="step-col"><div class="step-num">2</div><div class="step-line"></div></div>
-          <div class="step-body">
-            <div class="step-title"><span lang="vi">Kích hoạt trong chat</span><span lang="en">Activate from chat</span></div>
-            <p class="step-desc">
+        <div style="display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; padding: 20px 0; border-bottom: 1px solid var(--border);">
+          <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2px;"><div class="step-num">2</div><div class="step-line"></div></div>
+          <div style="min-width: 0; padding-top: 2px;">
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;"><span lang="vi">Kích hoạt trong chat</span><span lang="en">Activate from chat</span></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
               <span lang="vi">Claude Code tự phát hiện skill trong phiên hiện tại — không cần restart. Nói với agent:</span>
               <span lang="en">Claude Code auto-discovers the skill within the current session — no restart needed. Tell the agent:</span>
             </p>
@@ -389,11 +172,11 @@ cp -r skills ./.claude/skills/harness-kit</pre>
           </div>
         </div>
 
-        <div class="step">
-          <div class="step-col"><div class="step-num">3</div></div>
-          <div class="step-body">
-            <div class="step-title"><span lang="vi">Chạy thủ công (tùy chọn)</span><span lang="en">Run manually (optional)</span></div>
-            <p class="step-desc">
+        <div style="display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; padding: 20px 0;">
+          <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2px;"><div class="step-num">3</div></div>
+          <div style="min-width: 0; padding-top: 2px;">
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;"><span lang="vi">Chạy thủ công (tùy chọn)</span><span lang="en">Run manually (optional)</span></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
               <span lang="vi">Nếu muốn chạy scaffold trực tiếp không qua chat, dùng đường dẫn tuyệt đối tới skill đã cài:</span>
               <span lang="en">To run the scaffolder directly without going through chat, use the absolute path to the installed skill:</span>
             </p>
@@ -413,21 +196,21 @@ cp -r skills ./.claude/skills/harness-kit</pre>
     </div>
 
     <!-- ── CURSOR ── -->
-    <div class="ide-section">
-      <div class="ide-header">
-        <div class="ide-icon cursor">CR</div>
-        <div class="ide-meta">
-          <div class="ide-name">Cursor</div>
-          <div class="ide-tagline"><span lang="vi">Không có khái niệm skill — dùng <code>.cursor/rules/</code> thay thế</span><span lang="en">No native skill concept — uses <code>.cursor/rules/</code> instead</span></div>
+    <div style="padding: 44px 0; border-bottom: 1px solid var(--border);">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 24px;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 13px; font-weight: 800; background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.2);">CR</div>
+        <div>
+          <div style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3px;">Cursor</div>
+          <div style="font-size: 13px; color: var(--text-muted);"><span lang="vi">Không có khái niệm skill — dùng <code>.cursor/rules/</code> thay thế</span><span lang="en">No native skill concept — uses <code>.cursor/rules/</code> instead</span></div>
         </div>
       </div>
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-col"><div class="step-num">1</div><div class="step-line"></div></div>
-          <div class="step-body">
-            <div class="step-title"><span lang="vi">Copy SKILL.md thành Cursor Rule</span><span lang="en">Copy SKILL.md as a Cursor Rule</span></div>
-            <p class="step-desc">
+      <div style="display: flex; flex-direction: column; gap: 0;">
+        <div style="display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; padding: 20px 0; border-bottom: 1px solid var(--border);">
+          <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2px;"><div class="step-num">1</div><div class="step-line"></div></div>
+          <div style="min-width: 0; padding-top: 2px;">
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;"><span lang="vi">Copy SKILL.md thành Cursor Rule</span><span lang="en">Copy SKILL.md as a Cursor Rule</span></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
               <span lang="vi">Cursor inject hướng dẫn vào agent qua file <code>.cursor/rules/*.mdc</code>. Copy <code>SKILL.md</code> của harness-kit làm rule:</span>
               <span lang="en">Cursor injects guidance into the agent via <code>.cursor/rules/*.mdc</code>. Copy harness-kit's <code>SKILL.md</code> as a rule:</span>
             </p>
@@ -446,20 +229,20 @@ cp skills/SKILL.md /path/to/your-project/.cursor/rules/harness-kit.mdc</pre>
           </div>
         </div>
 
-        <div class="step">
-          <div class="step-col"><div class="step-num">2</div><div class="step-line"></div></div>
-          <div class="step-body">
-            <div class="step-title"><span lang="vi">Thêm frontmatter vào file rule</span><span lang="en">Add frontmatter to the rule file</span></div>
-            <p class="step-desc">
+        <div style="display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; padding: 20px 0; border-bottom: 1px solid var(--border);">
+          <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2px;"><div class="step-num">2</div><div class="step-line"></div></div>
+          <div style="min-width: 0; padding-top: 2px;">
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;"><span lang="vi">Thêm frontmatter vào file rule</span><span lang="en">Add frontmatter to the rule file</span></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
               <span lang="vi">Mở <code>.cursor/rules/harness-kit.mdc</code> và thêm frontmatter vào đầu file. Dùng <code>alwaysApply: true</code> để rule luôn active:</span>
               <span lang="en">Open <code>.cursor/rules/harness-kit.mdc</code> and prepend the Cursor frontmatter. Use <code>alwaysApply: true</code> for the rule to always be active:</span>
             </p>
-            <div class="frontmatter">
+            <div class="code-wrap">
               <pre>---
 description: Standard-library-only Python agent harness conventions
 alwaysApply: true
 ---
-<span style="color:var(--text-faint)">... (nội dung SKILL.md tiếp theo)</span></pre>
+... (nội dung SKILL.md tiếp theo)</pre>
             </div>
             <div class="callout">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
@@ -469,11 +252,11 @@ alwaysApply: true
           </div>
         </div>
 
-        <div class="step">
-          <div class="step-col"><div class="step-num">3</div></div>
-          <div class="step-body">
-            <div class="step-title"><span lang="vi">Cài governance files vào project</span><span lang="en">Install governance files into the project</span></div>
-            <p class="step-desc">
+        <div style="display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; padding: 20px 0;">
+          <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2px;"><div class="step-num">3</div></div>
+          <div style="min-width: 0; padding-top: 2px;">
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;"><span lang="vi">Cài governance files vào project</span><span lang="en">Install governance files into the project</span></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
               <span lang="vi">Chạy one-liner install từ thư mục gốc project để có sẵn AGENTS.md và các file harness:</span>
               <span lang="en">Run the install one-liner from your project root to create AGENTS.md and the other harness files:</span>
             </p>
@@ -493,21 +276,21 @@ alwaysApply: true
     </div>
 
     <!-- ── ANTIGRAVITY ── -->
-    <div class="ide-section">
-      <div class="ide-header">
-        <div class="ide-icon ag">AG</div>
-        <div class="ide-meta">
-          <div class="ide-name">Antigravity</div>
-          <div class="ide-tagline"><span lang="vi">Hỗ trợ native skill qua <code>.agents/skills/</code></span><span lang="en">Native skill support via <code>.agents/skills/</code></span></div>
+    <div style="padding: 44px 0;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 24px;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 13px; font-weight: 800; background: rgba(16,185,129,0.12); color: var(--success); border: 1px solid rgba(16,185,129,0.2);">AG</div>
+        <div>
+          <div style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3px;">Antigravity</div>
+          <div style="font-size: 13px; color: var(--text-muted);"><span lang="vi">Hỗ trợ native skill qua <code>.agents/skills/</code></span><span lang="en">Native skill support via <code>.agents/skills/</code></span></div>
         </div>
       </div>
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-col"><div class="step-num">1</div><div class="step-line"></div></div>
-          <div class="step-body">
-            <div class="step-title"><span lang="vi">Cài governance files (one-liner)</span><span lang="en">Install governance files (one-liner)</span></div>
-            <p class="step-desc">
+      <div style="display: flex; flex-direction: column; gap: 0;">
+        <div style="display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; padding: 20px 0; border-bottom: 1px solid var(--border);">
+          <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2px;"><div class="step-num">1</div><div class="step-line"></div></div>
+          <div style="min-width: 0; padding-top: 2px;">
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;"><span lang="vi">Cài governance files (one-liner)</span><span lang="en">Install governance files (one-liner)</span></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
               <span lang="vi">Antigravity đọc <code>AGENTS.md</code> ở gốc project (chuẩn cross-tool 2026). Chạy install từ thư mục gốc project:</span>
               <span lang="en">Antigravity reads <code>AGENTS.md</code> at the project root (cross-tool standard 2026). Run the install from your project root:</span>
             </p>
@@ -524,11 +307,11 @@ alwaysApply: true
           </div>
         </div>
 
-        <div class="step">
-          <div class="step-col"><div class="step-num">2</div><div class="step-line"></div></div>
-          <div class="step-body">
-            <div class="step-title"><span lang="vi">Cài native skill vào <code>.agents/skills/</code> (tùy chọn)</span><span lang="en">Install as native skill into <code>.agents/skills/</code> (optional)</span></div>
-            <p class="step-desc">
+        <div style="display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; padding: 20px 0; border-bottom: 1px solid var(--border);">
+          <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2px;"><div class="step-num">2</div><div class="step-line"></div></div>
+          <div style="min-width: 0; padding-top: 2px;">
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;"><span lang="vi">Cài native skill vào <code>.agents/skills/</code> (tùy chọn)</span><span lang="en">Install as native skill into <code>.agents/skills/</code> (optional)</span></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
               <span lang="vi">Nếu muốn Antigravity biết đầy đủ workflow harness-kit, copy thư mục skill vào <code>.agents/skills/</code> trong project (<strong>chạy lệnh này từ trong harness-kit/</strong>):</span>
               <span lang="en">To give Antigravity full harness-kit workflow knowledge, copy the skill folder into <code>.agents/skills/</code> in your project (<strong>run this from inside harness-kit/</strong>):</span>
             </p>
@@ -547,18 +330,18 @@ cp -r skills /path/to/your-project/.agents/skills/harness-kit</pre>
           </div>
         </div>
 
-        <div class="step">
-          <div class="step-col"><div class="step-num">3</div></div>
-          <div class="step-body">
-            <div class="step-title"><span lang="vi">Xác nhận hoạt động</span><span lang="en">Verify it works</span></div>
-            <p class="step-desc">
+        <div style="display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; padding: 20px 0;">
+          <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2px;"><div class="step-num">3</div></div>
+          <div style="min-width: 0; padding-top: 2px;">
+            <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;"><span lang="vi">Xác nhận hoạt động</span><span lang="en">Verify it works</span></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
               <span lang="vi">Mở project trong Antigravity và prompt agent:</span>
               <span lang="en">Open the project in Antigravity and prompt the agent:</span>
             </p>
             <div class="code-wrap">
               <pre><span lang="vi">"Đọc AGENTS.md và thực thi feature đang in_progress trong feature_list.json"</span><span lang="en">"Read AGENTS.md and execute the in_progress feature from feature_list.json"</span></pre>
             </div>
-            <div class="callout success" style="margin-top:12px">
+            <div class="callout success">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span lang="vi">Agent sẽ tự chạy <code>init.ps1</code>/<code>init.sh</code> để verify trước khi đánh dấu done. Không cần giải thích thêm.</span>
               <span lang="en">The agent will run <code>init.ps1</code>/<code>init.sh</code> for verification before flipping status to done. No further explanation needed.</span>
@@ -576,39 +359,15 @@ cp -r skills /path/to/your-project/.agents/skills/harness-kit</pre>
     <div class="footer-inner">
       <span lang="vi">&copy; 2026 Harness Kit. Phát hành dưới giấy phép MIT.</span>
       <span lang="en">&copy; 2026 Harness Kit. Released under the MIT License.</span>
-      <div style="display:flex; gap:16px">
-        <a href="getting-started.html"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
+      <div class="footer-links">
         <a href="index.html"><span lang="vi">Tổng quan</span><span lang="en">Overview</span></a>
+        <a href="getting-started.html"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
+        <a href="use-case.html">Use Cases</a>
         <a href="https://github.com/nguyenanh92/harness-kit" target="_blank">GitHub</a>
       </div>
     </div>
   </div>
 </footer>
 
-<script>
-  let currentLang = 'vi';
-
-  function switchLang(lang) {
-    currentLang = lang;
-    document.body.className = `lang-${lang}`;
-    document.getElementById('lang-vi-btn').classList.toggle('active', lang === 'vi');
-    document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
-    localStorage.setItem('harness-kit-lang', lang);
-  }
-
-  function copyBlock(btn) {
-    const pre = btn.closest('.code-wrap').querySelector('pre');
-    navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
-      const orig = btn.textContent;
-      btn.textContent = 'Copied!';
-      setTimeout(() => { btn.textContent = orig; }, 1800);
-    });
-  }
-
-  window.onload = function () {
-    const saved = localStorage.getItem('harness-kit-lang');
-    switchLang(saved === 'en' ? 'en' : 'vi');
-  };
-</script>
 </body>
 </html>

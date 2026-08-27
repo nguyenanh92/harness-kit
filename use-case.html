@@ -9,451 +9,61 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:          #080c18;
-      --bg-raised:   #0d1220;
-      --bg-card:     #0f1320;
-      --bg-code:     #080e1a;
-      --border:      rgba(255,255,255,0.07);
-      --border-hover:rgba(99,102,241,0.35);
-
-      --primary:     #6366f1;
-      --primary-dim: rgba(99,102,241,0.12);
-      --amber:       #f59e0b;
-      --success:     #10b981;
-      --danger:      #f43f5e;
-
-      --text:        #f1f5f9;
-      --text-muted:  #94a3b8;
-      --text-faint:  #4b5563;
-
-      --font-sans:   'Plus Jakarta Sans', sans-serif;
-      --font-mono:   'Fira Code', monospace;
-      --radius:      10px;
-      --transition:  0.2s ease;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font-sans);
-      line-height: 1.6;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    body.lang-vi [lang="en"] { display: none !important; }
-    body.lang-en [lang="vi"] { display: none !important; }
-
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 4px; }
-
-    a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
-    a:hover { color: var(--amber); }
-
-    .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
-
-    /* ==========================================
-       NAV
-       ========================================== */
-    nav.topbar {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(8,12,24,0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    nav.topbar .wrap {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 24px; max-width: 1000px; margin: 0 auto; gap: 16px;
-    }
-
-    .brand {
-      font-family: var(--font-mono); font-weight: 600;
-      color: var(--text); font-size: 14px; letter-spacing: -0.01em;
-    }
-
-    .brand .dot { color: var(--primary); }
-
-    .nav-links { display: flex; align-items: center; gap: 4px; }
-
-    .nav-links a {
-      padding: 6px 10px; border-radius: 6px; font-size: 13.5px;
-      font-weight: 500; color: var(--text-muted);
-      transition: color var(--transition), background var(--transition);
-    }
-
-    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
-
-    .lang-toggle {
-      display: flex;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      overflow: hidden;
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      margin-left: 8px;
-    }
-
-    .lang-toggle button {
-      background: none; border: none; color: var(--text-muted);
-      padding: 6px 11px; cursor: pointer; transition: all var(--transition);
-      font-family: inherit; font-size: inherit; font-weight: 600;
-    }
-
-    .lang-toggle button.active { background: var(--primary); color: white; }
-    .lang-toggle button:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.05); }
-
-    /* ==========================================
-       HERO
-       ========================================== */
-    .hero { padding: 80px 0 48px; text-align: center; }
-
-    .hero .eyebrow {
-      display: inline-block;
-      font-family: var(--font-mono); font-size: 11.5px;
-      color: var(--primary); letter-spacing: 0.12em; text-transform: uppercase;
-      padding: 4px 14px; border: 1px solid rgba(99,102,241,0.25);
-      border-radius: 999px; margin-bottom: 24px;
-    }
-
-    .hero h1 {
-      font-size: clamp(1.75rem, 4vw, 2.75rem);
-      font-weight: 800; line-height: 1.2;
-      letter-spacing: -0.025em; margin-bottom: 16px;
-    }
-
-    .hero h1 .grad {
-      background: linear-gradient(130deg, #fff 0%, var(--primary) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero p {
-      max-width: 640px; margin: 0 auto;
-      color: var(--text-muted); font-size: 15.5px; line-height: 1.7;
-    }
-
-    .hero-badges {
-      margin-top: 20px;
-      font-size: 13.5px;
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;
-      color: var(--text-muted);
-    }
-
-    /* ==========================================
-       MODE BADGES
-       ========================================== */
-    .mode-badge {
-      display: inline-block;
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      padding: 2px 7px; border-radius: 4px; margin-left: 5px;
-      letter-spacing: 0.06em; vertical-align: middle;
-    }
-
-    .mode-gov {
-      background: rgba(16,185,129,0.1); color: var(--success);
-      border: 1px solid rgba(16,185,129,0.25);
-    }
-
-    .mode-full {
-      background: rgba(245,158,11,0.1); color: var(--amber);
-      border: 1px solid rgba(245,158,11,0.25);
-    }
-
-    /* ==========================================
-       TOC GRID
-       ========================================== */
-    .toc {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px; margin: 36px auto 72px; max-width: 860px;
-    }
-
-    .toc a {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 16px;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text); font-size: 13.5px; font-weight: 500;
-      transition: all var(--transition);
-      position: relative;
-    }
-
-    .toc a::before {
-      content: '';
-      position: absolute; left: 0; top: 10px; bottom: 10px;
-      width: 3px; background: var(--primary);
-      border-radius: 0 2px 2px 0;
-      opacity: 0; transition: opacity var(--transition);
-    }
-
-    .toc a:hover { color: var(--text); border-color: var(--border-hover); }
-    .toc a:hover::before { opacity: 1; }
-
-    .toc-num {
-      flex: 0 0 28px; height: 28px; border-radius: 6px;
-      background: var(--primary-dim); color: var(--primary);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-    }
-
-    /* ==========================================
-       MODE DIVIDER
-       ========================================== */
-    .mode-divider {
-      display: flex; align-items: flex-start; gap: 16px;
-      margin: 48px 0 36px; padding: 20px 24px;
-      background: rgba(245,158,11,0.05);
-      border: 1px solid rgba(245,158,11,0.2);
-      border-radius: var(--radius);
-    }
-
-    .mode-divider-icon {
-      flex: 0 0 40px; height: 40px; border-radius: 8px;
-      background: rgba(245,158,11,0.1); color: var(--amber);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-    }
-
-    .mode-divider-body { flex: 1; }
-    .mode-divider-body strong { color: var(--amber); font-size: 15px; display: block; margin-bottom: 4px; }
-    .mode-divider-body .sub { font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px; }
-
-    /* ==========================================
-       USE CASE CARD
-       ========================================== */
-    .case {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 36px;
-      margin-bottom: 20px;
-      scroll-margin-top: 80px;
-    }
-
-    .case-head {
-      display: flex; align-items: flex-start; gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .case-num {
-      flex: 0 0 48px; height: 48px;
-      background: var(--primary-dim);
-      border: 1px solid rgba(99,102,241,0.25);
-      color: var(--primary); border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-mono); font-weight: 700; font-size: 17px;
-    }
-
-    .case h2 {
-      font-size: 20px; font-weight: 700; letter-spacing: -0.015em;
-      margin-bottom: 4px;
-    }
-
-    .case .tag {
-      display: inline-block; font-family: var(--font-mono); font-size: 11px;
-      color: var(--text-faint); letter-spacing: 0.04em;
-    }
-
-    /* ==========================================
-       PAIN / RESULT BLOCKS
-       ========================================== */
-    .pain {
-      display: flex; gap: 14px; align-items: flex-start;
-      padding: 14px 18px; margin: 0 0 28px;
-      background: rgba(244,63,94,0.05);
-      border-left: 3px solid var(--danger);
-      border-radius: 4px;
-    }
-
-    .pain .label {
-      flex: 0 0 56px;
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      color: var(--danger); letter-spacing: 0.1em; padding-top: 2px;
-      text-transform: uppercase;
-    }
-
-    .pain .text { color: var(--text); font-size: 14.5px; line-height: 1.6; }
-
-    .result {
-      display: flex; gap: 14px; align-items: flex-start;
-      padding: 14px 18px; margin-top: 12px;
-      background: rgba(16,185,129,0.05);
-      border-left: 3px solid var(--success);
-      border-radius: 4px;
-    }
-
-    .result .label {
-      flex: 0 0 56px;
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      color: var(--success); letter-spacing: 0.1em; padding-top: 2px;
-      text-transform: uppercase;
-    }
-
-    .result .text { color: var(--text); font-size: 14px; line-height: 1.6; }
-
-    /* ==========================================
-       STEP LIST
-       ========================================== */
-    .step-list { list-style: none; counter-reset: step; padding-left: 0; }
-
-    .step-list > li {
-      counter-increment: step;
-      position: relative;
-      padding: 0 0 28px 48px;
-      border-left: 1px solid var(--border);
-      margin-left: 15px;
-    }
-
-    .step-list > li:last-child { border-left-color: transparent; padding-bottom: 0; }
-
-    .step-list > li::before {
-      content: counter(step);
-      position: absolute; left: -15px; top: 0;
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--bg-raised);
-      border: 1px solid var(--primary);
-      color: var(--primary); font-family: var(--font-mono);
-      font-size: 11px; font-weight: 600;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .step-list > li > h3 {
-      font-size: 15px; font-weight: 600; margin-bottom: 8px;
-      color: var(--text); padding-top: 2px;
-    }
-
-    .step-list > li > p {
-      color: var(--text-muted); font-size: 13.5px; margin-bottom: 12px;
-      line-height: 1.65;
-    }
-
-    /* ==========================================
-       CODE BLOCKS
-       ========================================== */
-    .code-file-bar {
-      background: #0b1022;
-      border: 1px solid var(--border);
-      border-bottom: none;
-      border-radius: 7px 7px 0 0;
-      padding: 7px 14px;
-      display: flex; justify-content: space-between; align-items: center;
-      margin-top: 8px;
-    }
-
-    .code-file-name {
-      font-family: var(--font-mono); font-size: 11px; color: var(--text-faint);
-    }
-
-    .code-lang-tag {
-      font-family: var(--font-mono); font-size: 10px;
-      color: var(--primary); background: var(--primary-dim);
-      padding: 2px 7px; border-radius: 3px;
-    }
-
-    pre.code {
-      background: var(--bg-code);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 14px 18px;
-      font-family: var(--font-mono); font-size: 12.5px;
-      line-height: 1.65;
-      color: #cbd5e1;
-      overflow-x: auto;
-      margin: 8px 0;
-    }
-
-    pre.code.has-bar { border-radius: 0 0 7px 7px; margin-top: 0; }
-
-    pre.code .c { color: var(--text-faint); font-style: italic; }
-    pre.code .k { color: #93b4d8; }
-    pre.code .s { color: var(--amber); }
-    pre.code .n { color: #60a5fa; }
-    pre.code .v { color: #7dd3fc; }
-
-    code.inline {
-      font-family: var(--font-mono); font-size: 12px;
-      background: rgba(99,102,241,0.1);
-      padding: 2px 6px; border-radius: 4px;
-      color: var(--text-muted);
-    }
-
-    .filename {
-      display: inline-block;
-      font-family: var(--font-mono); font-size: 11px;
-      color: var(--text-faint); letter-spacing: 0.04em;
-      padding: 3px 9px; background: var(--primary-dim);
-      border: 1px solid rgba(99,102,241,0.15);
-      border-radius: 4px; margin-bottom: 4px; margin-top: 8px;
-    }
-
-    /* ==========================================
-       FOOTER
-       ========================================== */
-    footer {
-      margin-top: 96px; padding: 32px 24px;
-      border-top: 1px solid var(--border);
-      text-align: center; color: var(--text-faint); font-size: 13px;
-    }
-
-    footer a { color: var(--text-muted); }
-    footer a:hover { color: var(--text); }
-
-    /* ==========================================
-       MOBILE
-       ========================================== */
-    @media (max-width: 640px) {
-      .case { padding: 24px 20px; }
-      .case-head { flex-wrap: wrap; }
-      .step-list > li { padding-left: 36px; }
-      pre.code { font-size: 12px; padding: 12px 14px; }
-      .toc { grid-template-columns: 1fr 1fr; }
-      .mode-divider { flex-direction: column; gap: 12px; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js"></script>
 </head>
 <body class="lang-vi">
 
-  <nav class="topbar">
-    <div class="wrap">
-      <div class="brand">harness<span class="dot">·</span>kit / use-cases</div>
-      <div class="nav-links">
-        <a href="index.html">← Home</a>
-        <a href="https://github.com/nguyenanh92/harness-kit" target="_blank">GitHub</a>
-        <div class="lang-toggle">
-          <button data-lang="vi" class="active">VI</button>
-          <button data-lang="en">EN</button>
+  <!-- Header / Navigation -->
+  <header>
+    <div class="container">
+      <nav class="header-nav">
+        <a href="index.html" class="brand">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          harness<span class="dot">-kit</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html"><span lang="vi">Tổng quan</span><span lang="en">Overview</span></a>
+          <a href="getting-started.html"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
+          <a href="install-skill.html"><span lang="vi">Cài Skill</span><span lang="en">Install Skill</span></a>
+          <a href="use-case.html" class="active-page"><span lang="vi">Use Cases</span><span lang="en">Use Cases</span></a>
+          <a href="https://github.com/nguyenanh92/harness-kit" target="_blank" class="btn-github">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a>
+          <div class="lang-switch">
+            <button class="lang-btn active" id="lang-vi-btn" onclick="switchLang('vi')">VI</button>
+            <button class="lang-btn" id="lang-en-btn" onclick="switchLang('en')">EN</button>
+          </div>
         </div>
-      </div>
+      </nav>
     </div>
-  </nav>
+  </header>
 
-  <header class="hero container">
+  <!-- Hero Section -->
+  <header class="hero container" style="padding: 64px 0 48px; text-align: center;">
     <div class="eyebrow" lang="vi">8 tình huống thực tế</div>
     <div class="eyebrow" lang="en">8 real-world scenarios</div>
 
-    <h1 lang="vi">
-      Dùng harness-kit <span class="grad">trong thực tế</span> như thế nào?
+    <h1 lang="vi" style="font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.025em; margin-bottom: 16px;">
+      Dùng harness-kit <span style="background: linear-gradient(130deg, #fff 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">trong thực tế</span> như thế nào?
     </h1>
-    <h1 lang="en">
-      How to use harness-kit <span class="grad">in real projects</span>
+    <h1 lang="en" style="font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.025em; margin-bottom: 16px;">
+      How to use harness-kit <span style="background: linear-gradient(130deg, #fff 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">in real projects</span>
     </h1>
 
-    <p lang="vi">
+    <p lang="vi" style="max-width: 640px; margin: 0 auto; color: var(--text-muted); font-size: 15.5px; line-height: 1.7;">
       Mỗi tình huống bắt đầu bằng <em>nỗi đau cụ thể</em>, đi qua các bước copy-paste được, kết thúc bằng <em>kết quả nhìn thấy được</em>. Không lý thuyết thừa.
     </p>
-    <p lang="en">
+    <p lang="en" style="max-width: 640px; margin: 0 auto; color: var(--text-muted); font-size: 15.5px; line-height: 1.7;">
       Each scenario starts with a <em>concrete pain</em>, walks through copy-paste-ready steps, and ends with a <em>visible outcome</em>. No filler theory.
     </p>
 
-    <div class="hero-badges">
+    <div style="margin-top: 20px; font-size: 13.5px; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; color: var(--text-muted);">
       <span>
         <span class="mode-badge mode-gov">GOV</span>&nbsp;
         <span lang="vi">Case 1–4: governance-only — cài mặc định, mọi ngôn ngữ</span>
@@ -469,26 +79,25 @@
 
   <main class="container">
 
-    <div class="toc">
-      <a href="#case-1"><span class="toc-num">1</span><span lang="vi">Khởi tạo project mới</span><span lang="en">Cold-start a new project</span><span class="mode-badge mode-gov">GOV</span></a>
-      <a href="#case-2"><span class="toc-num">2</span><span lang="vi">Audit project đang lộn xộn</span><span lang="en">Audit a messy project</span><span class="mode-badge mode-gov">GOV</span></a>
-      <a href="#case-3"><span class="toc-num">3</span><span lang="vi">Gate CI theo điểm harness</span><span lang="en">Gate CI on harness score</span><span class="mode-badge mode-gov">GOV</span></a>
-      <a href="#case-8"><span class="toc-num">4</span><span lang="vi">Đổi AGENTS.md ↔ CLAUDE.md</span><span lang="en">Switch AGENTS.md ↔ CLAUDE.md</span><span class="mode-badge mode-gov">GOV</span></a>
-      <a href="#case-4"><span class="toc-num">5</span><span lang="vi">Khôi phục sau crash</span><span lang="en">Resume after a crash</span><span class="mode-badge mode-full">FULL</span></a>
-      <a href="#case-5"><span class="toc-num">6</span><span lang="vi">Thêm tool tuỳ chỉnh</span><span lang="en">Add a custom tool</span><span class="mode-badge mode-full">FULL</span></a>
-      <a href="#case-6"><span class="toc-num">7</span><span lang="vi">Wire LLM thật (Claude/OpenAI)</span><span lang="en">Wire a real LLM adapter</span><span class="mode-badge mode-full">FULL</span></a>
-      <a href="#case-7"><span class="toc-num">8</span><span lang="vi">Spawn sub-agent cho task con</span><span lang="en">Spawn a focused sub-agent</span><span class="mode-badge mode-full">FULL</span></a>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 36px auto 72px; max-width: 860px;">
+      <a href="#case-1" class="toc-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13.5px; font-weight: 500;"><span style="flex: 0 0 28px; height: 28px; border-radius: 6px; background: var(--primary-dim); color: var(--primary); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; font-weight: 700;">1</span><span lang="vi">Khởi tạo project mới</span><span lang="en">Cold-start a new project</span><span class="mode-badge mode-gov">GOV</span></a>
+      <a href="#case-2" class="toc-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13.5px; font-weight: 500;"><span style="flex: 0 0 28px; height: 28px; border-radius: 6px; background: var(--primary-dim); color: var(--primary); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; font-weight: 700;">2</span><span lang="vi">Audit project đang lộn xộn</span><span lang="en">Audit a messy project</span><span class="mode-badge mode-gov">GOV</span></a>
+      <a href="#case-3" class="toc-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13.5px; font-weight: 500;"><span style="flex: 0 0 28px; height: 28px; border-radius: 6px; background: var(--primary-dim); color: var(--primary); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; font-weight: 700;">3</span><span lang="vi">Gate CI theo điểm harness</span><span lang="en">Gate CI on harness score</span><span class="mode-badge mode-gov">GOV</span></a>
+      <a href="#case-8" class="toc-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13.5px; font-weight: 500;"><span style="flex: 0 0 28px; height: 28px; border-radius: 6px; background: var(--primary-dim); color: var(--primary); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; font-weight: 700;">4</span><span lang="vi">Đổi AGENTS.md ↔ CLAUDE.md</span><span lang="en">Switch AGENTS.md ↔ CLAUDE.md</span><span class="mode-badge mode-gov">GOV</span></a>
+      <a href="#case-4" class="toc-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13.5px; font-weight: 500;"><span style="flex: 0 0 28px; height: 28px; border-radius: 6px; background: var(--primary-dim); color: var(--primary); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; font-weight: 700;">5</span><span lang="vi">Khôi phục sau crash</span><span lang="en">Resume after a crash</span><span class="mode-badge mode-full">FULL</span></a>
+      <a href="#case-5" class="toc-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13.5px; font-weight: 500;"><span style="flex: 0 0 28px; height: 28px; border-radius: 6px; background: var(--primary-dim); color: var(--primary); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; font-weight: 700;">6</span><span lang="vi">Thêm tool tuỳ chỉnh</span><span lang="en">Add a custom tool</span><span class="mode-badge mode-full">FULL</span></a>
+      <a href="#case-6" class="toc-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13.5px; font-weight: 500;"><span style="flex: 0 0 28px; height: 28px; border-radius: 6px; background: var(--primary-dim); color: var(--primary); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; font-weight: 700;">7</span><span lang="vi">Wire LLM thật (Claude/OpenAI)</span><span lang="en">Wire a real LLM adapter</span><span class="mode-badge mode-full">FULL</span></a>
+      <a href="#case-7" class="toc-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13.5px; font-weight: 500;"><span style="flex: 0 0 28px; height: 28px; border-radius: 6px; background: var(--primary-dim); color: var(--primary); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px; font-weight: 700;">8</span><span lang="vi">Spawn sub-agent cho task con</span><span lang="en">Spawn a focused sub-agent</span><span class="mode-badge mode-full">FULL</span></a>
     </div>
 
-
     <!-- CASE 1 -->
-    <section class="case" id="case-1">
-      <div class="case-head">
-        <div class="case-num">01</div>
+    <section class="case" id="case-1" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 36px; margin-bottom: 20px; scroll-margin-top: 80px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px;">
+        <div style="flex: 0 0 48px; height: 48px; background: var(--primary-dim); border: 1px solid rgba(99,102,241,0.25); color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 700; font-size: 17px;">01</div>
         <div>
-          <h2 lang="vi">Khởi tạo harness cho project mới</h2>
-          <h2 lang="en">Cold-start a new project</h2>
-          <span class="tag">cold-start · scaffold · 2 minutes <span class="mode-badge mode-gov">GOV</span></span>
+          <h2 lang="vi" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Khởi tạo harness cho project mới</h2>
+          <h2 lang="en" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Cold-start a new project</h2>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.04em;">cold-start · scaffold · 2 minutes <span class="mode-badge mode-gov">GOV</span></span>
         </div>
       </div>
 
@@ -506,11 +115,14 @@
           <h3 lang="en">Run the install command from your project root</h3>
           <p lang="vi">Không cần npm/pip — chỉ cần Python 3.8+ và git. Lệnh tự clone, scaffold, rồi tự dọn sạch.</p>
           <p lang="en">No npm/pip — just Python 3.8+ and git. The script clones, scaffolds, then cleans up automatically.</p>
-<pre class="code"><span class="c"># macOS / Linux</span>
+          <div class="code-wrap">
+            <pre><span class="c"># macOS / Linux</span>
 <span class="k">curl</span> -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh
 
 <span class="c"># Windows (PowerShell)</span>
 <span class="k">irm</span> https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex</pre>
+            <button class="btn-copy" onclick="copyBlock(this)">Copy</button>
+          </div>
         </li>
 
         <li>
@@ -518,8 +130,8 @@
           <h3 lang="en">Fill in the first feature in <code class="inline">feature_list.json</code></h3>
           <p lang="vi">Đặt <code class="inline">active_feature</code> và <code class="inline">status: "in_progress"</code> cho duy nhất 1 feature.</p>
           <p lang="en">Set <code class="inline">active_feature</code> and <code class="inline">status: "in_progress"</code> for exactly one feature.</p>
-<div class="code-file-bar"><span class="code-file-name">feature_list.json</span><span class="code-lang-tag">json</span></div>
-<pre class="code has-bar">{
+          <div class="code-file-bar"><span class="code-file-name">feature_list.json</span><span class="code-lang-tag">json</span></div>
+          <pre class="code has-bar">{
   <span class="s">"active_feature"</span>: <span class="s">"F-001"</span>,
   <span class="s">"features"</span>: [
     {
@@ -536,7 +148,7 @@
         <li>
           <h3 lang="vi">Chạy verification entrypoint</h3>
           <h3 lang="en">Run the verification entrypoint</h3>
-<pre class="code"><span class="k">./init.sh</span>      <span class="c"># POSIX</span>
+          <pre class="code"><span class="k">./init.sh</span>      <span class="c"># POSIX</span>
 <span class="k">./init.ps1</span>     <span class="c"># Windows</span></pre>
         </li>
 
@@ -557,15 +169,14 @@
       </div>
     </section>
 
-
     <!-- CASE 2 -->
-    <section class="case" id="case-2">
-      <div class="case-head">
-        <div class="case-num">02</div>
+    <section class="case" id="case-2" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 36px; margin-bottom: 20px; scroll-margin-top: 80px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px;">
+        <div style="flex: 0 0 48px; height: 48px; background: var(--primary-dim); border: 1px solid rgba(99,102,241,0.25); color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 700; font-size: 17px;">02</div>
         <div>
-          <h2 lang="vi">Audit project đang lộn xộn</h2>
-          <h2 lang="en">Audit an existing chaotic project</h2>
-          <span class="tag">audit · score · bottleneck <span class="mode-badge mode-gov">GOV</span></span>
+          <h2 lang="vi" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Audit project đang lộn xộn</h2>
+          <h2 lang="en" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Audit an existing chaotic project</h2>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.04em;">audit · score · bottleneck <span class="mode-badge mode-gov">GOV</span></span>
         </div>
       </div>
 
@@ -581,7 +192,7 @@
         <li>
           <h3 lang="vi">Chấm điểm cấu trúc</h3>
           <h3 lang="en">Score the structure</h3>
-<pre class="code"><span class="k">py</span> skills/scripts/validate_harness.py <span class="n">--target</span> /path/to/project</pre>
+          <pre class="code"><span class="k">py</span> skills/scripts/validate_harness.py <span class="n">--target</span> /path/to/project</pre>
         </li>
 
         <li>
@@ -589,7 +200,7 @@
           <h3 lang="en">Read the <code class="inline">Bottleneck</code> first</h3>
           <p lang="vi">Output mẫu:</p>
           <p lang="en">Sample output:</p>
-<pre class="code">Overall: 64/100
+          <pre class="code">Overall: 64/100
 Bottleneck: <span class="n">verification</span>
 
 instructions: 4/5 (4/5)
@@ -608,7 +219,7 @@ verification: 1/5 (1/5)
         <li>
           <h3 lang="vi">Sinh report HTML để share team</h3>
           <h3 lang="en">Render an HTML report to share with the team</h3>
-<pre class="code"><span class="k">py</span> skills/scripts/render_assessment_html.py \
+          <pre class="code"><span class="k">py</span> skills/scripts/render_assessment_html.py \
     <span class="n">--target</span> /path/to/project \
     <span class="n">--output</span> harness-audit-$(date +%Y%m%d).html</pre>
         </li>
@@ -623,7 +234,7 @@ verification: 1/5 (1/5)
         <li>
           <h3 lang="vi">Re-score sau khi sửa</h3>
           <h3 lang="en">Re-score after the fix</h3>
-<pre class="code"><span class="k">py</span> skills/scripts/validate_harness.py <span class="n">--target</span> . <span class="n">--json</span> | jq <span class="s">'.overall'</span></pre>
+          <pre class="code"><span class="k">py</span> skills/scripts/validate_harness.py <span class="n">--target</span> . <span class="n">--json</span> | jq <span class="s">'.overall'</span></pre>
         </li>
       </ol>
 
@@ -636,15 +247,14 @@ verification: 1/5 (1/5)
       </div>
     </section>
 
-
     <!-- CASE 3 -->
-    <section class="case" id="case-3">
-      <div class="case-head">
-        <div class="case-num">03</div>
+    <section class="case" id="case-3" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 36px; margin-bottom: 20px; scroll-margin-top: 80px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px;">
+        <div style="flex: 0 0 48px; height: 48px; background: var(--primary-dim); border: 1px solid rgba(99,102,241,0.25); color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 700; font-size: 17px;">03</div>
         <div>
-          <h2 lang="vi">Gate CI theo điểm harness (chống drift)</h2>
-          <h2 lang="en">Gate CI on the harness score (anti-drift)</h2>
-          <span class="tag">ci · github-actions · regression <span class="mode-badge mode-gov">GOV</span></span>
+          <h2 lang="vi" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Gate CI theo điểm harness (chống drift)</h2>
+          <h2 lang="en" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Gate CI on the harness score (anti-drift)</h2>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.04em;">ci · github-actions · regression <span class="mode-badge mode-gov">GOV</span></span>
         </div>
       </div>
 
@@ -662,7 +272,7 @@ verification: 1/5 (1/5)
           <h3 lang="en">Vendor the scripts into your repo</h3>
           <p lang="vi">Clone harness-kit vào thư mục <code class="inline">.harness-scripts/</code> rồi commit. CI sẽ dùng scripts từ đó thay vì cần clone lại mỗi lần chạy.</p>
           <p lang="en">Clone harness-kit into <code class="inline">.harness-scripts/</code> then commit. CI uses those vendored scripts instead of cloning on every run.</p>
-<pre class="code"><span class="k">git clone</span> --depth 1 https://github.com/nguyenanh92/harness-kit.git .harness-scripts
+          <pre class="code"><span class="k">git clone</span> --depth 1 https://github.com/nguyenanh92/harness-kit.git .harness-scripts
 <span class="k">git add</span> .harness-scripts
 <span class="k">git commit -m</span> <span class="s">"vendor harness validation scripts"</span></pre>
         </li>
@@ -670,8 +280,8 @@ verification: 1/5 (1/5)
         <li>
           <h3 lang="vi">Thêm workflow GitHub Actions</h3>
           <h3 lang="en">Add a GitHub Actions workflow</h3>
-<div class="code-file-bar"><span class="code-file-name">.github/workflows/harness.yml</span><span class="code-lang-tag">yaml</span></div>
-<pre class="code has-bar"><span class="k">name</span>: <span class="s">Harness regression gate</span>
+          <div class="code-file-bar"><span class="code-file-name">.github/workflows/harness.yml</span><span class="code-lang-tag">yaml</span></div>
+          <pre class="code has-bar"><span class="k">name</span>: <span class="s">Harness regression gate</span>
 <span class="k">on</span>: [<span class="s">push</span>, <span class="s">pull_request</span>]
 <span class="k">jobs</span>:
   <span class="k">audit</span>:
@@ -693,7 +303,7 @@ verification: 1/5 (1/5)
         <li>
           <h3 lang="vi">(Tuỳ chọn) Upload HTML report làm artifact</h3>
           <h3 lang="en">(Optional) Upload the HTML report as an artifact</h3>
-<pre class="code">      - <span class="k">run</span>: <span class="s">python .harness-scripts/render_assessment_html.py --target . --output audit.html</span>
+          <pre class="code">      - <span class="k">run</span>: <span class="s">python .harness-scripts/render_assessment_html.py --target . --output audit.html</span>
         <span class="k">if</span>: <span class="s">always()</span>
       - <span class="k">uses</span>: <span class="s">actions/upload-artifact@v4</span>
         <span class="k">with</span>: { <span class="k">name</span>: <span class="s">harness-audit</span>, <span class="k">path</span>: <span class="s">audit.html</span> }</pre>
@@ -709,16 +319,15 @@ verification: 1/5 (1/5)
       </div>
     </section>
 
-
     <!-- MODE DIVIDER -->
-    <div class="mode-divider">
-      <div class="mode-divider-icon">&#x26A1;</div>
-      <div class="mode-divider-body">
-        <strong lang="vi">Các case dưới đây cần cài <code class="inline">--full</code></strong>
-        <strong lang="en">Cases below require the <code class="inline">--full</code> install</strong>
-        <div class="sub" lang="vi">Thêm Python runtime: vòng lặp agent, JSONL persistence, tool registry, sub-agent spawning.</div>
-        <div class="sub" lang="en">Adds the Python runtime: agent loop, JSONL persistence, tool registry, sub-agent spawning.</div>
-<pre class="code"><span class="c"># macOS / Linux</span>
+    <div style="display: flex; align-items: flex-start; gap: 16px; margin: 48px 0 36px; padding: 20px 24px; background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); border-radius: var(--radius);">
+      <div style="flex: 0 0 40px; height: 40px; border-radius: 8px; background: rgba(245,158,11,0.1); color: var(--amber); display: flex; align-items: center; justify-content: center; font-size: 18px;">&#x26A1;</div>
+      <div style="flex: 1;">
+        <strong lang="vi" style="color: var(--amber); font-size: 15px; display: block; margin-bottom: 4px;">Các case dưới đây cần cài <code class="inline">--full</code></strong>
+        <strong lang="en" style="color: var(--amber); font-size: 15px; display: block; margin-bottom: 4px;">Cases below require the <code class="inline">--full</code> install</strong>
+        <div style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px;" lang="vi">Thêm Python runtime: vòng lặp agent, JSONL persistence, tool registry, sub-agent spawning.</div>
+        <div style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px;" lang="en">Adds the Python runtime: agent loop, JSONL persistence, tool registry, sub-agent spawning.</div>
+        <pre class="code"><span class="c"># macOS / Linux</span>
 <span class="k">curl</span> -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh -s -- --full
 
 <span class="c"># Windows (PowerShell)</span>
@@ -726,15 +335,14 @@ verification: 1/5 (1/5)
       </div>
     </div>
 
-
     <!-- CASE 4 -->
-    <section class="case" id="case-4">
-      <div class="case-head">
-        <div class="case-num">04</div>
+    <section class="case" id="case-4" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 36px; margin-bottom: 20px; scroll-margin-top: 80px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px;">
+        <div style="flex: 0 0 48px; height: 48px; background: var(--primary-dim); border: 1px solid rgba(99,102,241,0.25); color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 700; font-size: 17px;">04</div>
         <div>
-          <h2 lang="vi">Khôi phục agent sau khi crash giữa chừng</h2>
-          <h2 lang="en">Resume an agent that crashed mid-feature</h2>
-          <span class="tag">durability · jsonl · replay <span class="mode-badge mode-full">FULL</span></span>
+          <h2 lang="vi" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Khôi phục agent sau khi crash giữa chừng</h2>
+          <h2 lang="en" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Resume an agent that crashed mid-feature</h2>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.04em;">durability · jsonl · replay <span class="mode-badge mode-full">FULL</span></span>
         </div>
       </div>
 
@@ -750,7 +358,7 @@ verification: 1/5 (1/5)
         <li>
           <h3 lang="vi">Kiểm tra JSONL còn nguyên</h3>
           <h3 lang="en">Check the JSONL log survived</h3>
-<pre class="code"><span class="k">ls</span> .harness/
+          <pre class="code"><span class="k">ls</span> .harness/
 <span class="c"># main_session.jsonl  &lt;-- mỗi dòng = 1 event được flush ngay xuống đĩa</span>
 <span class="k">tail -3</span> .harness/main_session.jsonl</pre>
         </li>
@@ -765,7 +373,7 @@ verification: 1/5 (1/5)
         <li>
           <h3 lang="vi">Chạy lại harness với cùng <code class="inline">session-id</code></h3>
           <h3 lang="en">Re-run the harness with the same <code class="inline">session-id</code></h3>
-<pre class="code"><span class="k">py</span> harness/harness.py \
+          <pre class="code"><span class="k">py</span> harness/harness.py \
     <span class="n">--session-id</span> main_session \
     <span class="n">--adapter</span> my_app.adapters:claude_turn \
     <span class="n">--goal</span> <span class="s">"continue F-001"</span></pre>
@@ -790,263 +398,14 @@ verification: 1/5 (1/5)
       </div>
     </section>
 
-
-    <!-- CASE 5 -->
-    <section class="case" id="case-5">
-      <div class="case-head">
-        <div class="case-num">05</div>
-        <div>
-          <h2 lang="vi">Thêm tool tuỳ chỉnh (ví dụ: query DB)</h2>
-          <h2 lang="en">Add a custom tool (e.g. query DB)</h2>
-          <span class="tag">extension · tool-registry · permission <span class="mode-badge mode-full">FULL</span></span>
-        </div>
-      </div>
-
-      <div class="pain">
-        <div class="label">PAIN</div>
-        <div class="text">
-          <span lang="vi">Agent cần đọc 1 bảng read-only trong staging DB để debug. Bạn không muốn dạy nó dùng <code class="inline">psql</code> qua <code class="inline">run_shell</code> (rủi ro inject quá lớn).</span>
-          <span lang="en">The agent needs to read one staging-DB table to debug. You don't want it shelling out to <code class="inline">psql</code> via <code class="inline">run_shell</code> — injection risk is too high.</span>
-        </div>
-      </div>
-
-      <ol class="step-list">
-        <li>
-          <h3 lang="vi">Viết handler trong <code class="inline">harness/extensions.py</code></h3>
-          <h3 lang="en">Write the handler in <code class="inline">harness/extensions.py</code></h3>
-<div class="code-file-bar"><span class="code-file-name">harness/extensions.py</span><span class="code-lang-tag">python</span></div>
-<pre class="code has-bar"><span class="k">import</span> sqlite3
-<span class="k">from</span> tool_registry <span class="k">import</span> Tool
-
-<span class="k">def</span> query_db_handler(args):
-    sql = args.get(<span class="s">"sql"</span>, <span class="s">""</span>).strip()
-    <span class="c"># Hard whitelist: read-only SELECTs only</span>
-    <span class="k">if</span> <span class="k">not</span> sql.lower().startswith(<span class="s">"select"</span>):
-        <span class="k">return</span> <span class="s">"Error: only SELECT allowed"</span>
-    conn = sqlite3.connect(<span class="s">"staging.db"</span>)
-    rows = conn.execute(sql).fetchmany(<span class="n">50</span>)
-    <span class="k">return</span> <span class="s">"\n"</span>.join(str(r) <span class="k">for</span> r <span class="k">in</span> rows)
-
-QUERY_DB_TOOL = Tool(
-    name=<span class="s">"query_db"</span>,
-    description=<span class="s">"Run a read-only SQL SELECT. Args: {'sql': str}"</span>,
-    required_permission=<span class="s">"READ_ONLY"</span>,
-    handler=query_db_handler,
-)</pre>
-        </li>
-
-        <li>
-          <h3 lang="vi">Đăng ký lúc khởi tạo harness</h3>
-          <h3 lang="en">Register at harness init</h3>
-<pre class="code"><span class="k">from</span> harness.harness <span class="k">import</span> Harness
-<span class="k">from</span> harness.extensions <span class="k">import</span> QUERY_DB_TOOL
-
-h = Harness(workspace_dir=<span class="s">"."</span>, model_turn=my_adapter)
-h.registry.register(QUERY_DB_TOOL)
-h.run(goal=<span class="s">"debug missing user record"</span>)</pre>
-        </li>
-
-        <li>
-          <h3 lang="vi">Document tool trong AGENTS.md</h3>
-          <h3 lang="en">Document the tool in AGENTS.md</h3>
-          <p lang="vi">Agent chỉ biết tool nếu được mô tả trong system prompt. Thêm vào section "Available Tools".</p>
-          <p lang="en">The agent only knows about a tool if it appears in the system prompt. Add to the "Available Tools" section.</p>
-        </li>
-
-        <li>
-          <h3 lang="vi">Thêm eval case</h3>
-          <h3 lang="en">Add an eval case</h3>
-          <p lang="vi">Mỗi tool mới = 1 eval mới trong <code class="inline">evals/evals.json</code> để CI giữ tool chạy đúng.</p>
-          <p lang="en">Every new tool = one new case in <code class="inline">evals/evals.json</code> so CI keeps it honest.</p>
-        </li>
-      </ol>
-
-      <div class="result">
-        <div class="label">RESULT</div>
-        <div class="text">
-          <span lang="vi">Agent có quyền đọc DB nhưng không có quyền viết — invariant nằm trong code (whitelist <code class="inline">SELECT</code>) chứ không phải trong system prompt mà LLM có thể "quên".</span>
-          <span lang="en">The agent has DB read access but cannot write — the invariant lives in code (the <code class="inline">SELECT</code>-only whitelist), not in a system prompt the LLM can "forget."</span>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- CASE 6 -->
-    <section class="case" id="case-6">
-      <div class="case-head">
-        <div class="case-num">06</div>
-        <div>
-          <h2 lang="vi">Wire LLM thật (Claude / OpenAI)</h2>
-          <h2 lang="en">Wire a real LLM adapter (Claude / OpenAI)</h2>
-          <span class="tag">live-mode · adapter · zero-dep core <span class="mode-badge mode-full">FULL</span></span>
-        </div>
-      </div>
-
-      <div class="pain">
-        <div class="label">PAIN</div>
-        <div class="text">
-          <span lang="vi">Bạn đã chơi mock đủ rồi. Muốn harness chạy với Claude thật, nhưng không muốn <code class="inline">anthropic</code> SDK xâm nhập vào module harness cốt lõi.</span>
-          <span lang="en">Done playing with mock mode. You want the harness to drive real Claude calls, but you don't want the <code class="inline">anthropic</code> SDK to leak into the core harness module.</span>
-        </div>
-      </div>
-
-      <ol class="step-list">
-        <li>
-          <h3 lang="vi">Viết adapter trong code của caller (KHÔNG trong harness/)</h3>
-          <h3 lang="en">Write the adapter in the caller's code (NOT in harness/)</h3>
-<div class="code-file-bar"><span class="code-file-name">my_app/adapters.py</span><span class="code-lang-tag">python</span></div>
-<pre class="code has-bar"><span class="k">import</span> anthropic
-
-client = anthropic.Anthropic()  <span class="c"># reads ANTHROPIC_API_KEY</span>
-
-<span class="k">def</span> claude_turn(messages):
-    system = next((m[<span class="s">"content"</span>] <span class="k">for</span> m <span class="k">in</span> messages
-                   <span class="k">if</span> m[<span class="s">"role"</span>] == <span class="s">"system"</span>), <span class="s">""</span>)
-    convo = [m <span class="k">for</span> m <span class="k">in</span> messages <span class="k">if</span> m[<span class="s">"role"</span>] != <span class="s">"system"</span>]
-
-    resp = client.messages.create(
-        model=<span class="s">"claude-opus-4-7"</span>,
-        max_tokens=<span class="n">2048</span>,
-        system=system,
-        messages=convo,
-        tools=[ <span class="c"># expose harness tools here</span> ],
-    )
-
-    <span class="c"># Convert Anthropic response to harness contract</span>
-    <span class="k">for</span> block <span class="k">in</span> resp.content:
-        <span class="k">if</span> block.type == <span class="s">"tool_use"</span>:
-            <span class="k">return</span> {<span class="s">"role"</span>: <span class="s">"assistant"</span>, <span class="s">"content"</span>: <span class="s">""</span>,
-                    <span class="s">"tool_call"</span>: {<span class="s">"name"</span>: block.name, <span class="s">"args"</span>: block.input}}
-    <span class="k">return</span> {<span class="s">"role"</span>: <span class="s">"assistant"</span>,
-            <span class="s">"content"</span>: resp.content[<span class="n">0</span>].text,
-            <span class="s">"tool_call"</span>: <span class="k">None</span>}  <span class="c"># no tool_call = "done"</span></pre>
-        </li>
-
-        <li>
-          <h3 lang="vi">Chạy từ CLI</h3>
-          <h3 lang="en">Run from the CLI</h3>
-<pre class="code"><span class="k">export</span> ANTHROPIC_API_KEY=<span class="s">"sk-ant-..."</span>
-<span class="k">py</span> harness/harness.py \
-    <span class="n">--goal</span> <span class="s">"implement F-001 login flow"</span> \
-    <span class="n">--adapter</span> my_app.adapters:claude_turn \
-    <span class="n">--max-iterations</span> <span class="n">30</span></pre>
-        </li>
-
-        <li>
-          <h3 lang="vi">…hoặc nhúng vào ứng dụng của bạn</h3>
-          <h3 lang="en">…or embed in your application</h3>
-<pre class="code"><span class="k">from</span> harness.harness <span class="k">import</span> Harness
-<span class="k">from</span> my_app.adapters <span class="k">import</span> claude_turn
-
-Harness(workspace_dir=<span class="s">"."</span>,
-        model_turn=claude_turn,
-        max_iterations=<span class="n">30</span>).run(goal=<span class="s">"..."</span>)</pre>
-        </li>
-
-        <li>
-          <h3 lang="vi">Đối xử adapter như external service</h3>
-          <h3 lang="en">Treat the adapter like any external service</h3>
-          <p lang="vi">Retry, rate-limit, structured logging — đều ở phía adapter, không ở phía harness. Harness phải tiếp tục chạy được trong sandbox không có mạng.</p>
-          <p lang="en">Retries, rate limiting, structured logging — all live in the adapter, not in the harness. The harness must still run in network-less sandboxes.</p>
-        </li>
-      </ol>
-
-      <div class="result">
-        <div class="label">RESULT</div>
-        <div class="text">
-          <span lang="vi">Harness modules vẫn zero-dep (chạy được trong sandbox Python trống). Đổi từ Claude sang OpenAI = đổi adapter, không đụng vào harness. Mock test vẫn chạy đầy đủ cho CI.</span>
-          <span lang="en">The harness modules stay dep-free (still run in an empty Python sandbox). Switching Claude → OpenAI = swap the adapter, no harness changes. Mock tests still cover the loop for CI.</span>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- CASE 7 -->
-    <section class="case" id="case-7">
-      <div class="case-head">
-        <div class="case-num">07</div>
-        <div>
-          <h2 lang="vi">Spawn sub-agent cho task con (fresh context)</h2>
-          <h2 lang="en">Spawn a sub-agent for a sub-task (fresh context)</h2>
-          <span class="tag">multi-agent · isolation · fresh-context <span class="mode-badge mode-full">FULL</span></span>
-        </div>
-      </div>
-
-      <div class="pain">
-        <div class="label">PAIN</div>
-        <div class="text">
-          <span lang="vi">Agent chính đang implement feature lớn, cần một "explorer" đi kiểm tra schema DB nhưng không muốn nó nhiễm bẩn context chính bằng 200 dòng output lan man.</span>
-          <span lang="en">The main agent is implementing a large feature and needs an "explorer" to inspect the DB schema — without polluting the main context with 200 lines of stream-of-thought.</span>
-        </div>
-      </div>
-
-      <ol class="step-list">
-        <li>
-          <h3 lang="vi">Agent chính gọi tool <code class="inline">spawn_subagent</code></h3>
-          <h3 lang="en">The main agent calls the <code class="inline">spawn_subagent</code> tool</h3>
-          <p lang="vi">Sub-agent này có <strong>fresh context</strong> — không kế thừa lịch sử conversation. Khác với "fork" (kế thừa toàn bộ history, single-level only).</p>
-          <p lang="en">This sub-agent gets a <strong>fresh context</strong> — it does not inherit the conversation history. Different from a "fork" (which inherits full history and is single-level only).</p>
-<pre class="code">{
-  <span class="s">"name"</span>: <span class="s">"schema-explorer"</span>,
-  <span class="s">"task"</span>: <span class="s">"List columns of users + sessions tables"</span>,
-  <span class="s">"allowed_tools"</span>: [<span class="s">"read_file"</span>, <span class="s">"query_db"</span>],
-  <span class="s">"system_prompt"</span>: <span class="s">"Probe the schema. Return at most 20 lines."</span>,
-  <span class="s">"max_iterations"</span>: <span class="n">5</span>
-}</pre>
-        </li>
-
-        <li>
-          <h3 lang="vi">Tool boundary tự enforce qua registry</h3>
-          <h3 lang="en">Tool boundary is enforced via the registry</h3>
-          <p lang="vi">Child registry chỉ copy các tool được liệt kê trong <code class="inline">allowed_tools</code>. <code class="inline">spawn_subagent</code> bị strip — child không thể tự spawn thêm.</p>
-          <p lang="en">The child registry copies only tools listed in <code class="inline">allowed_tools</code>. <code class="inline">spawn_subagent</code> is stripped — the child cannot spawn further.</p>
-          <p lang="vi"><em>Lưu ý:</em> Fresh-context subagent có thể nest nhiều cấp nếu registry cho phép. Python harness mặc định strip để giữ đơn giản.</p>
-          <p lang="en"><em>Note:</em> Fresh-context sub-agents can nest multiple levels if the registry allows it. The Python harness strips by default for simplicity.</p>
-        </li>
-
-        <li>
-          <h3 lang="vi">Child viết JSONL riêng</h3>
-          <h3 lang="en">The child writes its own JSONL</h3>
-<pre class="code">.harness/
-├── main_session.jsonl
-└── main_session/
-    └── schema-explorer.jsonl    <span class="c"># child's own log</span></pre>
-        </li>
-
-        <li>
-          <h3 lang="vi">Parent chỉ nhận summary string</h3>
-          <h3 lang="en">The parent only receives the summary string</h3>
-          <p lang="vi">Hết task, child return <em>một</em> string. 200 dòng tool-call trung gian không vào context của parent. Token budget được bảo vệ.</p>
-          <p lang="en">When done, the child returns <em>one</em> summary string. Its 200 lines of intermediate tool calls never enter the parent's context. Token budget protected.</p>
-        </li>
-      </ol>
-
-      <div class="result">
-        <div class="label">RESULT</div>
-        <div class="text">
-          <span lang="vi">Parent giữ context sạch và tập trung. Sub-agent có ranh giới rõ ràng (tool list + iteration cap). Lỡ child loop chạy hỏng cũng không kéo theo parent.</span>
-          <span lang="en">The parent keeps a clean focused context. The sub-agent has hard boundaries (tool list + iteration cap). A runaway child can't drag the parent down with it.</span>
-        </div>
-      </div>
-    </section>
-
-
     <!-- CASE 8 -->
-    <section class="case" id="case-8">
-      <div class="case-head">
-        <div class="case-num">08</div>
+    <section class="case" id="case-8" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 36px; margin-bottom: 20px; scroll-margin-top: 80px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px;">
+        <div style="flex: 0 0 48px; height: 48px; background: var(--primary-dim); border: 1px solid rgba(99,102,241,0.25); color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 700; font-size: 17px;">08</div>
         <div>
-          <h2 lang="vi">Đổi qua lại giữa AGENTS.md ↔ CLAUDE.md</h2>
-          <h2 lang="en">Switch between AGENTS.md and CLAUDE.md</h2>
-          <span class="tag">cross-tool · convention · zero-rewrite <span class="mode-badge mode-gov">GOV</span></span>
-        </div>
-      </div>
-
-      <div class="pain">
-        <div class="label">PAIN</div>
-        <div class="text">
-          <span lang="vi">Project đang dùng <code class="inline">CLAUDE.md</code> nhưng team mới chuyển sang Cursor/Windsurf — chúng kỳ vọng <code class="inline">AGENTS.md</code>. Bạn không muốn duy trì 2 file đồng bộ thủ công.</span>
-          <span lang="en">Your project uses <code class="inline">CLAUDE.md</code>, but the team is moving to Cursor/Windsurf — which expect <code class="inline">AGENTS.md</code>. You don't want to manually keep two files in sync.</span>
+          <h2 lang="vi" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Đổi AGENTS.md ↔ CLAUDE.md</h2>
+          <h2 lang="en" style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 4px;">Switch AGENTS.md ↔ CLAUDE.md</h2>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.04em;">cross-tool · compatibility · governance <span class="mode-badge mode-gov">GOV</span></span>
         </div>
       </div>
 
@@ -1054,7 +413,7 @@ Harness(workspace_dir=<span class="s">"."</span>,
         <li>
           <h3 lang="vi">Scaffold lại với cờ <code class="inline">--agent-file</code></h3>
           <h3 lang="en">Re-scaffold with the <code class="inline">--agent-file</code> flag</h3>
-<pre class="code"><span class="c"># Đặt CLAUDE.md là file canonical:</span>
+          <pre class="code"><span class="c"># Đặt CLAUDE.md là file canonical:</span>
 <span class="k">py</span> skills/scripts/scaffold_harness.py \
     <span class="n">--target</span> . \
     <span class="n">--agent-file</span> CLAUDE.md \
@@ -1064,9 +423,9 @@ Harness(workspace_dir=<span class="s">"."</span>,
         <li>
           <h3 lang="vi">Thêm symlink (POSIX) hoặc symbolic link (Windows admin)</h3>
           <h3 lang="en">Add a symlink (POSIX) or symbolic link (Windows admin)</h3>
-<pre class="code"><span class="c"># POSIX</span>
+          <pre class="code"><span class="c"># POSIX</span>
 <span class="k">ln -s</span> CLAUDE.md AGENTS.md
-<span class="k">git add</span> AGENTS.md && <span class="k">git commit -m</span> <span class="s">"alias AGENTS.md -> CLAUDE.md"</span>
+<span class="k">git add</span> AGENTS.md &amp;&amp; <span class="k">git commit -m</span> <span class="s">"alias AGENTS.md -> CLAUDE.md"</span>
 
 <span class="c"># Windows (PowerShell, admin)</span>
 <span class="k">New-Item</span> <span class="n">-ItemType</span> SymbolicLink <span class="n">-Path</span> AGENTS.md <span class="n">-Target</span> CLAUDE.md</pre>
@@ -1075,8 +434,8 @@ Harness(workspace_dir=<span class="s">"."</span>,
         <li>
           <h3 lang="vi">Nếu không dùng symlink: stub 3 dòng</h3>
           <h3 lang="en">If symlinks aren't viable: a 3-line stub</h3>
-<div class="code-file-bar"><span class="code-file-name">AGENTS.md</span><span class="code-lang-tag">markdown</span></div>
-<pre class="code has-bar"><span class="c"># Agent Instructions</span>
+          <div class="code-file-bar"><span class="code-file-name">AGENTS.md</span><span class="code-lang-tag">markdown</span></div>
+          <pre class="code has-bar"><span class="c"># Agent Instructions</span>
 
 This project's instructions live in [CLAUDE.md](./CLAUDE.md).
 Read that file end-to-end before writing any code.</pre>
@@ -1085,7 +444,7 @@ Read that file end-to-end before writing any code.</pre>
         <li>
           <h3 lang="vi">Validate vẫn chấm đúng — scorer hiểu cả hai</h3>
           <h3 lang="en">Validate still scores correctly — the scorer accepts either</h3>
-<pre class="code"><span class="k">py</span> skills/scripts/validate_harness.py <span class="n">--target</span> .
+          <pre class="code"><span class="k">py</span> skills/scripts/validate_harness.py <span class="n">--target</span> .
 <span class="c"># instructions: 5/5  PASS Agent instruction file exists</span></pre>
         </li>
       </ol>
@@ -1102,35 +461,19 @@ Read that file end-to-end before writing any code.</pre>
   </main>
 
   <footer>
-    <div lang="vi">
-      Tài liệu chi tiết hơn ở <a href="https://github.com/nguyenanh92/harness-kit/tree/main/skills/references" target="_blank">skills/references/</a>.
-      Gặp lỗi? Mở issue trên <a href="https://github.com/nguyenanh92/harness-kit/issues" target="_blank">GitHub</a>.
+    <div class="container">
+      <div class="footer-inner">
+        <span lang="vi">&copy; 2026 Harness Kit. Phát hành dưới giấy phép MIT.</span>
+        <span lang="en">&copy; 2026 Harness Kit. Released under the MIT License.</span>
+        <div class="footer-links">
+          <a href="index.html"><span lang="vi">Tổng quan</span><span lang="en">Overview</span></a>
+          <a href="getting-started.html"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
+          <a href="install-skill.html"><span lang="vi">Cài Skill</span><span lang="en">Install Skill</span></a>
+          <a href="https://github.com/nguyenanh92/harness-kit" target="_blank">GitHub</a>
+        </div>
+      </div>
     </div>
-    <div lang="en">
-      Deeper docs at <a href="https://github.com/nguyenanh92/harness-kit/tree/main/skills/references" target="_blank">skills/references/</a>.
-      Found a bug? Open an issue on <a href="https://github.com/nguyenanh92/harness-kit/issues" target="_blank">GitHub</a>.
-    </div>
-    <div style="margin-top: 12px; font-size: 12px; color: var(--text-faint);">MIT · Standard library only · Python 3.8+</div>
   </footer>
 
-  <script>
-    (function () {
-      const body = document.body;
-      const buttons = document.querySelectorAll('.lang-toggle button');
-      const saved = localStorage.getItem('hk-lang');
-      const initial = saved || (navigator.language.startsWith('en') ? 'en' : 'vi');
-      setLang(initial);
-
-      buttons.forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
-
-      function setLang(lang) {
-        body.classList.toggle('lang-vi', lang === 'vi');
-        body.classList.toggle('lang-en', lang === 'en');
-        body.lang = lang;
-        buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-        localStorage.setItem('hk-lang', lang);
-      }
-    })();
-  </script>
 </body>
 </html>

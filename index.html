@@ -9,1042 +9,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <style>
-    /* ==========================================
-       Design Tokens
-       ========================================== */
-    :root {
-      --bg:        #080c18;
-      --bg-raised: #0d1220;
-      --bg-card:   #0f1320;
-      --bg-code:   #080e1a;
-      --border:    rgba(255,255,255,0.07);
-      --border-hover: rgba(99,102,241,0.35);
-
-      --primary:   #6366f1;
-      --primary-dim: rgba(99,102,241,0.12);
-      --amber:     #f59e0b;
-      --amber-dim: rgba(245,158,11,0.12);
-      --success:   #10b981;
-      --danger:    #f43f5e;
-
-      --text:      #f1f5f9;
-      --text-muted:#94a3b8;
-      --text-faint:#4b5563;
-
-      --font-sans: 'Plus Jakarta Sans', sans-serif;
-      --font-mono: 'Fira Code', monospace;
-      --radius:    10px;
-      --transition: 0.2s ease;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font-sans);
-      line-height: 1.6;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    body.lang-vi [lang="en"] { display: none !important; }
-    body.lang-en [lang="vi"] { display: none !important; }
-
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 4px; }
-
-    a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
-    a:hover { color: var(--amber); }
-
-    button {
-      font-family: inherit;
-      cursor: pointer;
-      border: none;
-      background: none;
-    }
-
-    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-
-    /* ==========================================
-       NAV
-       ========================================== */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(8,12,24,0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .header-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 0;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: var(--font-mono);
-      font-weight: 600;
-      font-size: 15px;
-      color: var(--text);
-      letter-spacing: -0.01em;
-    }
-
-    .brand svg { width: 22px; height: 22px; }
-    .brand .dot { color: var(--primary); }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .nav-links a:not(.btn-github) {
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--text-muted);
-      transition: color var(--transition), background var(--transition);
-    }
-
-    .nav-links a:not(.btn-github):hover {
-      color: var(--text);
-      background: rgba(255,255,255,0.05);
-    }
-
-    .btn-github {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 14px;
-      border-radius: 7px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      border: 1px solid var(--border);
-      transition: all var(--transition);
-      margin-left: 4px;
-    }
-
-    .btn-github:hover {
-      color: var(--text);
-      border-color: var(--border-hover);
-      background: var(--primary-dim);
-    }
-
-    .lang-switch {
-      display: inline-flex;
-      align-items: center;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      overflow: hidden;
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      margin-left: 8px;
-    }
-
-    .lang-btn {
-      padding: 6px 11px;
-      color: var(--text-muted);
-      transition: all var(--transition);
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: 600;
-    }
-
-    .lang-btn.active {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .lang-btn:hover:not(.active) {
-      color: var(--text);
-      background: rgba(255,255,255,0.05);
-    }
-
-    /* ==========================================
-       HERO
-       ========================================== */
-    .hero {
-      padding: 96px 0 72px;
-      text-align: center;
-    }
-
-    .badge-top {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 5px 14px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 28px;
-      font-family: var(--font-mono);
-    }
-
-    .badge-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--success);
-      animation: pulse 2.4s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    .hero-title {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.03em;
-      margin-bottom: 20px;
-    }
-
-    .hero-title .grad {
-      background: linear-gradient(130deg, #fff 0%, var(--primary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-title .amber-grad {
-      background: linear-gradient(130deg, var(--amber) 0%, #fde68a 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-desc {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      max-width: 680px;
-      margin: 0 auto 40px;
-      line-height: 1.7;
-    }
-
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 56px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 11px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14.5px;
-      transition: all var(--transition);
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .btn-primary:hover {
-      background: #5254e0;
-      color: #fff;
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      color: var(--text);
-      border-color: var(--border-hover);
-      background: var(--primary-dim);
-      transform: translateY(-1px);
-    }
-
-    /* Terminal */
-    .terminal-container {
-      max-width: 680px;
-      margin: 0 auto;
-      background: var(--bg-code);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      text-align: left;
-    }
-
-    .terminal-header {
-      background: #0b1022;
-      padding: 11px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .terminal-dots { display: flex; gap: 6px; }
-    .terminal-dots span {
-      width: 11px; height: 11px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-    .d-red { background: #ef4444; }
-    .d-yellow { background: var(--amber); }
-    .d-green { background: var(--success); }
-
-    .terminal-title {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-faint);
-    }
-
-    .terminal-body {
-      padding: 20px 22px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .terminal-line { display: flex; gap: 10px; }
-    .t-prompt { color: var(--primary); user-select: none; }
-    .t-cmd { color: var(--text); }
-    .t-out { color: var(--text-muted); white-space: pre-wrap; }
-    .t-ok { color: var(--success); }
-
-    /* ==========================================
-       SECTIONS — shared utilities
-       ========================================== */
-    .section { padding: 80px 0; }
-    .section + .section { border-top: 1px solid var(--border); }
-
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--primary);
-      margin-bottom: 10px;
-    }
-
-    .section-title {
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-    }
-
-    .section-desc {
-      color: var(--text-muted);
-      font-size: 15px;
-      max-width: 680px;
-    }
-
-    .section-head { margin-bottom: 48px; }
-
-    /* ==========================================
-       SUBSYSTEMS CARDS
-       ========================================== */
-    .grid-subsystems {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 16px;
-    }
-
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
-      transition: border-color var(--transition), box-shadow var(--transition);
-      position: relative;
-    }
-
-    .card::after {
-      content: '';
-      position: absolute;
-      left: 0; top: 12px; bottom: 12px;
-      width: 3px;
-      background: var(--primary);
-      border-radius: 0 2px 2px 0;
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
-
-    .card:hover {
-      border-color: var(--border-hover);
-    }
-
-    .card:hover::after {
-      opacity: 1;
-    }
-
-    .card-icon {
-      width: 40px; height: 40px;
-      border-radius: 8px;
-      background: var(--primary-dim);
-      border: 1px solid rgba(99,102,241,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary);
-      margin-bottom: 18px;
-    }
-
-    .card-title {
-      font-size: 15.5px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: var(--text);
-    }
-
-    .card-desc {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-      line-height: 1.6;
-    }
-
-    .card-meta {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      color: var(--primary);
-      background: var(--primary-dim);
-      border: 1px solid rgba(99,102,241,0.15);
-      padding: 3px 9px;
-      border-radius: 4px;
-      display: inline-block;
-    }
-
-    /* ==========================================
-       CLI BUILDER
-       ========================================== */
-    .builder-section {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: var(--bg-card);
-    }
-
-    .builder-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 900px) {
-      .builder-grid {
-        grid-template-columns: 380px minmax(0, 1fr);
-      }
-    }
-
-    .builder-form {
-      padding: 36px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    @media (min-width: 900px) {
-      .builder-form {
-        border-bottom: none;
-        border-right: 1px solid var(--border);
-      }
-    }
-
-    .builder-form-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .builder-form-desc {
-      font-size: 13.5px;
-      color: var(--text-muted);
-      margin-bottom: 28px;
-    }
-
-    .form-group { margin-bottom: 20px; }
-
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: var(--text);
-    }
-
-    .form-control {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 7px;
-      font-family: var(--font-sans);
-      font-size: 14px;
-      transition: border-color var(--transition);
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-
-    .form-checkbox-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      user-select: none;
-      font-size: 14px;
-    }
-
-    .form-checkbox {
-      width: 17px; height: 17px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      appearance: none;
-      -webkit-appearance: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all var(--transition);
-      flex-shrink: 0;
-    }
-
-    .form-checkbox:checked {
-      background: var(--primary);
-      border-color: var(--primary);
-    }
-
-    .form-checkbox:checked::after {
-      content: '';
-      width: 4px; height: 8px;
-      border: solid #fff;
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-      margin-bottom: 2px;
-    }
-
-    .os-pill-group { display: flex; gap: 8px; }
-
-    .os-pill {
-      padding: 7px 14px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      background: var(--bg);
-      transition: all var(--transition);
-    }
-
-    .os-pill.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #fff;
-    }
-
-    .os-pill:hover:not(.active) {
-      border-color: var(--border-hover);
-      color: var(--text);
-    }
-
-    .builder-display {
-      background: var(--bg-code);
-      padding: 36px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-width: 0;
-    }
-
-    .tabs-header {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 20px;
-      gap: 0;
-      overflow-x: auto;
-    }
-
-    .tab-btn {
-      background: transparent;
-      color: var(--text-muted);
-      padding: 9px 13px;
-      font-family: var(--font-sans);
-      font-size: 13.5px;
-      font-weight: 600;
-      border-bottom: 2px solid transparent;
-      transition: all var(--transition);
-      white-space: nowrap;
-    }
-
-    .tab-btn:hover { color: var(--text); }
-    .tab-btn.active { color: var(--primary); border-color: var(--primary); }
-
-    /* Code block shared style */
-    .code-block-wrap {
-      position: relative;
-      margin-bottom: 16px;
-    }
-
-    .code-file-bar {
-      background: #0b1022;
-      border: 1px solid var(--border);
-      border-bottom: none;
-      border-radius: 7px 7px 0 0;
-      padding: 7px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .code-file-name {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-faint);
-    }
-
-    .code-lang-tag {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--primary);
-      background: var(--primary-dim);
-      padding: 2px 7px;
-      border-radius: 3px;
-    }
-
-    pre.code, .code-block {
-      background: var(--bg-code);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 16px 18px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 1.6;
-      color: #cbd5e1;
-      overflow-x: auto;
-      white-space: pre;
-    }
-
-    pre.code.has-bar, .code-block.has-bar {
-      border-radius: 0 0 7px 7px;
-    }
-
-    /* syntax tokens */
-    pre.code .c, .t-comment { color: var(--text-faint); font-style: italic; }
-    pre.code .k { color: #93b4d8; }
-    pre.code .s { color: var(--amber); }
-    pre.code .n { color: #60a5fa; }
-    pre.code .v { color: #7dd3fc; }
-
-    .btn-copy {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 5px 11px;
-      border-radius: 5px;
-      color: var(--text-muted);
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .btn-copy:hover {
-      color: var(--text);
-      background: rgba(255,255,255,0.08);
-    }
-
-    .btn-copy.copied {
-      color: var(--success);
-      border-color: rgba(16,185,129,0.3);
-    }
-
-    .builder-info-box {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      background: rgba(99,102,241,0.05);
-      border: 1px solid rgba(99,102,241,0.15);
-      padding: 14px 16px;
-      border-radius: 7px;
-    }
-
-    .builder-info-box svg {
-      width: 16px; height: 16px;
-      color: var(--primary);
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .builder-info-text {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .generated-code-wrap {
-      position: relative;
-      margin-bottom: 16px;
-    }
-
-    #generated-code {
-      border-radius: 7px;
-      padding-top: 44px;
-    }
-
-    /* ==========================================
-       ARCHITECTURE FLOW
-       ========================================== */
-    .flow-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 48px;
-    }
-
-    .flow-grid {
-      display: grid;
-      gap: 48px;
-    }
-
-    @media (min-width: 900px) {
-      .flow-grid { grid-template-columns: 1fr 1fr; align-items: center; }
-    }
-
-    .flow-visual { display: flex; flex-direction: column; gap: 12px; }
-
-    .flow-node {
-      background: var(--bg-raised);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: border-color var(--transition);
-    }
-
-    .flow-node:hover { border-color: var(--primary); }
-    .flow-node-title { font-weight: 600; font-size: 14px; }
-    .flow-node-badge {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      background: var(--primary-dim);
-      color: var(--primary);
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-
-    .flow-arrow {
-      text-align: center;
-      color: var(--border-hover);
-    }
-
-    .flow-content h3 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 14px;
-      letter-spacing: -0.02em;
-    }
-
-    .flow-content p {
-      color: var(--text-muted);
-      margin-bottom: 20px;
-      font-size: 14.5px;
-    }
-
-    .flow-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .flow-list li {
-      display: flex;
-      gap: 10px;
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .flow-list li svg {
-      width: 16px; height: 16px;
-      color: var(--success);
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    /* ==========================================
-       INSTALLATION
-       ========================================== */
-    .install-quick-block {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      margin-bottom: 20px;
-    }
-
-    .install-mode-label {
-      font-size: 13.5px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 16px;
-    }
-
-    .install-os-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-faint);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-      font-family: var(--font-mono);
-    }
-
-    .install-req {
-      margin-top: 20px;
-      color: var(--text-muted);
-      font-size: 13px;
-    }
-
-    .install-files-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-
-    .install-files-table th, .install-files-table td {
-      text-align: left;
-      padding: 11px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .install-files-table th {
-      color: var(--text-faint);
-      font-weight: 600;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .install-files-table td:first-child {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--primary);
-      white-space: nowrap;
-    }
-
-    .install-files-table tr:last-child td { border-bottom: none; }
-
-    /* ==========================================
-       SETUP STEPS
-       ========================================== */
-    .setup-tabs-wrapper { }
-
-    .setup-tab-navs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .setup-tab-pill {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 8px 18px;
-      border-radius: 7px;
-      font-weight: 600;
-      font-size: 13.5px;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all var(--transition);
-    }
-
-    .setup-tab-pill:hover {
-      border-color: var(--border-hover);
-      color: var(--text);
-    }
-
-    .setup-tab-pill.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #fff;
-    }
-
-    .setup-content-box { display: none; }
-    .setup-content-box.active { display: block; animation: fadeUp 0.3s ease-out; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .setup-step {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
-      margin-bottom: 16px;
-    }
-
-    .setup-step-num {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-      font-family: var(--font-mono);
-    }
-
-    .setup-step-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .setup-step-desc {
-      color: var(--text-muted);
-      font-size: 14px;
-      margin-bottom: 16px;
-      line-height: 1.6;
-    }
-
-    .prereq-note {
-      margin-bottom: 16px;
-      padding: 12px 16px;
-      background: var(--primary-dim);
-      border-left: 3px solid var(--primary);
-      border-radius: 4px;
-      font-size: 13.5px;
-      color: var(--text-muted);
-    }
-
-    code.inline {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      background: rgba(99,102,241,0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: var(--text-muted);
-    }
-
-    /* ==========================================
-       FOOTER
-       ========================================== */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 0;
-      color: var(--text-muted);
-      font-size: 13.5px;
-    }
-
-    .footer-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 28px;
-    }
-
-    @media (min-width: 768px) { .footer-nav { flex-direction: row; } }
-
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 14px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: var(--text-muted);
-      font-size: 13px;
-    }
-
-    .footer-links a:hover { color: var(--text); }
-
-    .copyright {
-      text-align: center;
-      font-size: 12px;
-      color: var(--text-faint);
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-    }
-
-    /* ==========================================
-       MOBILE
-       ========================================== */
-    @media (max-width: 768px) {
-      .nav-links a:not(.btn-github):not(.lang-btn) {
-        display: none;
-      }
-      .nav-links { gap: 8px; }
-      .brand { font-size: 13px; }
-      .btn-github span { display: none; }
-      .btn-github { padding: 8px; }
-      .hero { padding: 64px 0 48px; }
-      .section { padding: 56px 0; }
-      .builder-form, .builder-display { padding: 20px; }
-      .flow-container { padding: 24px; }
-      .setup-step { padding: 20px; }
-      .install-quick-block { padding: 20px; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js"></script>
 </head>
 <body class="lang-vi">
 
   <header>
     <div class="container header-nav">
-      <div class="brand">
+      <a href="index.html" class="brand">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M2 17L12 22L22 17" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M2 12L12 17L22 12" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        harness<span class="dot">·</span>kit
-      </div>
+        harness<span class="dot">-kit</span>
+      </a>
       <div class="nav-links">
-        <a href="#subsystems"><span lang="vi">Tính năng</span><span lang="en">Features</span></a>
+        <a href="index.html" class="active-page"><span lang="vi">Tổng quan</span><span lang="en">Overview</span></a>
         <a href="getting-started.html"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
-        <a href="#how-it-works"><span lang="vi">Luồng hoạt động</span><span lang="en">How it Works</span></a>
-        <a href="#installation"><span lang="vi">Cài đặt</span><span lang="en">Installation</span></a>
-        <a href="#ide-setup"><span lang="vi">Tích hợp IDE</span><span lang="en">IDE Integration</span></a>
         <a href="install-skill.html"><span lang="vi">Cài Skill</span><span lang="en">Install Skill</span></a>
         <a href="use-case.html"><span lang="vi">Use Cases</span><span lang="en">Use Cases</span></a>
         <a href="https://harness.nguyenanh98.com/" target="_blank"><span lang="vi">Học Harness</span><span lang="en">Learn Harness</span></a>
@@ -1752,14 +734,7 @@ curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/instal
             <pre class="code-block">npm install -g @openai/codex
 
 # Khởi động và đăng nhập bằng ChatGPT Plus / Pro / API key
-# Launch and authenticate via ChatGPT Plus / Pro / API key
-codex login
-
-# Hoặc cài extension chính thức từ marketplace của:
-# Or install the official extension from the marketplace of:
-#   - VS Code     (Visual Studio Code Marketplace)
-#   - Cursor      (Open VSX)
-#   - Windsurf    (Open VSX)</pre>
+codex login</pre>
           </div>
           <p class="setup-step-desc" style="margin-top:8px">
             <span lang="vi">Tham khảo thêm tại <a href="https://developers.openai.com/codex/cli" target="_blank">developers.openai.com/codex/cli</a>.</span>
@@ -1795,8 +770,7 @@ curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/instal
             <span lang="en">Open a terminal at the project root and run <code class="inline">codex</code>. The agent reads <code class="inline">AGENTS.md</code> and follows the Definition of Done. In VS Code, open the Codex side panel — the extension reads the same file.</span>
           </p>
           <div class="code-block-wrap">
-            <pre class="code-block">codex   # CLI mode
-# or open the Codex side panel inside VS Code</pre>
+            <pre class="code-block">codex   # CLI mode</pre>
           </div>
         </div>
       </div>
@@ -1805,7 +779,7 @@ curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/instal
 
   <footer>
     <div class="container">
-      <div class="footer-nav">
+      <div class="footer-inner">
         <div class="footer-brand">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1815,17 +789,14 @@ curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/instal
           harness-kit
         </div>
         <div class="footer-links">
-          <a href="#subsystems"><span lang="vi">Tính năng</span><span lang="en">Features</span></a>
+          <a href="index.html"><span lang="vi">Tổng quan</span><span lang="en">Overview</span></a>
           <a href="getting-started.html"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
-          <a href="#installation"><span lang="vi">Cài đặt</span><span lang="en">Installation</span></a>
-          <a href="#ide-setup"><span lang="vi">Tích hợp IDE</span><span lang="en">IDE Integration</span></a>
           <a href="install-skill.html"><span lang="vi">Cài Skill</span><span lang="en">Install Skill</span></a>
           <a href="use-case.html"><span lang="vi">Use Cases</span><span lang="en">Use Cases</span></a>
-          <a href="https://harness.nguyenanh98.com/" target="_blank"><span lang="vi">Học Harness</span><span lang="en">Learn Harness</span></a>
           <a href="https://github.com/nguyenanh92/harness-kit" target="_blank">GitHub</a>
         </div>
       </div>
-      <div class="copyright">
+      <div class="copyright" style="margin-top:16px;">
         <span lang="vi">&copy; 2026 Harness Kit. Phát hành dưới giấy phép MIT. Standard library only · Python 3.8+</span>
         <span lang="en">&copy; 2026 Harness Kit. Released under the MIT License. Standard library only · Python 3.8+</span>
       </div>
@@ -1835,7 +806,6 @@ curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/instal
   <script>
     let currentOS = 'win';
     let currentTab = 'install';
-    let currentLang = 'vi';
 
     const translations = {
       vi: {
@@ -1860,22 +830,21 @@ curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/instal
       }
     };
 
-    function switchLang(lang) {
-      currentLang = lang;
-      document.body.className = `lang-${lang}`;
-      document.getElementById('lang-vi-btn').classList.toggle('active', lang === 'vi');
-      document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
-      localStorage.setItem('harness-kit-lang', lang);
-      document.title = translations[lang].title;
-      const descMeta = document.querySelector('meta[name="description"]');
-      if (descMeta) descMeta.setAttribute('content', translations[lang].desc);
+    window.onLanguageChange = function (lang) {
+      if (translations[lang]) {
+        document.title = translations[lang].title;
+        const descMeta = document.querySelector('meta[name="description"]');
+        if (descMeta) descMeta.setAttribute('content', translations[lang].desc);
+      }
       updateBuilderCode();
-    }
+    };
 
     function setOS(os) {
       currentOS = os;
-      document.getElementById('os-win').classList.toggle('active', os === 'win');
-      document.getElementById('os-nix').classList.toggle('active', os === 'nix');
+      const winBtn = document.getElementById('os-win');
+      const nixBtn = document.getElementById('os-nix');
+      if (winBtn) winBtn.classList.toggle('active', os === 'win');
+      if (nixBtn) nixBtn.classList.toggle('active', os === 'nix');
       updateBuilderCode();
     }
 
@@ -1893,6 +862,7 @@ curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/instal
       const pyCmd = currentOS === 'win' ? 'py' : 'python3';
       let output = '';
       let infoText = '';
+      const currentLang = document.body.className.includes('lang-en') ? 'en' : 'vi';
 
       if (currentTab === 'install') {
         infoText = translations[currentLang].infoInstall;
@@ -1918,21 +888,26 @@ curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/instal
         output = `${pyCmd} hk.py status\n${pyCmd} hk.py audit\n${pyCmd} hk.py audit --html report.html`;
       }
 
-      document.getElementById('generated-code').textContent = output;
-      document.getElementById('builder-info-text').textContent = infoText;
+      const codeElem = document.getElementById('generated-code');
+      const infoElem = document.getElementById('builder-info-text');
+      if (codeElem) codeElem.textContent = output;
+      if (infoElem) infoElem.textContent = infoText;
     }
 
     function copyCode() {
       const codeText = document.getElementById('generated-code').textContent;
+      const currentLang = document.body.className.includes('lang-en') ? 'en' : 'vi';
       navigator.clipboard.writeText(codeText).then(() => {
         const btn = document.getElementById('btn-copy-code');
-        const span = btn.querySelector('span');
-        btn.classList.add('copied');
-        span.textContent = translations[currentLang].copied;
-        setTimeout(() => {
-          btn.classList.remove('copied');
-          span.textContent = translations[currentLang].copyBtn;
-        }, 2000);
+        if (btn) {
+          const span = btn.querySelector('span');
+          btn.classList.add('copied');
+          if (span) span.textContent = translations[currentLang].copied;
+          setTimeout(() => {
+            btn.classList.remove('copied');
+            if (span) span.textContent = translations[currentLang].copyBtn;
+          }, 2000);
+        }
       });
     }
 
@@ -1947,11 +922,9 @@ curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/instal
       });
     }
 
-    window.onload = function () {
-      const savedLang = localStorage.getItem('harness-kit-lang');
-      switchLang(savedLang === 'en' ? 'en' : 'vi');
+    document.addEventListener('DOMContentLoaded', function () {
       updateBuilderCode();
-    };
+    });
   </script>
 </body>
 </html>
