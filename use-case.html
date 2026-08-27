@@ -137,6 +137,42 @@
       font-family: var(--font-mono); font-size: 12px; font-weight: 600;
     }
 
+    /* ============== MODE BADGES ============== */
+    .mode-badge {
+      display: inline-block;
+      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+      padding: 1px 7px; border-radius: 4px; margin-left: 6px;
+      letter-spacing: .06em; vertical-align: middle;
+    }
+    .mode-gov {
+      background: rgba(16,185,129,0.12); color: var(--success);
+      border: 1px solid rgba(16,185,129,0.25);
+    }
+    .mode-full {
+      background: rgba(168,85,247,0.12); color: var(--accent);
+      border: 1px solid rgba(168,85,247,0.25);
+    }
+    .mode-divider {
+      display: flex; align-items: flex-start; gap: 16px;
+      margin: 40px 0 32px; padding: 18px 22px;
+      background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.22);
+      border-radius: 10px;
+    }
+    .mode-divider-icon {
+      flex: 0 0 38px; height: 38px; border-radius: 8px;
+      background: rgba(168,85,247,0.15); color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .mode-divider-body { flex: 1; }
+    .mode-divider-body strong { color: var(--accent); font-size: 15px; }
+    .mode-divider-body .sub {
+      margin-top: 4px; font-size: 13px; color: var(--text-muted);
+    }
+    .mode-divider-body pre.code {
+      margin-top: 10px; font-size: 12px;
+    }
+
     /* ============== USE CASE CARD ============== */
     .case {
       background: var(--bg-card); border: 1px solid var(--border);
@@ -291,19 +327,30 @@
     <p lang="en">
       Each scenario starts with a <em>concrete pain</em>, walks through copy-paste-ready steps, and ends with a <em>visible outcome</em>. No filler theory.
     </p>
+
+    <p style="margin-top: 20px; font-size: 14px; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;">
+      <span><span class="mode-badge mode-gov">GOV</span>&nbsp;
+        <span lang="vi">Case 1–4: governance-only — cài mặc định, mọi ngôn ngữ</span>
+        <span lang="en">Cases 1–4: governance-only — default install, any language</span>
+      </span>
+      <span><span class="mode-badge mode-full">FULL</span>&nbsp;
+        <span lang="vi">Case 5–8: cần <code class="inline">--full</code> (Python runtime)</span>
+        <span lang="en">Cases 5–8: require <code class="inline">--full</code> (Python runtime)</span>
+      </span>
+    </p>
   </header>
 
   <main class="container">
 
     <div class="toc">
-      <a href="#case-1"><span class="toc-num">1</span><span lang="vi">Khởi tạo project mới</span><span lang="en">Cold-start a new project</span></a>
-      <a href="#case-2"><span class="toc-num">2</span><span lang="vi">Audit project đang lộn xộn</span><span lang="en">Audit a messy project</span></a>
-      <a href="#case-3"><span class="toc-num">3</span><span lang="vi">Gate CI theo điểm harness</span><span lang="en">Gate CI on harness score</span></a>
-      <a href="#case-4"><span class="toc-num">4</span><span lang="vi">Khôi phục sau crash</span><span lang="en">Resume after a crash</span></a>
-      <a href="#case-5"><span class="toc-num">5</span><span lang="vi">Thêm tool tuỳ chỉnh</span><span lang="en">Add a custom tool</span></a>
-      <a href="#case-6"><span class="toc-num">6</span><span lang="vi">Wire LLM thật (Claude/OpenAI)</span><span lang="en">Wire a real LLM adapter</span></a>
-      <a href="#case-7"><span class="toc-num">7</span><span lang="vi">Spawn sub-agent cho task con</span><span lang="en">Spawn a focused sub-agent</span></a>
-      <a href="#case-8"><span class="toc-num">8</span><span lang="vi">Đổi AGENTS.md ↔ CLAUDE.md</span><span lang="en">Switch AGENTS.md ↔ CLAUDE.md</span></a>
+      <a href="#case-1"><span class="toc-num">1</span><span lang="vi">Khởi tạo project mới</span><span lang="en">Cold-start a new project</span><span class="mode-badge mode-gov">GOV</span></a>
+      <a href="#case-2"><span class="toc-num">2</span><span lang="vi">Audit project đang lộn xộn</span><span lang="en">Audit a messy project</span><span class="mode-badge mode-gov">GOV</span></a>
+      <a href="#case-3"><span class="toc-num">3</span><span lang="vi">Gate CI theo điểm harness</span><span lang="en">Gate CI on harness score</span><span class="mode-badge mode-gov">GOV</span></a>
+      <a href="#case-8"><span class="toc-num">4</span><span lang="vi">Đổi AGENTS.md ↔ CLAUDE.md</span><span lang="en">Switch AGENTS.md ↔ CLAUDE.md</span><span class="mode-badge mode-gov">GOV</span></a>
+      <a href="#case-4"><span class="toc-num">5</span><span lang="vi">Khôi phục sau crash</span><span lang="en">Resume after a crash</span><span class="mode-badge mode-full">FULL</span></a>
+      <a href="#case-5"><span class="toc-num">6</span><span lang="vi">Thêm tool tuỳ chỉnh</span><span lang="en">Add a custom tool</span><span class="mode-badge mode-full">FULL</span></a>
+      <a href="#case-6"><span class="toc-num">7</span><span lang="vi">Wire LLM thật (Claude/OpenAI)</span><span lang="en">Wire a real LLM adapter</span><span class="mode-badge mode-full">FULL</span></a>
+      <a href="#case-7"><span class="toc-num">8</span><span lang="vi">Spawn sub-agent cho task con</span><span lang="en">Spawn a focused sub-agent</span><span class="mode-badge mode-full">FULL</span></a>
     </div>
 
 
@@ -314,7 +361,7 @@
         <div>
           <h2 lang="vi">Khởi tạo harness cho project mới</h2>
           <h2 lang="en">Cold-start a new project</h2>
-          <span class="tag">cold-start · scaffold · 2 minutes</span>
+          <span class="tag">cold-start · scaffold · 2 minutes <span class="mode-badge mode-gov">GOV</span></span>
         </div>
       </div>
 
@@ -391,7 +438,7 @@
         <div>
           <h2 lang="vi">Audit project đang lộn xộn</h2>
           <h2 lang="en">Audit an existing chaotic project</h2>
-          <span class="tag">audit · score · bottleneck</span>
+          <span class="tag">audit · score · bottleneck <span class="mode-badge mode-gov">GOV</span></span>
         </div>
       </div>
 
@@ -470,7 +517,7 @@ verification: 1/5 (1/5)
         <div>
           <h2 lang="vi">Gate CI theo điểm harness (chống drift)</h2>
           <h2 lang="en">Gate CI on the harness score (anti-drift)</h2>
-          <span class="tag">ci · github-actions · regression</span>
+          <span class="tag">ci · github-actions · regression <span class="mode-badge mode-gov">GOV</span></span>
         </div>
       </div>
 
@@ -486,7 +533,9 @@ verification: 1/5 (1/5)
         <li>
           <h3 lang="vi">Vendor scripts vào repo</h3>
           <h3 lang="en">Vendor the scripts into your repo</h3>
-<pre class="code"><span class="k">cp -r</span> ~/tools/harness-kit/skills/scripts ./.harness-scripts
+          <p lang="vi">Clone harness-kit vào thư mục <code class="inline">.harness-scripts/</code> rồi commit. CI sẽ dùng scripts từ đó thay vì cần clone lại mỗi lần chạy.</p>
+          <p lang="en">Clone harness-kit into <code class="inline">.harness-scripts/</code> then commit. CI uses those vendored scripts instead of cloning on every run.</p>
+<pre class="code"><span class="k">git clone</span> --depth 1 https://github.com/nguyenanh92/harness-kit.git .harness-scripts
 <span class="k">git add</span> .harness-scripts
 <span class="k">git commit -m</span> <span class="s">"vendor harness validation scripts"</span></pre>
         </li>
@@ -534,6 +583,22 @@ verification: 1/5 (1/5)
     </section>
 
 
+    <!-- MODE DIVIDER: full harness required below this line -->
+    <div class="mode-divider">
+      <div class="mode-divider-icon">⚡</div>
+      <div class="mode-divider-body">
+        <strong lang="vi">Các case dưới đây cần cài <code class="inline">--full</code></strong>
+        <strong lang="en">Cases below require the <code class="inline">--full</code> install</strong>
+        <div class="sub" lang="vi">Thêm Python runtime: vòng lặp agent, JSONL persistence, tool registry, sub-agent spawning.</div>
+        <div class="sub" lang="en">Adds the Python runtime: agent loop, JSONL persistence, tool registry, sub-agent spawning.</div>
+<pre class="code"><span class="c"># macOS / Linux</span>
+<span class="k">curl</span> -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh -s -- --full
+
+<span class="c"># Windows (PowerShell)</span>
+<span class="k">&amp;</span> ([ScriptBlock]::Create((irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1))) --full</pre>
+      </div>
+    </div>
+
     <!-- CASE 4 -->
     <section class="case" id="case-4">
       <div class="case-head">
@@ -541,7 +606,7 @@ verification: 1/5 (1/5)
         <div>
           <h2 lang="vi">Khôi phục agent sau khi crash giữa chừng</h2>
           <h2 lang="en">Resume an agent that crashed mid-feature</h2>
-          <span class="tag">durability · jsonl · replay</span>
+          <span class="tag">durability · jsonl · replay <span class="mode-badge mode-full">FULL</span></span>
         </div>
       </div>
 
@@ -605,7 +670,7 @@ verification: 1/5 (1/5)
         <div>
           <h2 lang="vi">Thêm tool tuỳ chỉnh (ví dụ: query DB)</h2>
           <h2 lang="en">Add a custom tool (e.g. query DB)</h2>
-          <span class="tag">extension · tool-registry · permission</span>
+          <span class="tag">extension · tool-registry · permission <span class="mode-badge mode-full">FULL</span></span>
         </div>
       </div>
 
@@ -685,7 +750,7 @@ h.run(goal=<span class="s">"debug missing user record"</span>)</pre>
         <div>
           <h2 lang="vi">Wire LLM thật (Claude / OpenAI)</h2>
           <h2 lang="en">Wire a real LLM adapter (Claude / OpenAI)</h2>
-          <span class="tag">live-mode · adapter · zero-dep core</span>
+          <span class="tag">live-mode · adapter · zero-dep core <span class="mode-badge mode-full">FULL</span></span>
         </div>
       </div>
 
@@ -775,7 +840,7 @@ Harness(workspace_dir=<span class="s">"."</span>,
         <div>
           <h2 lang="vi">Spawn sub-agent cho task con (fresh context)</h2>
           <h2 lang="en">Spawn a sub-agent for a sub-task (fresh context)</h2>
-          <span class="tag">multi-agent · isolation · fresh-context</span>
+          <span class="tag">multi-agent · isolation · fresh-context <span class="mode-badge mode-full">FULL</span></span>
         </div>
       </div>
 
@@ -845,7 +910,7 @@ Harness(workspace_dir=<span class="s">"."</span>,
         <div>
           <h2 lang="vi">Đổi qua lại giữa AGENTS.md ↔ CLAUDE.md</h2>
           <h2 lang="en">Switch between AGENTS.md and CLAUDE.md</h2>
-          <span class="tag">cross-tool · convention · zero-rewrite</span>
+          <span class="tag">cross-tool · convention · zero-rewrite <span class="mode-badge mode-gov">GOV</span></span>
         </div>
       </div>
 
