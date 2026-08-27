@@ -142,7 +142,12 @@ def cmd_start(args: argparse.Namespace, root: Path) -> int:
     feature["status"] = "in_progress"
     data["active_feature"] = fid
     save_fl(root, data)
-    print(f"→ Active: {fid} — {feature['name']}")
+    print(f"[→] Active: {fid} — {feature['name']}")
+    print()
+    print("  Mở AI tool của bạn tại thư mục này rồi gõ vào chat:")
+    print('  > "Đọc AGENTS.md và implement feature đang active trong feature_list.json."')
+    print()
+    print("  Khởi động nhanh:  claude  (Claude Code)  |  cursor .  (Cursor)  |  codex  (Codex)")
     return 0
 
 

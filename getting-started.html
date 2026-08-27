@@ -237,10 +237,13 @@
             <div style="font-size: 15px; font-weight: 700; margin-bottom: 6px;">
               <span lang="vi">Prompt AI bằng ngôn ngữ tự nhiên</span><span lang="en">Prompt your AI in plain language</span>
             </div>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
-              <span lang="vi">Mở Claude Code, Cursor, Codex... rồi nói với AI điều bạn muốn. Agent tự đọc <code>AGENTS.md</code>, tự biết feature nào đang active, tự chạy <code>init.sh</code> khi xong.</span>
-              <span lang="en">Open Claude Code, Cursor, Codex... and tell the AI what you need. The agent reads <code>AGENTS.md</code> automatically, knows which feature is active, and runs <code>init.sh</code> when done.</span>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+              <span lang="vi">Chạy lệnh này trong thư mục project để mở AI tool, rồi gõ prompt vào chat. Agent tự đọc <code>AGENTS.md</code>, tự biết feature nào đang active.</span>
+              <span lang="en">Run this in the project directory to open your AI tool, then type a prompt. The agent reads <code>AGENTS.md</code> automatically and knows which feature is active.</span>
             </p>
+            <code style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; display: block; margin-bottom: 12px; white-space: pre;">claude      # Claude Code
+cursor .    # Cursor
+codex       # OpenAI Codex</code>
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <div style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
                 <span lang="vi">"Đọc AGENTS.md và implement feature đang active trong feature_list.json."</span>
@@ -315,11 +318,16 @@ py hk.py audit</pre>
           <div style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--border);">
             <div style="width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: var(--bg-card); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--text-faint); font-family: var(--font-mono); margin-top: 2px;">C</div>
             <div style="min-width: 0; flex: 1;">
-              <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;"><span lang="vi">Cho AI làm việc (chọn 1 trong 2)</span><span lang="en">Let the AI work (pick one)</span></div>
-              <div style="margin-bottom:8px">
-                <div style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.5;"><span lang="vi">"Đọc AGENTS.md và implement feature đang active."</span><span lang="en">"Read AGENTS.md and implement the active feature."</span></div>
+              <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;"><span lang="vi">Mở AI tool và gõ prompt</span><span lang="en">Open your AI tool and type a prompt</span></div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"><span lang="vi">Khởi động AI tool trong thư mục project:</span><span lang="en">Launch your AI tool in the project directory:</span></div>
+              <code style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; display: block; margin-bottom: 10px; white-space: pre;">claude      <span style="color:var(--text-faint)"># Claude Code</span>
+cursor .    <span style="color:var(--text-faint)"># Cursor</span>
+codex       <span style="color:var(--text-faint)"># OpenAI Codex</span></code>
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;"><span lang="vi">Rồi gõ vào chat:</span><span lang="en">Then type in the chat:</span></div>
+              <div style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
+                <span lang="vi">"Đọc AGENTS.md và implement feature đang active trong feature_list.json."</span>
+                <span lang="en">"Read AGENTS.md and implement the active feature in feature_list.json."</span>
               </div>
-              <div style="font-size: 12px; color: var(--text-muted);"><span lang="vi">Hoặc dùng IDE / tool của bạn để implement trực tiếp.</span><span lang="en">Or use your IDE / tool to implement directly.</span></div>
             </div>
           </div>
           <div style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 0;">
