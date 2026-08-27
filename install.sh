@@ -3,9 +3,13 @@
 # Run from your project root:
 #   curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh
 #
-# Optional flags passed through to the scaffold script:
+# Flags (passed before the pipe, via -s --):
+#   --full               Also scaffold the Python runtime (harness/ dir + 7 modules)
 #   --agent-file CLAUDE.md   (default: AGENTS.md)
-#   --force                  (overwrite existing files)
+#   --force              Overwrite existing files
+#
+# Default is governance-only (5 files, works for any language/stack).
+# Use --full for Python-based orchestration or programmatic agent loops.
 set -e
 
 REPO="https://github.com/nguyenanh92/harness-kit.git"
@@ -34,15 +38,32 @@ if ! command -v git >/dev/null 2>&1; then
     exit 1
 fi
 
+# ── Parse --full flag (consumed here, not forwarded to scaffold) ──────────────
+GOVERNANCE_ONLY="--governance-only"
+PASSTHROUGH=""
+for arg in "$@"; do
+    if [ "$arg" = "--full" ]; then
+        GOVERNANCE_ONLY=""
+    else
+        PASSTHROUGH="$PASSTHROUGH $arg"
+    fi
+done
+
 # ── Clone + scaffold ─────────────────────────────────────────────────────────
 echo "harness-kit: installing into $(pwd) ..."
 git clone --depth 1 --quiet "$REPO" "$TMP/harness-kit"
 
+# shellcheck disable=SC2086
 "$PY" "$TMP/harness-kit/skills/scripts/scaffold_harness.py" \
     --target "$(pwd)" \
-    --governance-only \
-    "$@"
+    $GOVERNANCE_ONLY \
+    $PASSTHROUGH
 
 echo ""
-echo "Done. Edit AGENTS.md (or CLAUDE.md) to customize rules for your project."
-echo "Supported tools: Claude Code, Cursor, Codex, Windsurf, and any AI that reads your instruction file."
+if [ -z "$GOVERNANCE_ONLY" ]; then
+    echo "Done (full harness). Edit AGENTS.md, fill feature_list.json, then:"
+    echo "  py harness/harness.py --mock --goal 'your goal here'"
+else
+    echo "Done. Edit AGENTS.md (or CLAUDE.md) to customize rules for your project."
+    echo "Supported tools: Claude Code, Cursor, Codex, Windsurf, and any AI that reads your instruction file."
+fi

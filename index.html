@@ -1548,6 +1548,10 @@ Created: prompt_assembly.py
 
     <!-- One-command install block -->
     <div class="install-quick-block">
+      <p style="margin: 0 0 16px; font-weight: 600; font-size: 0.95rem;">
+        <span lang="vi">Mặc định — Governance only (mọi ngôn ngữ, mọi stack)</span>
+        <span lang="en">Default — Governance only (any language, any stack)</span>
+      </p>
       <div class="install-os-label">macOS / Linux</div>
       <div class="setup-code-container">
         <pre class="code-block">curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh</pre>
@@ -1556,6 +1560,20 @@ Created: prompt_assembly.py
       <div class="setup-code-container">
         <pre class="code-block">irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex</pre>
       </div>
+
+      <p style="margin: 28px 0 16px; font-weight: 600; font-size: 0.95rem;">
+        <span lang="vi">Full harness — Thêm Python runtime (vòng lặp agent, subagent, hooks)</span>
+        <span lang="en">Full harness — adds Python runtime (agent loop, subagents, hooks)</span>
+      </p>
+      <div class="install-os-label">macOS / Linux</div>
+      <div class="setup-code-container">
+        <pre class="code-block">curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh -s -- --full</pre>
+      </div>
+      <div class="install-os-label" style="margin-top: 24px;">Windows (PowerShell)</div>
+      <div class="setup-code-container">
+        <pre class="code-block">&amp; ([ScriptBlock]::Create((irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1))) --full</pre>
+      </div>
+
       <p class="install-req">
         <span lang="vi">Yêu cầu: Python 3.8+, git</span>
         <span lang="en">Requirements: Python 3.8+, git</span>
@@ -1611,11 +1629,24 @@ Created: prompt_assembly.py
               <span lang="en">Context for the next session</span>
             </td>
           </tr>
+          <tr style="background: rgba(99,102,241,0.04);">
+            <td style="color: var(--text-muted);">harness/ <span style="font-size:0.78rem;">(--full)</span></td>
+            <td>
+              <span lang="vi">7 Python module: vòng lặp agent, tool registry, subagent, hooks, context, persistence, prompt</span>
+              <span lang="en">7 Python modules: agent loop, tool registry, subagent, hooks, context, persistence, prompt</span>
+            </td>
+          </tr>
         </tbody>
       </table>
       <p class="setup-step-desc" style="margin-top: 20px; margin-bottom: 0;">
-        <span lang="vi">Dùng <code style="color: var(--color-secondary); font-family: var(--font-mono);">--agent-file CLAUDE.md</code> nếu tool của bạn đọc <code style="font-family: var(--font-mono);">CLAUDE.md</code> thay vì <code style="font-family: var(--font-mono);">AGENTS.md</code>.</span>
-        <span lang="en">Use <code style="color: var(--color-secondary); font-family: var(--font-mono);">--agent-file CLAUDE.md</code> if your tool reads <code style="font-family: var(--font-mono);">CLAUDE.md</code> instead of <code style="font-family: var(--font-mono);">AGENTS.md</code>.</span>
+        <span lang="vi">
+          Dùng <code style="color: var(--color-secondary); font-family: var(--font-mono);">--agent-file CLAUDE.md</code> nếu tool đọc <code style="font-family: var(--font-mono);">CLAUDE.md</code> thay vì <code style="font-family: var(--font-mono);">AGENTS.md</code>.
+          Dùng <code style="color: var(--color-secondary); font-family: var(--font-mono);">--full</code> để thêm Python runtime (vòng lặp agent, subagent, hooks) — phù hợp khi bạn muốn điều khiển agent theo cách lập trình.
+        </span>
+        <span lang="en">
+          Use <code style="color: var(--color-secondary); font-family: var(--font-mono);">--agent-file CLAUDE.md</code> if your tool reads <code style="font-family: var(--font-mono);">CLAUDE.md</code> instead of <code style="font-family: var(--font-mono);">AGENTS.md</code>.
+          Use <code style="color: var(--color-secondary); font-family: var(--font-mono);">--full</code> to add the Python runtime (agent loop, subagents, hooks) — useful when you want to drive agents programmatically.
+        </span>
       </p>
     </div>
 
