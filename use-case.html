@@ -302,7 +302,7 @@
       <a href="#case-4"><span class="toc-num">4</span><span lang="vi">Khôi phục sau crash</span><span lang="en">Resume after a crash</span></a>
       <a href="#case-5"><span class="toc-num">5</span><span lang="vi">Thêm tool tuỳ chỉnh</span><span lang="en">Add a custom tool</span></a>
       <a href="#case-6"><span class="toc-num">6</span><span lang="vi">Wire LLM thật (Claude/OpenAI)</span><span lang="en">Wire a real LLM adapter</span></a>
-      <a href="#case-7"><span class="toc-num">7</span><span lang="vi">Fork sub-agent cho task con</span><span lang="en">Fork a focused sub-agent</span></a>
+      <a href="#case-7"><span class="toc-num">7</span><span lang="vi">Spawn sub-agent cho task con</span><span lang="en">Spawn a focused sub-agent</span></a>
       <a href="#case-8"><span class="toc-num">8</span><span lang="vi">Đổi AGENTS.md ↔ CLAUDE.md</span><span lang="en">Switch AGENTS.md ↔ CLAUDE.md</span></a>
     </div>
 
@@ -328,21 +328,15 @@
 
       <ol class="step-list">
         <li>
-          <h3 lang="vi">Clone hoặc vendor harness-kit</h3>
-          <h3 lang="en">Clone or vendor harness-kit</h3>
-          <p lang="vi">Không cần npm/pip — chỉ cần Python 3.8+.</p>
-          <p lang="en">No npm/pip needed — Python 3.8+ is the only requirement.</p>
-<pre class="code"><span class="c"># once per machine</span>
-<span class="k">git clone</span> https://github.com/nguyenanh92/harness-kit.git ~/tools/harness-kit</pre>
-        </li>
+          <h3 lang="vi">Chạy lệnh cài đặt tại thư mục gốc project</h3>
+          <h3 lang="en">Run the install command from your project root</h3>
+          <p lang="vi">Không cần npm/pip — chỉ cần Python 3.8+ và git. Lệnh tự clone, scaffold, rồi tự dọn sạch.</p>
+          <p lang="en">No npm/pip — just Python 3.8+ and git. The script clones, scaffolds, then cleans up automatically.</p>
+<pre class="code"><span class="c"># macOS / Linux</span>
+<span class="k">curl</span> -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh
 
-        <li>
-          <h3 lang="vi">Scaffold vào project của bạn</h3>
-          <h3 lang="en">Scaffold into your project</h3>
-          <p lang="vi">Governance lên thư mục gốc, 7 module Python vào <code class="inline">harness/</code>.</p>
-          <p lang="en">Governance lands at the project root; the seven Python modules land in <code class="inline">harness/</code>.</p>
-<pre class="code"><span class="k">cd</span> ~/work/my-project
-<span class="k">py</span> ~/tools/harness-kit/skills/scripts/scaffold_harness.py <span class="n">--target</span> .</pre>
+<span class="c"># Windows (PowerShell)</span>
+<span class="k">irm</span> https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex</pre>
         </li>
 
         <li>
@@ -779,9 +773,9 @@ Harness(workspace_dir=<span class="s">"."</span>,
       <div class="case-head">
         <div class="case-num">07</div>
         <div>
-          <h2 lang="vi">Fork sub-agent cho task con</h2>
-          <h2 lang="en">Fork a focused sub-agent for a sub-task</h2>
-          <span class="tag">multi-agent · isolation · single-level</span>
+          <h2 lang="vi">Spawn sub-agent cho task con (fresh context)</h2>
+          <h2 lang="en">Spawn a sub-agent for a sub-task (fresh context)</h2>
+          <span class="tag">multi-agent · isolation · fresh-context</span>
         </div>
       </div>
 
@@ -797,6 +791,8 @@ Harness(workspace_dir=<span class="s">"."</span>,
         <li>
           <h3 lang="vi">Agent chính gọi tool <code class="inline">spawn_subagent</code></h3>
           <h3 lang="en">The main agent calls the <code class="inline">spawn_subagent</code> tool</h3>
+          <p lang="vi">Sub-agent này có <strong>fresh context</strong> — không kế thừa lịch sử conversation. Khác với "fork" (kế thừa toàn bộ history, single-level only).</p>
+          <p lang="en">This sub-agent gets a <strong>fresh context</strong> — it does not inherit the conversation history. Different from a "fork" (which inherits full history and is single-level only).</p>
 <pre class="code">{
   <span class="s">"name"</span>: <span class="s">"schema-explorer"</span>,
   <span class="s">"task"</span>: <span class="s">"List columns of users + sessions tables"</span>,
@@ -807,10 +803,12 @@ Harness(workspace_dir=<span class="s">"."</span>,
         </li>
 
         <li>
-          <h3 lang="vi">Single-level invariant tự enforce</h3>
-          <h3 lang="en">The single-level invariant enforces itself</h3>
-          <p lang="vi">Child registry copy chỉ các tool được liệt kê. <code class="inline">spawn_subagent</code> luôn bị strip. Không cần runtime check — không gọi được vì không có trong registry.</p>
-          <p lang="en">The child registry copies only the listed tools. <code class="inline">spawn_subagent</code> is unconditionally stripped. No runtime check needed — it's just absent.</p>
+          <h3 lang="vi">Tool boundary tự enforce qua registry</h3>
+          <h3 lang="en">Tool boundary is enforced via the registry</h3>
+          <p lang="vi">Child registry chỉ copy các tool được liệt kê trong <code class="inline">allowed_tools</code>. <code class="inline">spawn_subagent</code> bị strip — child không thể tự spawn thêm.</p>
+          <p lang="en">The child registry copies only tools listed in <code class="inline">allowed_tools</code>. <code class="inline">spawn_subagent</code> is stripped — the child cannot spawn further.</p>
+          <p lang="vi"><em>Lưu ý:</em> Fresh-context subagent có thể nest nhiều cấp nếu registry cho phép. Python harness mặc định strip để giữ đơn giản.</p>
+          <p lang="en"><em>Note:</em> Fresh-context sub-agents can nest multiple levels if the registry allows it. The Python harness strips by default for simplicity.</p>
         </li>
 
         <li>
