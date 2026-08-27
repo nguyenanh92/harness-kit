@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bắt đầu — Harness Kit</title>
+  <meta name="description" content="Hướng dẫn cài đặt Harness Kit từ A đến Z — từ cài đặt yêu cầu đến feature đầu tiên, trong 5 phút.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%234F46E5'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='system-ui'>HK</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:            #080c18;
+      --bg-raised:     #0d1220;
+      --bg-card:       #0f1320;
+      --bg-code:       #080e1a;
+      --border:        rgba(255,255,255,0.07);
+      --border-hover:  rgba(99,102,241,0.35);
+      --primary:       #6366f1;
+      --primary-dim:   rgba(99,102,241,0.12);
+      --amber:         #f59e0b;
+      --amber-dim:     rgba(245,158,11,0.12);
+      --success:       #10b981;
+      --success-dim:   rgba(16,185,129,0.12);
+      --text:          #f1f5f9;
+      --text-muted:    #94a3b8;
+      --text-faint:    #4b5563;
+      --font-sans:     'Plus Jakarta Sans', sans-serif;
+      --font-mono:     'Fira Code', monospace;
+      --radius:        10px;
+      --transition:    0.2s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body.lang-vi [lang="en"] { display: none !important; }
+    body.lang-en [lang="vi"] { display: none !important; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 4px; }
+
+    a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--amber); }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── NAV ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,12,24,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-mono); font-weight: 600; font-size: 15px;
+      color: var(--text); letter-spacing: -0.01em;
+    }
+    .brand svg { width: 22px; height: 22px; }
+    .brand .dot { color: var(--primary); }
+
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a:not(.btn-github) {
+      padding: 6px 10px; border-radius: 6px;
+      font-size: 13.5px; font-weight: 500; color: var(--text-muted);
+      transition: color var(--transition), background var(--transition);
+    }
+    .nav-links a:not(.btn-github):hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-links a.active-page { color: var(--primary); }
+
+    .btn-github {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 7px; font-size: 13px; font-weight: 600;
+      color: var(--text); border: 1px solid var(--border);
+      transition: all var(--transition); margin-left: 4px;
+    }
+    .btn-github:hover { color: var(--text); border-color: var(--border-hover); background: var(--primary-dim); }
+
+    .lang-switch {
+      display: inline-flex; align-items: center;
+      border: 1px solid var(--border); border-radius: 7px; overflow: hidden;
+      font-family: var(--font-mono); font-size: 11.5px; margin-left: 8px;
+    }
+    .lang-btn {
+      padding: 6px 11px; color: var(--text-muted);
+      transition: all var(--transition); font-family: inherit; font-size: inherit; font-weight: 600;
+    }
+    .lang-btn.active { background: var(--primary); color: #fff; }
+    .lang-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.05); }
+
+    /* ── HERO ── */
+    .gs-hero {
+      padding: 72px 0 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .gs-label {
+      display: inline-flex; align-items: center; gap: 7px;
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 5px 14px; font-size: 11px; font-weight: 700;
+      color: var(--text-muted); letter-spacing: 0.1em;
+      text-transform: uppercase; font-family: var(--font-mono);
+      margin-bottom: 20px;
+    }
+    .gs-label span { width: 6px; height: 6px; border-radius: 50%; background: var(--success); display: inline-block; }
+    .gs-hero h1 {
+      font-size: clamp(28px, 5vw, 42px); font-weight: 800;
+      line-height: 1.15; letter-spacing: -0.03em;
+      margin-bottom: 14px;
+    }
+    .gs-hero h1 em { font-style: normal; color: var(--primary); }
+    .gs-hero p {
+      font-size: 16px; color: var(--text-muted); max-width: 540px;
+      margin-bottom: 28px;
+    }
+    .time-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--success-dim); border: 1px solid rgba(16,185,129,0.25);
+      border-radius: 8px; padding: 8px 16px;
+      font-size: 13px; font-weight: 600; color: var(--success);
+      font-family: var(--font-mono);
+    }
+
+    /* ── PROGRESS BAR ── */
+    .gs-progress {
+      display: flex; align-items: center; gap: 0;
+      padding: 28px 0 0; overflow-x: auto;
+    }
+    .gs-progress-step {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      min-width: 80px; cursor: pointer;
+    }
+    .gs-progress-dot {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--bg-card); border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--text-faint);
+      font-family: var(--font-mono);
+      transition: all var(--transition);
+    }
+    .gs-progress-step.done .gs-progress-dot {
+      background: var(--success-dim); border-color: var(--success); color: var(--success);
+    }
+    .gs-progress-step.active .gs-progress-dot {
+      background: var(--primary-dim); border-color: var(--primary); color: var(--primary);
+    }
+    .gs-progress-label {
+      font-size: 10px; font-weight: 600; color: var(--text-faint);
+      text-align: center; white-space: nowrap;
+      font-family: var(--font-mono); letter-spacing: 0.04em;
+    }
+    .gs-progress-step.active .gs-progress-label { color: var(--primary); }
+    .gs-progress-line {
+      flex: 1; height: 1px; background: var(--border); min-width: 20px; margin-bottom: 22px;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .gs-body { padding: 0 0 80px; }
+
+    /* ── STEP ── */
+    .gs-step {
+      display: grid; grid-template-columns: 56px 1fr;
+      gap: 0 24px; padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .gs-step:last-child { border-bottom: none; }
+
+    .step-num-col { padding-top: 4px; }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--primary-dim); border: 1.5px solid var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; color: var(--primary);
+      font-family: var(--font-mono);
+    }
+    .step-line {
+      width: 1px; height: calc(100% - 48px);
+      background: var(--border); margin: 8px auto 0;
+    }
+
+    .step-content { min-width: 0; }
+    .step-tag {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; font-family: var(--font-mono);
+      color: var(--primary); margin-bottom: 6px;
+    }
+    .step-title {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+      margin-bottom: 10px; line-height: 1.25;
+    }
+    .step-desc {
+      font-size: 14px; color: var(--text-muted); margin-bottom: 20px;
+      max-width: 600px;
+    }
+
+    /* ── CODE BLOCK ── */
+    .code-wrap {
+      background: var(--bg-code); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; position: relative;
+      margin-bottom: 16px;
+    }
+    .code-wrap pre {
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.7;
+      color: #c9d1d9; padding: 18px 20px; overflow-x: auto;
+      white-space: pre;
+    }
+    .code-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; font-family: var(--font-mono);
+      color: var(--text-faint); padding: 10px 16px 0; display: block;
+    }
+    .btn-copy-inline {
+      position: absolute; top: 10px; right: 10px;
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 6px; padding: 5px 10px;
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+      transition: all var(--transition); font-family: var(--font-mono);
+    }
+    .btn-copy-inline:hover { color: var(--text); background: rgba(255,255,255,0.1); }
+
+    /* ── OS TOGGLE ── */
+    .os-toggle {
+      display: inline-flex; align-items: center;
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+      margin-bottom: 14px; font-family: var(--font-mono); font-size: 12px;
+    }
+    .os-btn {
+      padding: 7px 16px; color: var(--text-muted); font-weight: 600;
+      transition: all var(--transition); font-family: inherit; font-size: inherit;
+    }
+    .os-btn.active { background: var(--primary); color: #fff; }
+    .os-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.05); }
+
+    /* ── FILE LIST ── */
+    .file-list { display: flex; flex-direction: column; gap: 8px; }
+    .file-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px;
+      transition: border-color var(--transition);
+    }
+    .file-row:hover { border-color: var(--border-hover); }
+    .file-icon {
+      width: 32px; height: 32px; border-radius: 7px;
+      background: var(--primary-dim); border: 1px solid rgba(99,102,241,0.2);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .file-icon svg { width: 15px; height: 15px; stroke: var(--primary); }
+    .file-name {
+      font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+      color: var(--text); margin-bottom: 2px;
+    }
+    .file-desc { font-size: 13px; color: var(--text-muted); }
+    .file-badge {
+      margin-left: auto; flex-shrink: 0;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; font-family: var(--font-mono);
+      padding: 3px 8px; border-radius: 5px;
+      background: var(--primary-dim); color: var(--primary);
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+    .file-badge.amber {
+      background: var(--amber-dim); color: var(--amber);
+      border-color: rgba(245,158,11,0.2);
+    }
+
+    /* ── TWO MODES ── */
+    .modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    @media (max-width: 600px) { .modes-grid { grid-template-columns: 1fr; } }
+
+    .mode-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+      transition: border-color var(--transition);
+    }
+    .mode-card:hover { border-color: var(--border-hover); }
+    .mode-num {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; font-family: var(--font-mono);
+      color: var(--primary); margin-bottom: 8px;
+    }
+    .mode-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .mode-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+
+    /* ── PROMPT EXAMPLES ── */
+    .prompt-list { display: flex; flex-direction: column; gap: 8px; }
+    .prompt-item {
+      background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);
+      border-radius: 8px; padding: 12px 14px;
+      font-size: 13px; color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prompt-item::before {
+      content: '"'; color: var(--primary); font-size: 16px; font-weight: 700; margin-right: 2px;
+    }
+    .prompt-item::after {
+      content: '"'; color: var(--primary); font-size: 16px; font-weight: 700; margin-left: 2px;
+    }
+
+    /* ── WORKFLOW STEPS ── */
+    .workflow { display: flex; flex-direction: column; gap: 0; }
+    .wf-row {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .wf-row:last-child { border-bottom: none; }
+    .wf-dot {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: var(--bg-card); border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: var(--text-faint);
+      font-family: var(--font-mono); margin-top: 2px;
+    }
+    .wf-body { min-width: 0; flex: 1; }
+    .wf-action { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .wf-cmd {
+      font-family: var(--font-mono); font-size: 12.5px;
+      color: var(--primary); background: var(--primary-dim);
+      border-radius: 5px; padding: 2px 8px; display: inline-block;
+      margin-bottom: 4px;
+    }
+    .wf-note { font-size: 12px; color: var(--text-muted); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      display: flex; gap: 12px; align-items: flex-start;
+      border: 1px solid rgba(99,102,241,0.25);
+      background: rgba(99,102,241,0.06);
+      border-radius: var(--radius); padding: 14px 16px;
+      font-size: 13px; color: var(--text-muted);
+      margin-top: 16px;
+    }
+    .callout svg { width: 16px; height: 16px; stroke: var(--primary); flex-shrink: 0; margin-top: 2px; }
+
+    /* ── NEXT STEPS ── */
+    .next-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .next-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px;
+      transition: border-color var(--transition), background var(--transition);
+      display: block; color: var(--text);
+    }
+    .next-card:hover { border-color: var(--border-hover); background: rgba(99,102,241,0.04); color: var(--text); }
+    .next-card-icon { margin-bottom: 10px; }
+    .next-card-icon svg { width: 18px; height: 18px; stroke: var(--primary); }
+    .next-card-title { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+    .next-card-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* ── INLINE CODE ── */
+    code { font-family: var(--font-mono); font-size: 12.5px; color: var(--primary); background: var(--primary-dim); border-radius: 4px; padding: 1px 5px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      font-size: 13px; color: var(--text-faint);
+    }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+
+    /* ── HIGHLIGHT COLORS ── */
+    .t-green { color: var(--success); }
+    .t-purple { color: var(--primary); }
+    .t-amber { color: var(--amber); }
+    .t-muted { color: var(--text-muted); }
+  </style>
+</head>
+<body class="lang-vi">
+
+<!-- ── NAV ── -->
+<header>
+  <div class="container">
+    <nav class="header-nav">
+      <a href="index.html" class="brand">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 17L12 22L22 17" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 12L12 17L22 12" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        harness<span class="dot">-kit</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html"><span lang="vi">Tổng quan</span><span lang="en">Overview</span></a>
+        <a href="getting-started.html" class="active-page"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
+        <a href="use-case.html"><span lang="vi">Use Cases</span><span lang="en">Use Cases</span></a>
+        <a href="https://github.com/nguyenanh92/harness-kit" target="_blank" class="btn-github">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub
+        </a>
+        <div class="lang-switch">
+          <button class="lang-btn active" id="lang-vi-btn" onclick="switchLang('vi')">VI</button>
+          <button class="lang-btn" id="lang-en-btn" onclick="switchLang('en')">EN</button>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="gs-hero">
+  <div class="container">
+    <div class="gs-label"><span></span> <span lang="vi">Hướng dẫn từng bước</span><span lang="en">Step-by-step guide</span></div>
+    <h1>
+      <span lang="vi">Cài đặt Harness Kit <em>từ A đến Z</em></span>
+      <span lang="en">Set up Harness Kit <em>from A to Z</em></span>
+    </h1>
+    <p>
+      <span lang="vi">Từ máy trống đến có harness đầu tiên — cài yêu cầu, chạy lệnh install, thêm feature đầu tiên và bắt đầu làm việc với AI.</span>
+      <span lang="en">From a blank machine to your first harness — install prerequisites, run the install command, add your first feature, and start working with AI.</span>
+    </p>
+    <div class="time-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span lang="vi">Khoảng 5 phút</span>
+      <span lang="en">~5 minutes</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── BODY ── -->
+<main class="gs-body">
+  <div class="container">
+
+    <!-- STEP 1: Prerequisites -->
+    <div class="gs-step">
+      <div class="step-num-col">
+        <div class="step-num">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-tag"><span lang="vi">Yêu cầu</span><span lang="en">Prerequisites</span></div>
+        <h2 class="step-title"><span lang="vi">Kiểm tra máy của bạn</span><span lang="en">Check your machine</span></h2>
+        <p class="step-desc">
+          <span lang="vi">Harness Kit chỉ cần 2 thứ. Không cần <code>npm install</code>, không cần <code>pip install</code> — chỉ Python và git có sẵn trên máy.</span>
+          <span lang="en">Harness Kit needs exactly 2 things. No <code>npm install</code>, no <code>pip install</code> — just Python and git already on your machine.</span>
+        </p>
+
+        <div class="file-list">
+          <div class="file-row">
+            <div class="file-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div>
+              <div class="file-name">Python 3.8+</div>
+              <div class="file-desc">
+                <span lang="vi">Kiểm tra: <code>py --version</code> (Windows) hoặc <code>python3 --version</code>. Tải tại <a href="https://python.org" target="_blank">python.org</a></span>
+                <span lang="en">Check: <code>py --version</code> (Windows) or <code>python3 --version</code>. Download at <a href="https://python.org" target="_blank">python.org</a></span>
+              </div>
+            </div>
+          </div>
+          <div class="file-row">
+            <div class="file-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="6" y1="9" x2="12" y2="15"/></svg>
+            </div>
+            <div>
+              <div class="file-name">git</div>
+              <div class="file-desc">
+                <span lang="vi">Kiểm tra: <code>git --version</code>. Tải tại <a href="https://git-scm.com" target="_blank">git-scm.com</a></span>
+                <span lang="en">Check: <code>git --version</code>. Download at <a href="https://git-scm.com" target="_blank">git-scm.com</a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Install -->
+    <div class="gs-step">
+      <div class="step-num-col">
+        <div class="step-num">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-tag"><span lang="vi">Cài đặt</span><span lang="en">Install</span></div>
+        <h2 class="step-title"><span lang="vi">Chạy lệnh cài vào project của bạn</span><span lang="en">Run the install command in your project</span></h2>
+        <p class="step-desc">
+          <span lang="vi"><strong>Mở terminal tại thư mục gốc project</strong> rồi chạy lệnh bên dưới. Script tự tải và tạo file — bạn không cần clone hay tải gì thêm.</span>
+          <span lang="en"><strong>Open a terminal at your project root</strong> and run the command below. The script downloads and creates files automatically — no manual cloning needed.</span>
+        </p>
+
+        <div class="os-toggle">
+          <button class="os-btn active" id="os-win" onclick="setOS('win')">Windows (PowerShell)</button>
+          <button class="os-btn" id="os-nix" onclick="setOS('nix')">macOS / Linux</button>
+        </div>
+
+        <div class="code-wrap" id="install-cmd-wrap">
+          <span class="code-label" id="install-label">PowerShell</span>
+          <pre id="install-cmd">irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex</pre>
+          <button class="btn-copy-inline" onclick="copyInstall()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+
+        <div class="callout">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span lang="vi">Muốn cài thêm runtime Python (harness loop, sub-agent, hooks)? Thêm flag <code>--full</code> sau lệnh. Mặc định chỉ tạo governance files — đủ dùng cho mọi ngôn ngữ/stack.</span>
+          <span lang="en">Want the full Python runtime (harness loop, sub-agents, hooks)? Pass <code>--full</code> as an argument. The default creates governance files only — works with any language or stack.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Files Created -->
+    <div class="gs-step">
+      <div class="step-num-col">
+        <div class="step-num">3</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-tag"><span lang="vi">Kết quả</span><span lang="en">What got created</span></div>
+        <h2 class="step-title"><span lang="vi">Các file được tạo trong project</span><span lang="en">Files created in your project</span></h2>
+        <p class="step-desc">
+          <span lang="vi">Sau khi cài xong, bạn có 6 file ở thư mục gốc. Đây là nền tảng của harness — AI agent sẽ đọc và ghi vào những file này.</span>
+          <span lang="en">After install, you'll have 6 files at the project root. These are the harness foundation — your AI agent reads and writes to them.</span>
+        </p>
+
+        <div class="file-list">
+          <div class="file-row">
+            <div class="file-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div style="flex:1; min-width:0">
+              <div class="file-name">AGENTS.md</div>
+              <div class="file-desc"><span lang="vi">Luật vận hành của agent — AI đọc file này khi bắt đầu mỗi phiên. Customize tại đây.</span><span lang="en">Agent operating rules — AI reads this file on every session start. Customize it here.</span></div>
+            </div>
+            <div class="file-badge">AI reads</div>
+          </div>
+          <div class="file-row">
+            <div class="file-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div style="flex:1; min-width:0">
+              <div class="file-name">feature_list.json</div>
+              <div class="file-desc"><span lang="vi">Danh sách feature đang làm, trạng thái, dependencies. Agent chỉ làm 1 feature tại một thời điểm.</span><span lang="en">Active feature list, status, and dependencies. Agent works on exactly one feature at a time.</span></div>
+            </div>
+            <div class="file-badge">State</div>
+          </div>
+          <div class="file-row">
+            <div class="file-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
+            <div style="flex:1; min-width:0">
+              <div class="file-name">progress.md</div>
+              <div class="file-desc"><span lang="vi">AI ghi tiến độ vào đây sau mỗi phiên — Current State, What I Did, Next Step.</span><span lang="en">AI writes session progress here — Current State, What I Did, Next Step.</span></div>
+            </div>
+            <div class="file-badge">AI writes</div>
+          </div>
+          <div class="file-row">
+            <div class="file-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+            <div style="flex:1; min-width:0">
+              <div class="file-name">hk.py</div>
+              <div class="file-desc"><span lang="vi">CLI quản lý workflow: thêm feature, bắt đầu, xong, audit điểm. Không cần plugin.</span><span lang="en">Workflow CLI: add features, start, mark done, audit score. No plugin needed.</span></div>
+            </div>
+            <div class="file-badge amber">CLI</div>
+          </div>
+          <div class="file-row">
+            <div class="file-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+            <div style="flex:1; min-width:0">
+              <div class="file-name"><span lang="vi">init.sh / init.ps1</span><span lang="en">init.sh / init.ps1</span></div>
+              <div class="file-desc"><span lang="vi">Script kiểm tra nhanh (test, lint, build). AI chạy cái này trước khi mark done.</span><span lang="en">Fail-fast verification script (test, lint, build). AI runs this before marking done.</span></div>
+            </div>
+            <div class="file-badge">Verify</div>
+          </div>
+          <div class="file-row">
+            <div class="file-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div style="flex:1; min-width:0">
+              <div class="file-name">session-handoff.md</div>
+              <div class="file-desc"><span lang="vi">Context cho phiên làm việc tiếp theo — blockers, files đang chạm, next step.</span><span lang="en">Context for the next session — blockers, touched files, recommended next step.</span></div>
+            </div>
+            <div class="file-badge">Handoff</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Two ways to work -->
+    <div class="gs-step">
+      <div class="step-num-col">
+        <div class="step-num">4</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-tag"><span lang="vi">Hai cách làm việc</span><span lang="en">Two ways to work</span></div>
+        <h2 class="step-title"><span lang="vi">Prompt AI hoặc dùng hk.py CLI</span><span lang="en">Prompt your AI or use hk.py CLI</span></h2>
+        <p class="step-desc">
+          <span lang="vi">Harness Kit hỗ trợ cả 2 luồng. Chọn cái nào phù hợp với workflow của bạn — hoặc dùng cả 2.</span>
+          <span lang="en">Harness Kit supports both flows. Pick what fits your workflow — or use both.</span>
+        </p>
+
+        <div class="modes-grid">
+          <!-- Mode A: Prompt AI -->
+          <div class="mode-card">
+            <div class="mode-num"><span lang="vi">Cách A — Dành cho chat session</span><span lang="en">Mode A — For chat sessions</span></div>
+            <div class="mode-title"><span lang="vi">Prompt AI bằng ngôn ngữ tự nhiên</span><span lang="en">Prompt your AI in plain language</span></div>
+            <p class="mode-desc">
+              <span lang="vi">Mở Claude Code, Cursor, Codex... rồi nói với AI điều bạn muốn. Agent tự đọc <code>AGENTS.md</code>, tự biết feature nào đang active, tự chạy <code>init.sh</code> khi xong.</span>
+              <span lang="en">Open Claude Code, Cursor, Codex... and tell the AI what you need. The agent reads <code>AGENTS.md</code> automatically, knows which feature is active, and runs <code>init.sh</code> when done.</span>
+            </p>
+            <div class="prompt-list">
+              <div class="prompt-item">
+                <span lang="vi">Đọc AGENTS.md và implement feature đang active trong feature_list.json.</span>
+                <span lang="en">Read AGENTS.md and implement the active feature in feature_list.json.</span>
+              </div>
+              <div class="prompt-item">
+                <span lang="vi">Thêm feature cho màn hình Settings và bắt đầu làm.</span>
+                <span lang="en">Add a new feature for the Settings screen and start working on it.</span>
+              </div>
+              <div class="prompt-item">
+                <span lang="vi">Xong F-003 rồi — chạy init.sh, cập nhật progress.md, chuyển feature tiếp theo.</span>
+                <span lang="en">We're done with F-003 — run init.sh, update progress.md, move to the next feature.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mode B: hk.py CLI -->
+          <div class="mode-card">
+            <div class="mode-num"><span lang="vi">Cách B — Dành cho terminal / CI</span><span lang="en">Mode B — For terminal / CI</span></div>
+            <div class="mode-title"><span lang="vi">Dùng hk.py từ terminal</span><span lang="en">Use hk.py from the terminal</span></div>
+            <p class="mode-desc">
+              <span lang="vi">Dùng khi bạn muốn quản lý hàng đợi feature từ shell, CI step, hay script mà không cần mở chat session. Chạy từ bất kỳ thư mục con nào.</span>
+              <span lang="en">Use when you want to manage the feature queue from a shell, CI step, or script without opening a chat session. Runs from any subdirectory.</span>
+            </p>
+            <div class="code-wrap">
+              <pre id="hk-cmds">py hk.py feature "Settings screen"
+py hk.py start F-001
+py hk.py status
+py hk.py done
+py hk.py audit</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5: First feature workflow -->
+    <div class="gs-step">
+      <div class="step-num-col">
+        <div class="step-num">5</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-tag"><span lang="vi">Feature đầu tiên</span><span lang="en">First feature</span></div>
+        <h2 class="step-title"><span lang="vi">Luồng làm việc từ đầu đến cuối</span><span lang="en">End-to-end workflow</span></h2>
+        <p class="step-desc">
+          <span lang="vi">Ví dụ đầy đủ với một feature thực tế — từ lúc thêm vào đến lúc mark done.</span>
+          <span lang="en">A complete example with a real feature — from adding it to marking it done.</span>
+        </p>
+
+        <div class="workflow">
+          <div class="wf-row">
+            <div class="wf-dot">A</div>
+            <div class="wf-body">
+              <div class="wf-action"><span lang="vi">Thêm feature vào hàng đợi</span><span lang="en">Add a feature to the queue</span></div>
+              <code class="wf-cmd" id="wf-add">py hk.py feature "User authentication" --desc "Login, register, logout"</code>
+              <div class="wf-note"><span lang="vi">Tạo F-001 với trạng thái <em>pending</em>.</span><span lang="en">Creates F-001 with status <em>pending</em>.</span></div>
+            </div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-dot">B</div>
+            <div class="wf-body">
+              <div class="wf-action"><span lang="vi">Bật feature active</span><span lang="en">Set the feature active</span></div>
+              <code class="wf-cmd" id="wf-start">py hk.py start F-001</code>
+              <div class="wf-note"><span lang="vi">Chuyển F-001 sang <em>in-progress</em>. Agent sẽ biết cần làm gì.</span><span lang="en">Moves F-001 to <em>in-progress</em>. The agent knows what to work on.</span></div>
+            </div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-dot">C</div>
+            <div class="wf-body">
+              <div class="wf-action"><span lang="vi">Cho AI làm việc (chọn 1 trong 2)</span><span lang="en">Let the AI work (pick one)</span></div>
+              <div class="prompt-list" style="margin-bottom:8px">
+                <div class="prompt-item"><span lang="vi">Đọc AGENTS.md và implement feature đang active.</span><span lang="en">Read AGENTS.md and implement the active feature.</span></div>
+              </div>
+              <div class="wf-note"><span lang="vi">Hoặc dùng IDE / tool của bạn để implement trực tiếp.</span><span lang="en">Or use your IDE / tool to implement directly.</span></div>
+            </div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-dot">D</div>
+            <div class="wf-body">
+              <div class="wf-action"><span lang="vi">Kiểm tra và mark done</span><span lang="en">Verify and mark done</span></div>
+              <code class="wf-cmd" id="wf-done">py hk.py done</code>
+              <div class="wf-note"><span lang="vi">Tự chạy <code>init.sh</code> / <code>init.ps1</code> trước. Nếu pass mới mark done. Chuyển feature tiếp theo tự động.</span><span lang="en">Runs <code>init.sh</code> / <code>init.ps1</code> first. Marks done only if verification passes. Moves to the next feature automatically.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6: Audit -->
+    <div class="gs-step">
+      <div class="step-num-col">
+        <div class="step-num">6</div>
+      </div>
+      <div class="step-content">
+        <div class="step-tag"><span lang="vi">Kiểm tra</span><span lang="en">Verify</span></div>
+        <h2 class="step-title"><span lang="vi">Kiểm tra điểm harness bất kỳ lúc nào</span><span lang="en">Audit the harness score anytime</span></h2>
+        <p class="step-desc">
+          <span lang="vi"><code>hk.py audit</code> chấm điểm harness của bạn theo 5 phân hệ (0–100). Điểm cao = agent sẽ làm việc ổn định và nhất quán hơn.</span>
+          <span lang="en"><code>hk.py audit</code> scores your harness across 5 subsystems (0–100). Higher score = the agent works more reliably and consistently.</span>
+        </p>
+
+        <div class="code-wrap">
+          <span class="code-label"><span lang="vi">Terminal</span><span lang="en">Terminal</span></span>
+          <pre id="audit-cmd">py hk.py status
+py hk.py audit
+py hk.py audit --html report.html</pre>
+        </div>
+
+        <!-- Next Steps -->
+        <div style="margin-top:36px">
+          <div class="step-tag" style="margin-bottom:16px"><span lang="vi">Bước tiếp theo</span><span lang="en">What's next</span></div>
+          <div class="next-cards">
+            <a href="index.html#how-it-works" class="next-card">
+              <div class="next-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+              <div class="next-card-title"><span lang="vi">Kiến trúc 9 thành phần</span><span lang="en">9-component architecture</span></div>
+              <div class="next-card-desc"><span lang="vi">Hiểu harness hoạt động như thế nào bên trong.</span><span lang="en">Understand how the harness works under the hood.</span></div>
+            </a>
+            <a href="use-case.html" class="next-card">
+              <div class="next-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <div class="next-card-title"><span lang="vi">Use Cases thực tế</span><span lang="en">Real-world use cases</span></div>
+              <div class="next-card-desc"><span lang="vi">Xem harness dùng trong các dự án thực tế.</span><span lang="en">See harness applied to real projects.</span></div>
+            </a>
+            <a href="index.html#installation" class="next-card">
+              <div class="next-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+              <div class="next-card-title"><span lang="vi">Cài với --full</span><span lang="en">Install with --full</span></div>
+              <div class="next-card-desc"><span lang="vi">Thêm Python runtime: harness loop, sub-agent, hooks.</span><span lang="en">Add the Python runtime: harness loop, sub-agents, hooks.</span></div>
+            </a>
+            <a href="https://github.com/nguyenanh92/harness-kit" target="_blank" class="next-card">
+              <div class="next-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></div>
+              <div class="next-card-title">GitHub</div>
+              <div class="next-card-desc"><span lang="vi">Source code, issues, đóng góp.</span><span lang="en">Source code, issues, and contributions.</span></div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span lang="vi">&copy; 2026 Harness Kit. Phát hành dưới giấy phép MIT.</span>
+      <span lang="en">&copy; 2026 Harness Kit. Released under the MIT License.</span>
+      <div style="display:flex; gap:16px">
+        <a href="index.html"><span lang="vi">Tổng quan</span><span lang="en">Overview</span></a>
+        <a href="use-case.html">Use Cases</a>
+        <a href="https://github.com/nguyenanh92/harness-kit" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  let currentOS = 'win';
+  let currentLang = 'vi';
+
+  const CMDS = {
+    win: {
+      install: 'irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex',
+      installFull: '& ([ScriptBlock]::Create((irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1))) --full',
+      hk: 'py',
+    },
+    nix: {
+      install: 'curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh',
+      installFull: 'curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh -s -- --full',
+      hk: 'python3',
+    },
+  };
+
+  function setOS(os) {
+    currentOS = os;
+    document.getElementById('os-win').classList.toggle('active', os === 'win');
+    document.getElementById('os-nix').classList.toggle('active', os === 'nix');
+    document.getElementById('install-label').textContent = os === 'win' ? 'PowerShell' : 'bash';
+    document.getElementById('install-cmd').textContent = CMDS[os].install;
+    updateHkCmds();
+    updateWorkflowCmds();
+  }
+
+  function updateHkCmds() {
+    const p = CMDS[currentOS].hk;
+    document.getElementById('hk-cmds').textContent =
+      `${p} hk.py feature "Settings screen"\n${p} hk.py start F-001\n${p} hk.py status\n${p} hk.py done\n${p} hk.py audit`;
+  }
+
+  function updateWorkflowCmds() {
+    const p = CMDS[currentOS].hk;
+    const isVI = currentLang === 'vi';
+    const desc = isVI ? '"Login, register, logout"' : '"Login, register, logout"';
+    document.getElementById('wf-add').textContent = `${p} hk.py feature "User authentication" --desc ${desc}`;
+    document.getElementById('wf-start').textContent = `${p} hk.py start F-001`;
+    document.getElementById('wf-done').textContent = `${p} hk.py done`;
+    document.getElementById('audit-cmd').textContent =
+      `${p} hk.py status\n${p} hk.py audit\n${p} hk.py audit --html report.html`;
+  }
+
+  function copyInstall() {
+    const text = document.getElementById('install-cmd').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.btn-copy-inline');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(() => { btn.innerHTML = orig; }, 1800);
+    });
+  }
+
+  function switchLang(lang) {
+    currentLang = lang;
+    document.body.className = `lang-${lang}`;
+    document.getElementById('lang-vi-btn').classList.toggle('active', lang === 'vi');
+    document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
+    localStorage.setItem('harness-kit-lang', lang);
+    updateWorkflowCmds();
+  }
+
+  window.onload = function () {
+    const saved = localStorage.getItem('harness-kit-lang');
+    switchLang(saved === 'en' ? 'en' : 'vi');
+    const savedOS = localStorage.getItem('harness-kit-os') || 'win';
+    setOS(savedOS);
+  };
+
+  document.querySelectorAll('.os-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const os = btn.id === 'os-win' ? 'win' : 'nix';
+      localStorage.setItem('harness-kit-os', os);
+    });
+  });
+</script>
+</body>
+</html>
