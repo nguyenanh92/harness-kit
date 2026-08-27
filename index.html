@@ -939,6 +939,64 @@
     }
 
     /* ==========================================
+       7b. Quick Install Block
+       ========================================== */
+    .install-quick-block {
+      background: rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 40px;
+    }
+
+    .install-os-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--color-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .install-req {
+      margin-top: 24px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .install-files-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .install-files-table th,
+    .install-files-table td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .install-files-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .install-files-table td:first-child {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--color-secondary);
+      white-space: nowrap;
+    }
+
+    .install-files-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ==========================================
        8. Footer Elements
        ========================================== */
     footer {
@@ -1474,123 +1532,111 @@ Created: prompt_assembly.py
   <section class="container setup-tabs-wrapper" id="installation">
     <div class="section-title-wrap">
       <div class="section-subtitle">
-        <span lang="vi">Hướng Dẫn Lắp Đặt</span>
-        <span lang="en">Installation Guide</span>
+        <span lang="vi">Cài Đặt</span>
+        <span lang="en">Install</span>
       </div>
       <h2 class="section-title">
-        <span lang="vi">Lựa chọn giải pháp cài đặt tối ưu</span>
-        <span lang="en">Choose the Optimal Setup Method</span>
+        <span lang="vi">Một lệnh — mọi dự án</span>
+        <span lang="en">One command — any project</span>
       </h2>
+      <p class="setup-step-desc" style="margin-top: 12px; max-width: 680px; text-align: center; margin-left: auto; margin-right: auto;">
+        <span lang="vi">Chạy từ <strong style="color: var(--text-main);">thư mục gốc dự án</strong> của bạn. Tương thích với Claude Code, Cursor, Codex, Windsurf — mọi AI đọc instruction file.</span>
+        <span lang="en">Run from your <strong style="color: var(--text-main);">project root</strong>. Works with Claude Code, Cursor, Codex, Windsurf — any AI that reads an instruction file.</span>
+      </p>
     </div>
 
-    <div class="setup-tab-navs">
-      <button class="setup-tab-pill active" id="tab-cli" onclick="toggleSetupTab('cli')">
-        <span lang="vi">Qua Skills CLI (Khuyên dùng)</span>
-        <span lang="en">Via Skills CLI (Recommended)</span>
-      </button>
-      <button class="setup-tab-pill" id="tab-copy" onclick="toggleSetupTab('copy')">
-        <span lang="vi">Copy Thủ Công</span>
-        <span lang="en">Manual Copy</span>
-      </button>
-      <button class="setup-tab-pill" id="tab-direct" onclick="toggleSetupTab('direct')">
-        <span lang="vi">Dành cho Dự Án Standalone</span>
-        <span lang="en">Standalone Project Setup</span>
-      </button>
+    <!-- One-command install block -->
+    <div class="install-quick-block">
+      <div class="install-os-label">macOS / Linux</div>
+      <div class="setup-code-container">
+        <pre class="code-block">curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh</pre>
+      </div>
+      <div class="install-os-label" style="margin-top: 24px;">Windows (PowerShell)</div>
+      <div class="setup-code-container">
+        <pre class="code-block">irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex</pre>
+      </div>
+      <p class="install-req">
+        <span lang="vi">Yêu cầu: Python 3.8+, git</span>
+        <span lang="en">Requirements: Python 3.8+, git</span>
+      </p>
     </div>
 
-    <!-- CLI tab content -->
-    <div class="setup-content-box active" id="setup-cli-content">
-      <div class="setup-step">
-        <div class="setup-step-num">Step 1</div>
-        <h3 class="setup-step-title">
-          <span lang="vi">Tải kỹ năng bằng CLI</span>
-          <span lang="en">Add Skill via CLI</span>
-        </h3>
-        <p class="setup-step-desc">
-          <span lang="vi">Chạy lệnh bên dưới tại thư mục gốc dự án của bạn bằng terminal. Thao tác này sẽ tải bộ kỹ năng về thư mục kỹ năng tác nhân cục bộ:</span>
-          <span lang="en">Run the command below at your project root. This fetches the harness-kit skill templates into your local agent skills path:</span>
-        </p>
-        <div class="setup-code-container">
-          <pre class="code-block">git clone https://github.com/nguyenanh92/harness-kit.git
-# or copy skills/ into your existing skill path</pre>
-        </div>
-      </div>
-      <div class="setup-step">
-        <div class="setup-step-num">Step 2</div>
-        <h3 class="setup-step-title">
-          <span lang="vi">Khởi tạo các file mẫu vào dự án</span>
-          <span lang="en">Scaffold Harness Files</span>
-        </h3>
-        <p class="setup-step-desc">
-          <span lang="vi">Chạy tệp python vừa tải xuống để tạo ra khung sườn code cho Harness của bạn:</span>
-          <span lang="en">Run the scaffolding script to generate standard-library-only harness templates in your project:</span>
-        </p>
-        <div class="setup-code-container">
-          <pre class="code-block">py .agents/skills/harness-kit/scripts/scaffold_harness.py --target harness</pre>
-        </div>
-      </div>
+    <!-- What gets created -->
+    <div class="setup-step">
+      <h3 class="setup-step-title">
+        <span lang="vi">Những file được tạo trong dự án của bạn</span>
+        <span lang="en">What gets created in your project</span>
+      </h3>
+      <table class="install-files-table">
+        <thead>
+          <tr>
+            <th>File</th>
+            <th><span lang="vi">Mục đích</span><span lang="en">Purpose</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AGENTS.md</td>
+            <td>
+              <span lang="vi">Quy tắc AI đọc khi bắt đầu mỗi phiên làm việc</span>
+              <span lang="en">Rules your AI reads on every session start</span>
+            </td>
+          </tr>
+          <tr>
+            <td>feature_list.json</td>
+            <td>
+              <span lang="vi">Tính năng đang thực hiện, trạng thái, phụ thuộc</span>
+              <span lang="en">Active feature, status, dependencies</span>
+            </td>
+          </tr>
+          <tr>
+            <td>progress.md</td>
+            <td>
+              <span lang="vi">AI ghi tiến độ vào đây sau mỗi phiên</span>
+              <span lang="en">AI writes progress here after each session</span>
+            </td>
+          </tr>
+          <tr>
+            <td>init.sh / init.ps1</td>
+            <td>
+              <span lang="vi">Script kiểm tra xác thực (tests, lint, build)</span>
+              <span lang="en">Verification script (tests, lint, build)</span>
+            </td>
+          </tr>
+          <tr>
+            <td>session-handoff.md</td>
+            <td>
+              <span lang="vi">Ngữ cảnh bàn giao cho phiên AI tiếp theo</span>
+              <span lang="en">Context for the next session</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="setup-step-desc" style="margin-top: 20px; margin-bottom: 0;">
+        <span lang="vi">Dùng <code style="color: var(--color-secondary); font-family: var(--font-mono);">--agent-file CLAUDE.md</code> nếu tool của bạn đọc <code style="font-family: var(--font-mono);">CLAUDE.md</code> thay vì <code style="font-family: var(--font-mono);">AGENTS.md</code>.</span>
+        <span lang="en">Use <code style="color: var(--color-secondary); font-family: var(--font-mono);">--agent-file CLAUDE.md</code> if your tool reads <code style="font-family: var(--font-mono);">CLAUDE.md</code> instead of <code style="font-family: var(--font-mono);">AGENTS.md</code>.</span>
+      </p>
     </div>
 
-    <!-- Manual copy tab content -->
-    <div class="setup-content-box" id="setup-copy-content">
-      <div class="setup-step">
-        <div class="setup-step-num">Step 1</div>
-        <h3 class="setup-step-title">
-          <span lang="vi">Tải thư mục kỹ năng</span>
-          <span lang="en">Download Skill Directory</span>
-        </h3>
-        <p class="setup-step-desc">
-          <span lang="vi">Tải hoặc clone dự án từ GitHub và sao chép trực tiếp thư mục `skills/` vào thư mục `skills/` trong dự án của bạn.</span>
-          <span lang="en">Download or clone this repository and manually copy the `skills/` folder into your target project's `skills/` directory.</span>
-        </p>
+    <!-- Develop locally -->
+    <div class="setup-step" style="margin-top: 24px;">
+      <div class="setup-step-num">
+        <span lang="vi">Phát triển &amp; Đóng góp</span>
+        <span lang="en">Develop &amp; Contribute</span>
       </div>
-      <div class="setup-step">
-        <div class="setup-step-num">Step 2</div>
-        <h3 class="setup-step-title">
-          <span lang="vi">Sử dụng python package chạy scaffolding</span>
-          <span lang="en">Run Scaffolding via Python Module</span>
-        </h3>
-        <p class="setup-step-desc">
-          <span lang="vi">Mã nguồn có thể khởi tạo trực tiếp thông qua module Python nội bộ:</span>
-          <span lang="en">Scaffold template files using Python module execution syntax:</span>
-        </p>
-        <div class="setup-code-container">
-          <pre class="code-block">py -m skills.scripts.scaffold_harness --target harness</pre>
-        </div>
-      </div>
-    </div>
-
-    <!-- Standalone tab content -->
-    <div class="setup-content-box" id="setup-direct-content">
-      <div class="setup-step">
-        <div class="setup-step-num">Step 1</div>
-        <h3 class="setup-step-title">
-          <span lang="vi">Clone và chạy cục bộ</span>
-          <span lang="en">Clone and Enter Directory</span>
-        </h3>
-        <p class="setup-step-desc">
-          <span lang="vi">Nếu bạn muốn chỉnh sửa, đóng góp mã nguồn hoặc phát triển cục bộ trong harness-kit:</span>
-          <span lang="en">Clone the repository to make local changes, debug, or contribute to harness-kit development:</span>
-        </p>
-        <div class="setup-code-container">
-          <pre class="code-block">git clone https://github.com/nguyenanh92/harness-kit.git
-cd harness-kit</pre>
-        </div>
-      </div>
-      <div class="setup-step">
-        <div class="setup-step-num">Step 2</div>
-        <h3 class="setup-step-title">
-          <span lang="vi">Khởi tạo và chạy test cục bộ</span>
-          <span lang="en">Initialize and Validate Locally</span>
-        </h3>
-        <p class="setup-step-desc">
-          <span lang="vi">Bạn có thể tạo ra các thư mục test để thử nghiệm trực tiếp:</span>
-          <span lang="en">Create test folders and perform structural harness scoring to inspect changes locally:</span>
-        </p>
-        <div class="setup-code-container">
-          <pre class="code-block">py skills/scripts/scaffold_harness.py --target test_run
+      <h3 class="setup-step-title">
+        <span lang="vi">Clone và chạy cục bộ</span>
+        <span lang="en">Clone and run locally</span>
+      </h3>
+      <p class="setup-step-desc">
+        <span lang="vi">Nếu bạn muốn chỉnh sửa, đóng góp hoặc kiểm tra harness-kit:</span>
+        <span lang="en">To edit, contribute, or test harness-kit locally:</span>
+      </p>
+      <div class="setup-code-container">
+        <pre class="code-block">git clone https://github.com/nguyenanh92/harness-kit.git
+cd harness-kit
+py skills/scripts/scaffold_harness.py --target test_run
 py skills/scripts/validate_harness.py --target test_run</pre>
-        </div>
       </div>
     </div>
   </section>
