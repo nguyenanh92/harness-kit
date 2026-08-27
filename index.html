@@ -1045,6 +1045,7 @@
         <a href="#how-it-works"><span lang="vi">Luồng hoạt động</span><span lang="en">How it Works</span></a>
         <a href="#installation"><span lang="vi">Cài đặt</span><span lang="en">Installation</span></a>
         <a href="#ide-setup"><span lang="vi">Tích hợp IDE</span><span lang="en">IDE Integration</span></a>
+        <a href="install-skill.html"><span lang="vi">Cài Skill</span><span lang="en">Install Skill</span></a>
         <a href="use-case.html"><span lang="vi">Use Cases</span><span lang="en">Use Cases</span></a>
         <a href="https://harness.nguyenanh98.com/" target="_blank"><span lang="vi">Học Harness</span><span lang="en">Learn Harness</span></a>
 
@@ -1544,12 +1545,12 @@ py skills/scripts/validate_harness.py --target test_run</pre>
           <span lang="en">IDE Integration</span>
         </div>
         <h2 class="section-title">
-          <span lang="vi">Cài đặt cho Claude Code, Cursor, Antigravity, OpenAI Codex</span>
-          <span lang="en">Install for Claude Code, Cursor, Antigravity, OpenAI Codex</span>
+          <span lang="vi">Làm việc với Claude Code, Cursor, Antigravity, OpenAI Codex</span>
+          <span lang="en">Work with Claude Code, Cursor, Antigravity, OpenAI Codex</span>
         </h2>
         <p class="section-desc">
-          <span lang="vi">Mỗi IDE đọc skill theo cách riêng. Bảng dưới chỉ rõ đường dẫn cài đặt, lệnh sao chép, và cách kích hoạt cho từng môi trường.</span>
-          <span lang="en">Each IDE discovers skills differently. The tabs below show the exact install path, copy command, and how each environment picks up the harness-kit.</span>
+          <span lang="vi">Chạy lệnh cài một lần để tạo governance files, rồi mở AI tool và bắt đầu. Muốn cài harness-kit như một skill tích hợp sâu, xem <a href="install-skill.html" style="color:var(--primary);text-decoration:underline">trang Cài Skill →</a></span>
+          <span lang="en">Run the one-liner to create governance files, then open your AI tool and start. For deep skill integration see the <a href="install-skill.html" style="color:var(--primary);text-decoration:underline">Install Skill guide →</a></span>
         </p>
       </div>
 
@@ -1570,22 +1571,19 @@ py skills/scripts/validate_harness.py --target test_run</pre>
         <div class="setup-step">
           <div class="setup-step-num">Step 1</div>
           <h3 class="setup-step-title">
-            <span lang="vi">Sao chép skill vào thư mục Claude Code</span>
-            <span lang="en">Copy the skill into the Claude Code skills directory</span>
+            <span lang="vi">Cài governance files vào project</span>
+            <span lang="en">Install governance files into your project</span>
           </h3>
           <p class="setup-step-desc">
-            <span lang="vi">Claude Code tự phát hiện skill qua frontmatter trong <code class="inline">SKILL.md</code>. Cài user-level để mọi project đều dùng được, hoặc project-level cho riêng từng dự án.</span>
-            <span lang="en">Claude Code auto-discovers skills via the YAML frontmatter in <code class="inline">SKILL.md</code>. Install at the user level so every project can use it, or scope it to a single project.</span>
+            <span lang="vi">Chạy lệnh này ở thư mục gốc dự án — tạo <code class="inline">AGENTS.md</code>, <code class="inline">feature_list.json</code>, <code class="inline">progress.md</code>, <code class="inline">hk.py</code>, và init scripts:</span>
+            <span lang="en">Run this at your project root — creates <code class="inline">AGENTS.md</code>, <code class="inline">feature_list.json</code>, <code class="inline">progress.md</code>, <code class="inline">hk.py</code>, and the init scripts:</span>
           </p>
           <div class="code-block-wrap">
-            <pre class="code-block"># Windows (user-level)
-Copy-Item -Recurse "skills" "$env:USERPROFILE\.claude\skills\harness-kit"
+            <pre class="code-block"># Windows (PowerShell)
+irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex
 
-# macOS / Linux (user-level)
-cp -r skills ~/.claude/skills/harness-kit
-
-# Project-level (any OS)
-cp -r skills ./.claude/skills/harness-kit</pre>
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh</pre>
           </div>
         </div>
         <div class="setup-step">
@@ -1602,16 +1600,19 @@ cp -r skills ./.claude/skills/harness-kit</pre>
         <div class="setup-step">
           <div class="setup-step-num">Step 3</div>
           <h3 class="setup-step-title">
-            <span lang="vi">Chạy scaffold ngay trong chat</span>
-            <span lang="en">Run scaffolding directly from chat</span>
+            <span lang="vi">Tuỳ chọn: cài harness-kit như một Skill</span>
+            <span lang="en">Optional: install harness-kit as a Claude Code Skill</span>
           </h3>
           <p class="setup-step-desc">
-            <span lang="vi">Claude sẽ gọi script bằng đường dẫn tuyệt đối tới skill đã cài. Bạn cũng có thể chạy thủ công:</span>
-            <span lang="en">Claude will invoke the script via the absolute path of the installed skill. You can also run it manually:</span>
+            <span lang="vi">Muốn Claude tự biết dùng harness-kit trong mọi dự án (không cần giải thích mỗi lần), hãy cài như một skill user-level. Xem hướng dẫn đầy đủ tại:</span>
+            <span lang="en">To let Claude invoke harness-kit by name across all projects without explaining it each time, install it as a user-level skill. Full instructions at:</span>
           </p>
-          <div class="code-block-wrap">
-            <pre class="code-block">py "$env:USERPROFILE\.claude\skills\harness-kit\scripts\scaffold_harness.py" --target harness</pre>
-          </div>
+          <p class="setup-step-desc" style="margin-top:8px">
+            <a href="install-skill.html" style="color:var(--primary);font-weight:600;text-decoration:underline">
+              <span lang="vi">→ Hướng dẫn cài Skill</span>
+              <span lang="en">→ Install Skill guide</span>
+            </a>
+          </p>
         </div>
       </div>
 
@@ -1625,64 +1626,53 @@ cp -r skills ./.claude/skills/harness-kit</pre>
         <div class="setup-step">
           <div class="setup-step-num">Step 1</div>
           <h3 class="setup-step-title">
-            <span lang="vi">Tạo Cursor Rule cho project</span>
-            <span lang="en">Create a Cursor Rule for the project</span>
+            <span lang="vi">Cài governance files vào project</span>
+            <span lang="en">Install governance files into your project</span>
           </h3>
           <p class="setup-step-desc">
-            <span lang="vi">Cursor không có "skills" nhưng dùng <code class="inline">.cursor/rules/*.mdc</code> để inject hướng dẫn vào agent. Copy nội dung <code class="inline">SKILL.md</code> thành một rule:</span>
-            <span lang="en">Cursor has no "skills" concept, but it injects guidance via <code class="inline">.cursor/rules/*.mdc</code>. Convert <code class="inline">SKILL.md</code> into a rule:</span>
+            <span lang="vi">Chạy lệnh này ở thư mục gốc dự án — Cursor agent sẽ đọc <code class="inline">AGENTS.md</code> được tạo ra để biết quy trình làm việc:</span>
+            <span lang="en">Run this at your project root — Cursor's agent will pick up the generated <code class="inline">AGENTS.md</code> to understand the workflow:</span>
           </p>
           <div class="code-block-wrap">
-            <pre class="code-block"># Windows
-New-Item -ItemType Directory -Force .cursor\rules | Out-Null
-Copy-Item skills\SKILL.md .cursor\rules\harness-kit.mdc
+            <pre class="code-block"># Windows (PowerShell)
+irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex
 
 # macOS / Linux
-mkdir -p .cursor/rules
-cp skills/SKILL.md .cursor/rules/harness-kit.mdc</pre>
+curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh</pre>
           </div>
         </div>
         <div class="setup-step">
           <div class="setup-step-num">Step 2</div>
           <h3 class="setup-step-title">
-            <span lang="vi">Thiết lập scope của rule</span>
-            <span lang="en">Set the rule's scope</span>
+            <span lang="vi">Mở project trong Cursor và prompt agent</span>
+            <span lang="en">Open the project in Cursor and prompt the agent</span>
           </h3>
           <p class="setup-step-desc">
-            <span lang="vi">Mở <code class="inline">.cursor/rules/harness-kit.mdc</code> và bổ sung frontmatter chuẩn Cursor. Với <code class="inline">alwaysApply: true</code>, Cursor bỏ qua <code class="inline">globs</code> — rule áp dụng mọi lúc:</span>
-            <span lang="en">Open <code class="inline">.cursor/rules/harness-kit.mdc</code> and add the Cursor frontmatter. With <code class="inline">alwaysApply: true</code>, Cursor ignores <code class="inline">globs</code> — the rule applies in every context:</span>
+            <span lang="vi">Cursor tự đọc <code class="inline">AGENTS.md</code> ở gốc dự án. Gõ vào Composer/Chat:</span>
+            <span lang="en">Cursor picks up <code class="inline">AGENTS.md</code> from the project root automatically. Type in Composer/Chat:</span>
           </p>
           <div class="code-block-wrap">
-            <pre class="code-block">---
-description: Standard-library-only Python agent harness conventions
-alwaysApply: true
----</pre>
-          </div>
-          <p class="setup-step-desc" style="margin-top:12px">
-            <span lang="vi">Nếu muốn scope theo file thay vì luôn bật, đặt <code class="inline">alwaysApply: false</code> và dùng <code class="inline">globs</code> dạng chuỗi phân tách bằng dấu phẩy:</span>
-            <span lang="en">To scope by file type instead of always-on, set <code class="inline">alwaysApply: false</code> and use <code class="inline">globs</code> as a comma-separated string:</span>
-          </p>
-          <div class="code-block-wrap">
-            <pre class="code-block">---
-description: Standard-library-only Python agent harness conventions
-globs: **/*.py, AGENTS.md, feature_list.json, progress.md
-alwaysApply: false
----</pre>
+            <pre class="code-block">&gt; "Read AGENTS.md and implement the active feature in feature_list.json."
+&gt; "Add a new feature for the Settings screen and start working on it."
+&gt; "Run hk.py status and tell me what to do next."</pre>
           </div>
         </div>
         <div class="setup-step">
           <div class="setup-step-num">Step 3</div>
           <h3 class="setup-step-title">
-            <span lang="vi">Đồng bộ scaffold vào project</span>
-            <span lang="en">Scaffold the templates into the project</span>
+            <span lang="vi">Tuỳ chọn: cài harness-kit như Cursor Rule</span>
+            <span lang="en">Optional: install harness-kit as a Cursor Rule</span>
           </h3>
           <p class="setup-step-desc">
-            <span lang="vi">Chạy script scaffold để có sẵn các file mẫu Cursor agent có thể đọc/chỉnh:</span>
-            <span lang="en">Run the scaffolder so Cursor's agent has the template files to read and edit:</span>
+            <span lang="vi">Muốn Cursor tự biết quy trình harness-kit mà không cần nhắc lại — cài <code class="inline">SKILL.md</code> thành một <code class="inline">.cursor/rules/*.mdc</code>. Xem hướng dẫn đầy đủ tại:</span>
+            <span lang="en">To have Cursor understand the harness-kit workflow without prompting each time, install <code class="inline">SKILL.md</code> as a <code class="inline">.cursor/rules/*.mdc</code>. Full guide at:</span>
           </p>
-          <div class="code-block-wrap">
-            <pre class="code-block">py skills/scripts/scaffold_harness.py --target harness</pre>
-          </div>
+          <p class="setup-step-desc" style="margin-top:8px">
+            <a href="install-skill.html" style="color:var(--primary);font-weight:600;text-decoration:underline">
+              <span lang="vi">→ Hướng dẫn cài Skill</span>
+              <span lang="en">→ Install Skill guide</span>
+            </a>
+          </p>
         </div>
       </div>
 
@@ -1700,11 +1690,15 @@ alwaysApply: false
             <span lang="en">Scaffold AGENTS.md into the project root</span>
           </h3>
           <p class="setup-step-desc">
-            <span lang="vi">Antigravity (Google, convention 2026) đọc <code class="inline">AGENTS.md</code> ở gốc dự án (chuẩn cross-tool). Scaffold đặt sẵn <code class="inline">AGENTS.md</code>, <code class="inline">feature_list.json</code>, <code class="inline">progress.md</code>, <code class="inline">init.sh</code>/<code class="inline">init.ps1</code>:</span>
-            <span lang="en">Antigravity (Google, 2026 convention) reads <code class="inline">AGENTS.md</code> at the project root as the cross-tool standard. The scaffolder drops the key governance files:</span>
+            <span lang="vi">Antigravity (Google, convention 2026) đọc <code class="inline">AGENTS.md</code> ở gốc dự án (chuẩn cross-tool). Lệnh cài tạo sẵn <code class="inline">AGENTS.md</code>, <code class="inline">feature_list.json</code>, <code class="inline">progress.md</code>, <code class="inline">init.sh</code>/<code class="inline">init.ps1</code>:</span>
+            <span lang="en">Antigravity (Google, 2026 convention) reads <code class="inline">AGENTS.md</code> at the project root as the cross-tool standard. The one-liner drops all key governance files:</span>
           </p>
           <div class="code-block-wrap">
-            <pre class="code-block">py skills/scripts/scaffold_harness.py --target .</pre>
+            <pre class="code-block"># Windows (PowerShell)
+irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex
+
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh</pre>
           </div>
         </div>
         <div class="setup-step">
@@ -1714,18 +1708,15 @@ alwaysApply: false
             <span lang="en">Enable native skills via <code class="inline">.agents/skills/</code></span>
           </h3>
           <p class="setup-step-desc">
-            <span lang="vi">Antigravity còn hỗ trợ thư mục native <code class="inline">.agents/</code> gồm <code class="inline">agents.md</code>, <code class="inline">skills/*.md</code>, và <code class="inline">workflows/*.md</code>. Symlink hoặc copy skill harness-kit vào <code class="inline">.agents/skills/</code>:</span>
-            <span lang="en">Antigravity also supports a native <code class="inline">.agents/</code> folder with <code class="inline">agents.md</code>, <code class="inline">skills/*.md</code>, and <code class="inline">workflows/*.md</code>. Link or copy harness-kit:</span>
+            <span lang="vi">Antigravity còn hỗ trợ thư mục native <code class="inline">.agents/skills/</code>. Muốn cài harness-kit như một Antigravity native skill, cần clone repo trước. Xem hướng dẫn đầy đủ:</span>
+            <span lang="en">Antigravity also supports a native <code class="inline">.agents/skills/</code> folder. To install harness-kit as a native Antigravity skill (requires cloning the repo), see the full guide:</span>
           </p>
-          <div class="code-block-wrap">
-            <pre class="code-block"># Windows
-New-Item -ItemType Directory -Force .agents\skills | Out-Null
-Copy-Item -Recurse skills .agents\skills\harness-kit
-
-# macOS / Linux
-mkdir -p .agents/skills
-cp -r skills .agents/skills/harness-kit</pre>
-          </div>
+          <p class="setup-step-desc" style="margin-top:8px">
+            <a href="install-skill.html" style="color:var(--primary);font-weight:600;text-decoration:underline">
+              <span lang="vi">→ Hướng dẫn cài Skill</span>
+              <span lang="en">→ Install Skill guide</span>
+            </a>
+          </p>
         </div>
         <div class="setup-step">
           <div class="setup-step-num">Step 3</div>
@@ -1782,11 +1773,15 @@ codex login
             <span lang="en">Scaffold AGENTS.md into the root</span>
           </h3>
           <p class="setup-step-desc">
-            <span lang="vi">Giống Antigravity, Codex bắt <code class="inline">AGENTS.md</code> ở gốc dự án. Scaffold cài luôn cả governance docs cần cho validator chấm 100/100.</span>
-            <span lang="en">Like Antigravity, Codex picks up <code class="inline">AGENTS.md</code> from the project root. The scaffolder also drops in the governance docs needed for the validator to score 100/100.</span>
+            <span lang="vi">Giống Antigravity, Codex bắt <code class="inline">AGENTS.md</code> ở gốc dự án. Lệnh cài tạo luôn governance docs cần cho validator chấm 100/100.</span>
+            <span lang="en">Like Antigravity, Codex picks up <code class="inline">AGENTS.md</code> from the project root. The one-liner drops all governance docs needed for the validator to score 100/100.</span>
           </p>
           <div class="code-block-wrap">
-            <pre class="code-block">py skills/scripts/scaffold_harness.py --target .</pre>
+            <pre class="code-block"># Windows (PowerShell)
+irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex
+
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh</pre>
           </div>
         </div>
         <div class="setup-step">
@@ -1824,6 +1819,7 @@ codex login
           <a href="getting-started.html"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
           <a href="#installation"><span lang="vi">Cài đặt</span><span lang="en">Installation</span></a>
           <a href="#ide-setup"><span lang="vi">Tích hợp IDE</span><span lang="en">IDE Integration</span></a>
+          <a href="install-skill.html"><span lang="vi">Cài Skill</span><span lang="en">Install Skill</span></a>
           <a href="use-case.html"><span lang="vi">Use Cases</span><span lang="en">Use Cases</span></a>
           <a href="https://harness.nguyenanh98.com/" target="_blank"><span lang="vi">Học Harness</span><span lang="en">Learn Harness</span></a>
           <a href="https://github.com/nguyenanh92/harness-kit" target="_blank">GitHub</a>
