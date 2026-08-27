@@ -80,7 +80,7 @@ Là nền móng của cả hệ thống điều phối. Harness chạy một vò
 
 ### 3.2. Quản Lý Ngữ Cảnh (Context Management)
 Khi phiên làm việc kéo dài, lịch sử hội thoại và kết quả chạy công cụ sẽ tăng lên nhanh chóng và dễ làm tràn giới hạn token (Context Window) của LLM.
-* **Compaction (Nén)**: Khi ngữ cảnh đạt tới một ngưỡng nhất định (ví dụ 80-90%), Harness sẽ tự động tóm tắt các lượt hội thoại cũ, giữ nguyên các lượt hội thoại mới nhất và loại bỏ các chi tiết không cần thiết.
+* **Compaction (Nén)**: Khi ngữ cảnh đạt tới ~95% cửa sổ ngữ cảnh của mô hình (có thể cấu hình qua `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`), Harness sẽ tự động tóm tắt các lượt hội thoại cũ, giữ nguyên system prompt và các lượt gần nhất. Hook `PreCompact` được kích hoạt trước khi nén, cho phép lưu trữ bản sao toàn bộ transcript.
 * **Progressive Disclosure**: Chỉ tải ngữ cảnh khi cần thiết (Just-In-Time) để giảm độ trễ khởi động phiên và tối ưu chi phí token.
 
 ### 3.3. Đăng Ký Công Cụ & Kỹ Năng (Tools & Skills Registry)
@@ -140,6 +140,6 @@ Dưới đây là các lỗi thiết kế hệ thống Harness phổ biến đã
 2. **Xung đột thời điểm trích xuất (Extraction Timing Race)**: Quá trình trích xuất thông tin hội thoại để lưu vào bộ nhớ thường diễn ra cuối lượt trả lời. Nếu người dùng gửi tin nhắn tiếp theo quá nhanh trước khi quá trình ghi nhớ hoàn tất, Agent sẽ bị mất ngữ cảnh của lượt hội thoại trước đó.
 3. **Phân loại concurrency theo lượt gọi thay vì theo công cụ**: Không nên đánh giá một công cụ là an toàn hay nguy hiểm một cách tĩnh. 
    * *Khắc phục*: Phải phân tích các tham số truyền vào công cụ tại thời điểm chạy (runtime) để quyết định mức độ an toàn.
-4. **Bùng nổ token do Sub-agent gọi đệ quy**: Phải cấm tuyệt đối việc Sub-agent tự ý tạo thêm Sub-agent của riêng nó (Fork Children Must Not Fork), nếu không số lượng token sẽ bùng nổ theo cấp số nhân.
+4. **Fork con không được tạo Fork tiếp**: *Fork* (sub-agent thừa kế toàn bộ lịch sử hội thoại) bị giới hạn một cấp — fork con không được tạo fork tiếp. Sub-agent thông thường (context riêng biệt) có thể lồng nhiều cấp; chỉ có kiểu fork đầy đủ lịch sử mới phải giữ giới hạn một cấp để chi phí token có thể dự đoán được.
 5. **Quên xóa cache khi sửa đổi file (Cache Invalidation)**: Khi Agent thực hiện cập nhật nội dung file, Harness phải xóa cache của file đó ngay lập tức, tránh việc các công cụ khác đọc lại dữ liệu cũ đã lưu cache.
-6. **Móc nối bảo mật "Tất cả hoặc Không" (All-or-Nothing Hook Trust)**: Nếu không gian làm việc (workspace) bị đánh dấu là không đáng tin cậy (untrusted), Harness phải tắt toàn bộ Hook thay vì cố gắng lọc xem hook nào an toàn.
+6. **Tin cậy Hook theo phân cấp phạm vi, không phải nhị phân**: Tin cậy Hook tuân theo phân cấp 7 phạm vi (managed policy → user settings → project settings → local settings → plugin → skill frontmatter → enterprise lock). Hook từ user settings chạy ngay cả khi workspace không được tin cậy; chỉ `allowManagedHooksOnly` mới tạo ra cổng tất-cả-hoặc-không thực sự. Trong từng phạm vi, tin cậy vẫn là tất-cả-hoặc-không — không cố lọc hook nào "trông có vẻ an toàn".

@@ -19,7 +19,7 @@ A **framework** (LangChain, LangGraph, AutoGen) tries to be both. A **harness** 
 | 1 | While loop               | `harness.py`            | Bounded orchestration; ties the other eight together |
 | 2 | Context compaction       | `context_manager.py`    | Token estimation, threshold-based summarization |
 | 3 | Tool registry            | `tool_registry.py`      | Tool descriptors, permission classifier, dispatch |
-| 4 | Sub-agents               | `subagent.py`           | Fork a restricted child for a scoped sub-task |
+| 4 | Sub-agents               | `subagent.py`           | Spawn a restricted child for a scoped sub-task; two modes: *fork* (inherits full history, single-level only) and *subagent* (fresh context, nestable up to 3 levels) |
 | 5 | Primitives               | `tool_registry.py` builtins | `read_file`, `write_file`, `run_shell` |
 | 6 | Memory / persistence     | `persistence.py`        | Append-only JSONL session log, replay |
 | 7 | System prompt assembly   | `prompt_assembly.py`    | Walk ancestors, append guidelines, preserve cache prefix |
@@ -46,6 +46,19 @@ Components 3, 5, and 9 all live in `tool_registry.py` because they share state: 
 - New tool? Register it in `tool_registry.py`, add a `classify_command` rule if it shells out.
 - New telemetry? Add a post-tool hook in `hooks.py`.
 - New summarization strategy? Subclass `ContextManager` and inject it into `Harness.__init__`.
+
+## Sub-agent modes
+
+Component 4 ships two distinct spawning patterns with different isolation guarantees:
+
+| Mode | Context inherited | Can nest? | Use when |
+|------|------------------|-----------|----------|
+| **Fork** | Full conversation history + system prompt + tools | No — single-level only | Short parallel slice; shares prompt cache with parent |
+| **Subagent** | Fresh context (new session) | Yes — up to 3 levels (`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`) | Isolated task with its own tool set and iteration cap |
+
+Peer-to-peer communication between concurrently running subagents uses a `SendMessage` tool — one subagent addresses another by name and passes a message string; the recipient integrates it on its next iteration. The child still returns a single summary string to the parent's context at completion.
+
+The Python harness in this kit implements the *fork* mode by default — single-level, restricted registry, summary-only return. To add nestable subagents, introduce a separate session log under `.harness/<parent>/` and remove `spawn_subagent` from the child's registry only when the child is itself a fork.
 
 **Replace** only if the contract itself changes:
 - Multi-step planning that needs more than `run()` can express → write a new orchestrator module and keep `harness.py` as the leaf executor.

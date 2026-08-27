@@ -80,7 +80,7 @@ The foundation of the orchestrator. The harness runs an outer iteration loop: na
 
 ### 3.2. Context Management (Compaction & Budgeting)
 Long agent sessions accumulate messages, tool inputs, and stdout logs, which quickly exceed the LLM's context window limits.
-*   **Compaction**: When context usage hits a threshold (e.g., 80%), the harness automatically summarizes older turns in the middle, while keeping the system prompt and the most recent $N$ turns verbatim.
+*   **Compaction**: When context usage hits a threshold (~95% of the model's context window; configurable via `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`), the harness automatically summarizes older turns in the middle, while keeping the system prompt and the most recent $N$ turns verbatim. A `PreCompact` hook fires before summarization, allowing transcript archiving.
 *   **Progressive Disclosure**: Loads metadata initially and reads resource files on-demand (Just-In-Time) to minimize startup latency and conserve token budget.
 
 ### 3.3. Tools & Skills Registry
@@ -137,6 +137,6 @@ Keep these design failure modes in mind when engineering a harness:
 1.  **Silent Memory Index Caps**: Memory caches often enforce hard limits (e.g., 25KB) at read time. Long topic summaries will hit the byte cap silently, causing older memories to "disappear". Save short one-line pointers instead.
 2.  **Extraction Timing Race**: Background context extraction runs after responses are completed. If the user submits a new prompt too quickly, the extraction hasn't finished, leading to missing session context.
 3.  **Per-Call Concurrency Classification**: Do not mark a tool as concurrent-safe statically. A shell tool is safe running `git diff` but unsafe running `rm -rf`. Classify concurrency dynamically on arguments at runtime.
-4.  **Sub-Agent Recursion (Fork Children Must Not Fork)**: If a child sub-agent can spawn its own sub-agents, token costs expand exponentially. Enforce a single-level spawn restriction.
+4.  **Fork Children Must Not Fork**: *Forks* (sub-agents that inherit the full conversation history) are single-level only — a fork child may not spawn further forks. Regular sub-agents (fresh context) can nest multiple levels; it is only the full-history fork pattern that must stay single-level to keep token costs predictable.
 5.  **Cache Invalidation on Mutation**: When writing or modifying files, the harness must immediately invalidate cached contents for those paths, or other tools will read stale data.
-6.  **All-or-Nothing Hook Trust**: Running local hooks from untrusted workspaces is a security vector. If a workspace is untrusted, bypass all local hooks entirely; do not attempt selective trust validation.
+6.  **Hook Trust Is Scope-Based, Not Binary**: Hook trust follows a 7-scope hierarchy (managed policy → user settings → project settings → local settings → plugin → skill frontmatter → enterprise lock). A hook from user settings runs even when the workspace is untrusted; only `allowManagedHooksOnly` produces a true all-or-nothing gate. Within any given scope, trust remains all-or-nothing — do not attempt selective hook validation inside a scope.

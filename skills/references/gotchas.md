@@ -36,7 +36,7 @@ A summarizer that compacts everything except the system prompt loses the model's
 
 ## 9. Hook trust decided per file
 
-If you allow per-hook trust decisions ("this hook looks safe, that one doesn't"), the attack model becomes "ship a safe-looking hook that calls back to a malicious one." Trust must be all-or-nothing per workspace. Resist the temptation to be clever.
+If you allow per-hook trust decisions within a scope ("this hook looks safe, that one doesn't"), the attack model becomes "ship a safe-looking hook that calls back to a malicious one." Within any given trust scope, trust must be all-or-nothing — do not cherry-pick hooks. See [Lifecycle and hooks](lifecycle-and-hooks.md) for the full 7-scope hierarchy.
 
 ## 10. Replay re-executes side effects
 
@@ -73,9 +73,34 @@ The Python scaffolder calls `make_executable` after writing, but the effect is a
 
 `AGENTS.md` says "tests pass." That is enforced by *the agent*, not by the harness. If you need a hard gate, wire it into `init.sh` so a non-zero exit code blocks the agent from declaring done. The validation score will tell you the *file says* tests must pass; only the verification script can tell you *whether* they did.
 
+## 17. MCP tool schema contains a timestamp — cache busts every call
+
+MCP tool schemas are part of the stable prefix. If the MCP server injects a per-request timestamp or session ID into a schema description field, the prefix cache is invalidated on every iteration. Keep MCP tool schema descriptions strictly static; put any dynamic metadata inside the tool's return payload.
+
+## 18. Subagent nesting depth vs. fork depth confused
+
+The single-level restriction applies to **forks** only — sub-processes that inherit the full conversation history. Regular subagents (fresh context, own JSONL log) can nest up to 3 levels. Applying the single-level constraint to all child spawns unnecessarily limits parallelism and is architecturally incorrect.
+
+## 19. Hook exit code 1 is non-blocking
+
+Only exit code `2` vetoes a tool call. Exit code `1` is a non-blocking error: it is logged and execution continues. Writing a hook that exits 1 to try to block a call silently fails — the call proceeds. Use exit code `2` to veto.
+
+## 20. Compaction threshold misconfigured to 80% on a 200K-context model
+
+A threshold of 80% triggers compaction at ~160K tokens on a 200K-context model, discarding ~30K tokens of usable context unnecessarily. Calibrate the threshold to the model's actual window: ~95% (~190K tokens for 200K window) with a ~33K response reserve. Override via `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`.
+
+## 21. Auto memory MEMORY.md over 200 lines silently truncated
+
+Only the first 200 lines of `MEMORY.md` are loaded at session start. Entries past line 200 are invisible to the agent without an explicit read call. Keep `MEMORY.md` as a concise one-line-per-entry pointer index; put content in per-entry topic files.
+
+## 22. MCP tool list assumed static at session start
+
+MCP servers can send `notifications/tools/list_changed` at any time during a session. A harness that fetches the tool list once at startup will miss tools added (or removed) mid-session. Subscribe to the notification and re-fetch on change.
+
 ## Related references
 
 - [Architecture principles](architecture-principles.md) — invariants these gotchas violate.
 - [Tool registry and safety](tool-registry-and-safety.md) — classifier and trust details.
 - [Context and memory](context-and-memory.md) — cache and JSONL pitfalls.
 - [Lifecycle and hooks](lifecycle-and-hooks.md) — bootstrap and end-of-session edges.
+- [MCP integration](mcp-integration.md) — MCP-specific gotchas (#17, #22).

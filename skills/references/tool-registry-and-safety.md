@@ -6,7 +6,7 @@ Load when you are adding a tool, changing a permission rule, or designing a sub-
 
 1. **Fail closed.** A tool not in the registry cannot be called. A command the classifier does not recognize is escalated, not auto-allowed.
 2. **Classify per call, not per tool.** A single `run_shell` tool covers `ls`, `git commit`, and `rm -rf` — the *string passed at call time* determines the permission level, not the tool's type.
-3. **Single-level fork.** A parent may spawn a child sub-agent. A child must not be able to spawn another. Enforce this by removing `spawn_subagent` from the child's registry, not by a runtime check alone.
+3. **Fork vs. subagent nesting.** *Forks* inherit the full conversation history and may not spawn further forks — single-level only. *Regular subagents* run in a fresh context and can nest up to 3 levels (`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`). Enforce the fork boundary by removing `spawn_subagent` from the fork child's registry; nestable subagents manage their own iteration cap.
 4. **Manual gate by default.** Any escalation prompts the user via `input()`; auto-allow only when the workspace is explicitly trusted *and* the command is read-only.
 
 ## Permission levels
@@ -47,6 +47,38 @@ Notes on the implementation in `tool_registry.py`:
 - Always normalize with `.lower()` first.
 - The order of the checks matters — `FULL_ACCESS` patterns must run before `WORKSPACE_WRITE` patterns, because `rm` substring appears inside `rm -rf`.
 
+## Permission modes
+
+The 3-tier classifier (READ_ONLY / WORKSPACE_WRITE / FULL_ACCESS) decides the *cost* of a command. The **permission mode** decides what to *do* with that cost. Six modes:
+
+| Mode | Behavior |
+|------|----------|
+| `default` | Prompt user for WORKSPACE_WRITE and FULL_ACCESS commands |
+| `acceptEdits` | Auto-approve file edits; prompt for shell commands |
+| `plan` | Read-only — no file writes or shell commands allowed |
+| `dontAsk` | Deny sensitive actions instead of prompting (CI-safe) |
+| `auto` | Model classifier decides; overrides only on ambiguous commands |
+| `bypassPermissions` | Full access — critical-path guardrails still apply (see below) |
+
+**6-step evaluation order** for each tool call:
+
+1. **Hooks** — any registered hook may deny (exit code `2`)
+2. **Deny rules** — explicit `denyRules` patterns block unconditionally
+3. **Ask rules** → callback — `askRules` patterns prompt the user
+4. **Permission mode** — the active mode determines default behavior
+5. **Allow rules** — `allowRules` patterns bypass the mode check
+6. **`canUseTool` callback** — final programmatic veto
+
+**Scoped patterns** let you target specific argument shapes, not just tool names:
+
+```
+Bash(rm *)          # match rm with any argument
+Edit(//secrets/**)  # block edits inside /secrets/
+mcp__github__get_*  # allow all MCP GitHub read tools
+```
+
+**Critical paths are blocked in all modes** — including `bypassPermissions`. `rm` / `rmdir` on system directories (`/`, `/usr`, `C:\Windows`) is unconditionally refused regardless of mode.
+
 ## Sub-agent fork boundary
 
 Spawn-Restrict-Collect lifecycle:
@@ -57,18 +89,28 @@ Spawn-Restrict-Collect lifecycle:
 
 > Why the single-level invariant: if a child can fork, context costs are unbounded, and a runaway child can sit invisible to the parent's iteration cap. The cap belongs to the loop, not the agent tree.
 
-## Hook trust gate (all-or-nothing)
+## Hook trust gate
 
-Hooks are powerful — they can log, redact, veto, or rewrite arguments. They are also user-supplied code from a workspace the harness may not trust.
+Hook trust is resolved through a 7-scope hierarchy — see [Lifecycle and hooks](lifecycle-and-hooks.md) for the full table. The practical rule for the Python harness:
 
-The rule: **if the workspace is not explicitly trusted, do not run *any* hooks**. Do not pick and choose "safe-looking" hooks. Trust is a per-workspace boolean, not a per-file decision.
+- Hooks from user settings (`~/.claude/settings.json`) run regardless of workspace trust.
+- Hooks from project settings (`.claude/settings.json`) require a workspace trust decision.
+- The `allowManagedHooksOnly` enterprise flag disables all non-managed hooks.
 
-Trust signals (any one is sufficient):
-- The user has run `--trust` on the workspace.
-- The workspace is under a path the user has globally trusted (e.g., `~/repos/`).
-- The user approves a one-shot `input()` prompt at session start.
+Do not allow per-hook trust decisions within a scope. If the workspace is untrusted, `hooks.py` must short-circuit both `dispatch_pre_hooks` and `dispatch_post_hooks` for that scope — selectively running "safe-looking" hooks from an untrusted workspace is the attack surface this model is designed to prevent.
 
-When untrusted, `hooks.py` short-circuits both `dispatch_pre_hooks` and `dispatch_post_hooks` and returns the unchanged arguments / no-op respectively. The harness still runs.
+## MCP tools (optional)
+
+MCP servers expose tools that integrate into the registry under the `mcp__<server>__<tool>` namespace. From the dispatch perspective they are identical to built-in tools; the classifier and permission modes apply equally.
+
+Additional rules for MCP tools:
+
+- **Re-fetch on `notifications/tools/list_changed`** — MCP tool lists are dynamic; a cached list misses tools added mid-session.
+- **Apply the same permission classification** — an MCP tool that shells out or touches the network must still be classified `FULL_ACCESS`.
+- **Isolate the MCP client** — import the `mcp` SDK only in an adapter module outside `harness/`; keep the core dependency-free.
+- **Document MCP tool availability for sub-agents** — if a fork child should not reach an MCP server, remove those tool entries from the child's registry.
+
+See [MCP integration](mcp-integration.md) for the full integration guide.
 
 ## Adding a new tool: checklist
 

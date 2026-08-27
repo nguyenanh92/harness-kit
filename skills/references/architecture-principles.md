@@ -16,6 +16,8 @@ The harness modules under `harness/` import only the Python standard library. No
 
 **Bright line.** If a feature requires a third-party package, push it behind a thin adapter in the *caller's* code, not into `harness/`.
 
+**MCP carve-out (opt-in).** MCP integration is the one sanctioned exception. If you opt into MCP, the `mcp` Python SDK may be imported — but only in a dedicated adapter module (e.g., `harness_mcp/`), never inside `harness/`. The harness core remains dependency-free; the adapter is injected via the `model_turn` callable pattern. See [MCP integration](mcp-integration.md).
+
 ## 2. The while loop is the program
 
 A harness is a bounded orchestrator of one loop. Every other module exists to feed it inputs or execute its decisions. The canonical step order:

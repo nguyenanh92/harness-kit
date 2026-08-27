@@ -89,14 +89,15 @@ Load only the reference needed for the user's problem:
 - Compaction, prefix cache, JSONL persistence: [Context and Memory](references/context-and-memory.md)
 - Bootstrap stages, hooks, restart contract: [Lifecycle and Hooks](references/lifecycle-and-hooks.md)
 - Non-obvious failure modes (numbered): [Gotchas](references/gotchas.md)
+- Optional MCP tool federation layer: [MCP integration](references/mcp-integration.md)
 
 ## Design Rules
 
 - **Zero external dependencies** in core harness modules. Standard library only.
 - **Prefix caching alignment**: static prompt first, dynamic content appended; never rewrite the prefix.
 - **Append-only logging**: flush every event immediately; replay reconstructs context, not side effects.
-- **Single-level sub-agent fork**: children must not be able to spawn further children.
-- **Fail-closed permission gate**: unknown commands escalate; trust is all-or-nothing per workspace.
+- **Sub-agent fork boundary**: fork children (full-history inheritors) must not spawn further forks; regular subagents may nest up to 3 levels.
+- **Fail-closed permission gate**: unknown commands escalate; hook trust follows a 7-scope hierarchy (see [Lifecycle and hooks](references/lifecycle-and-hooks.md)).
 - **One active feature**: enforced by `feature_list.json`, not by hope.
 - **Never hide destructive behavior in scripts**: `--force` is opt-in; ask before overwriting.
 
