@@ -23,6 +23,34 @@
 
 ---
 
+## Cài đặt
+
+Chạy lệnh này tại **thư mục gốc của project** — hoạt động với Claude Code, Cursor, Codex, Windsurf và bất kỳ AI nào đọc instruction file.
+
+```bash
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh
+
+# Windows (PowerShell)
+irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex
+```
+
+**Yêu cầu:** Python 3.8+, git
+
+Những file được tạo trong project của bạn:
+
+| File | Mục đích |
+|---|---|
+| `AGENTS.md` | Quy tắc AI đọc mỗi khi bắt đầu session |
+| `feature_list.json` | Feature đang làm, trạng thái, dependencies |
+| `progress.md` | AI ghi tiến độ sau mỗi session |
+| `init.sh` / `init.ps1` | Script kiểm tra (tests, lint, build) |
+| `session-handoff.md` | Ngữ cảnh cho session tiếp theo |
+
+> Dùng `--agent-file CLAUDE.md` nếu tool của bạn đọc `CLAUDE.md` thay vì `AGENTS.md`.
+
+---
+
 # Tài Liệu Chuyên Sâu: Tìm Hiểu Về Agent Harness (Khung Kiến Trúc Tác Nhân AI)
 
 Tài liệu này được tổng hợp từ bài chia sẻ thực tế kết hợp với việc đối chiếu, phân tích các mẫu thiết kế kỹ thuật (design patterns) hiện có trong dự án **harness-kit**.

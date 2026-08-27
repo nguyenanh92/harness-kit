@@ -23,6 +23,34 @@
 
 ---
 
+## Install
+
+Run this in your **project root** — works with Claude Code, Cursor, Codex, Windsurf, and any AI that reads an instruction file.
+
+```bash
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh
+
+# Windows (PowerShell)
+irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex
+```
+
+**Requirements:** Python 3.8+, git
+
+What gets created in your project:
+
+| File | Purpose |
+|---|---|
+| `AGENTS.md` | Rules your AI reads on every session start |
+| `feature_list.json` | Active feature, status, dependencies |
+| `progress.md` | AI writes progress here after each session |
+| `init.sh` / `init.ps1` | Verification script (tests, lint, build) |
+| `session-handoff.md` | Context for the next session |
+
+> Use `--agent-file CLAUDE.md` if your tool reads `CLAUDE.md` instead of `AGENTS.md`.
+
+---
+
 # Deep Dive: Understanding Agent Harness (AI Agent Architecture)
 
 This document is compiled from practical observations combined with an analysis of the engineering design patterns available in the **harness-kit** project.
