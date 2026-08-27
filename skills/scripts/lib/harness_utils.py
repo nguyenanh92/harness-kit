@@ -400,6 +400,10 @@ def score_harness(root: Path, harness_dir: Optional[Path] = None) -> ScoreResult
               "Completion gate limits scope closure"),
     ]
 
+    # Governance-only projects (e.g. frontend repos) never have a harness/
+    # subdirectory. Penalising them for absent Python modules is a false negative.
+    is_governance_only = bool(governance) and not (root / "harness").is_dir()
+
     lifecycle = [
         Check(has_file(governance, ["init.sh", "init.ps1", "init.bat", "init.cmd"]),
               "Startup script exists"),
@@ -410,7 +414,7 @@ def score_harness(root: Path, harness_dir: Optional[Path] = None) -> ScoreResult
         Check(text_has(progress + handoff,
                        ["Last Updated", "Current Objective", "Recommended Next Step"]),
               "Session restart markers exist"),
-        Check(any(code.values()),
+        Check(any(code.values()) or is_governance_only,
               "Harness code modules scaffolded"),
     ]
 
