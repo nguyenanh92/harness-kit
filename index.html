@@ -593,7 +593,7 @@
     .tab-btn {
       background: transparent;
       color: var(--text-muted);
-      padding: 9px 16px;
+      padding: 9px 13px;
       font-family: var(--font-sans);
       font-size: 13.5px;
       font-weight: 600;
@@ -1231,8 +1231,8 @@ Created: persistence.py, hooks.py, subagent.py, prompt_assembly.py
           <span lang="en">Getting Started</span>
         </div>
         <h2 class="section-title">
-          <span lang="vi">Ba bước đầu tiên</span>
-          <span lang="en">Three steps to get going</span>
+          <span lang="vi">Hai cách làm việc</span>
+          <span lang="en">Two ways to work</span>
         </h2>
       </div>
 
@@ -1245,8 +1245,8 @@ Created: persistence.py, hooks.py, subagent.py, prompt_assembly.py
               <span lang="en">Pick your platform</span>
             </h3>
             <p class="builder-form-desc">
-              <span lang="vi"><code class="inline">hk.py</code> đi kèm mọi project sau khi cài. Chạy được từ bất kỳ thư mục con nào — tự tìm <code class="inline">feature_list.json</code>. Không cần plugin hay extension.</span>
-              <span lang="en"><code class="inline">hk.py</code> ships with every project after install. Run it from any subdirectory — it auto-discovers <code class="inline">feature_list.json</code>. No plugin or extension needed.</span>
+              <span lang="vi">Sau khi cài, có <strong>hai cách làm việc</strong>: prompt AI bằng ngôn ngữ tự nhiên — agent tự đọc <code class="inline">AGENTS.md</code> — hoặc dùng <code class="inline">hk.py</code> từ terminal bất kỳ. Không cần plugin hay extension.</span>
+              <span lang="en">After install, <strong>two ways to work</strong>: prompt your AI in natural language — the agent reads <code class="inline">AGENTS.md</code> automatically — or use <code class="inline">hk.py</code> from any terminal. No plugin or extension needed.</span>
             </p>
 
             <div class="form-group">
@@ -1258,20 +1258,33 @@ Created: persistence.py, hooks.py, subagent.py, prompt_assembly.py
             </div>
 
             <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 12px;">
-              <div style="display:flex; gap:10px; align-items:center; font-size:13px; color:var(--text-muted);">
-                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;">1</span>
-                <span lang="vi">Cài vào thư mục gốc dự án (chạy 1 lần)</span>
-                <span lang="en">Install into your project root (once)</span>
+              <div style="display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; margin-top:1px;">1</span>
+                <span>
+                  <span lang="vi">Cài vào thư mục gốc dự án (chạy 1 lần)</span>
+                  <span lang="en">Install into your project root (once)</span>
+                </span>
               </div>
-              <div style="display:flex; gap:10px; align-items:center; font-size:13px; color:var(--text-muted);">
-                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;">2</span>
-                <span lang="vi">Thêm feature và bắt đầu làm</span>
-                <span lang="en">Add a feature and start working</span>
+              <div style="display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; margin-top:1px;">2</span>
+                <span>
+                  <span lang="vi">Prompt AI bằng ngôn ngữ tự nhiên — agent tự đọc AGENTS.md</span>
+                  <span lang="en">Prompt your AI in plain language — agent reads AGENTS.md automatically</span>
+                </span>
               </div>
-              <div style="display:flex; gap:10px; align-items:center; font-size:13px; color:var(--text-muted);">
-                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;">3</span>
-                <span lang="vi">Kiểm tra điểm harness bất kỳ lúc nào</span>
-                <span lang="en">Audit the harness score anytime</span>
+              <div style="display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; margin-top:1px;">3</span>
+                <span>
+                  <span lang="vi">Hoặc dùng <code class="inline">hk.py</code> từ terminal, CI, hay script</span>
+                  <span lang="en">Or use <code class="inline">hk.py</code> from any terminal, CI, or script</span>
+                </span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+                <span style="width:22px; height:22px; border-radius:50%; background:rgba(99,102,241,0.15); border:1px solid var(--primary); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; margin-top:1px;">4</span>
+                <span>
+                  <span lang="vi">Kiểm tra điểm harness bất kỳ lúc nào</span>
+                  <span lang="en">Audit the harness score anytime</span>
+                </span>
               </div>
             </div>
           </div>
@@ -1283,13 +1296,17 @@ Created: persistence.py, hooks.py, subagent.py, prompt_assembly.py
                   <span lang="vi">1. Cài đặt</span>
                   <span lang="en">1. Install</span>
                 </button>
+                <button class="tab-btn" onclick="switchActionTab('prompt')">
+                  <span lang="vi">2. Prompt AI</span>
+                  <span lang="en">2. Prompt AI</span>
+                </button>
                 <button class="tab-btn" onclick="switchActionTab('workflow')">
-                  <span lang="vi">2. Thêm &amp; bắt đầu</span>
-                  <span lang="en">2. Add &amp; start</span>
+                  <span lang="vi">3. hk.py CLI</span>
+                  <span lang="en">3. hk.py CLI</span>
                 </button>
                 <button class="tab-btn" onclick="switchActionTab('audit')">
-                  <span lang="vi">3. Kiểm tra điểm</span>
-                  <span lang="en">3. Audit score</span>
+                  <span lang="vi">4. Kiểm tra điểm</span>
+                  <span lang="en">4. Audit score</span>
                 </button>
               </div>
 
@@ -1803,7 +1820,7 @@ codex login
         </div>
         <div class="footer-links">
           <a href="#subsystems"><span lang="vi">Tính năng</span><span lang="en">Features</span></a>
-          <a href="#setup-cli"><span lang="vi">Trình dựng</span><span lang="en">CLI Builder</span></a>
+          <a href="#setup-cli"><span lang="vi">Bắt đầu</span><span lang="en">Get Started</span></a>
           <a href="#installation"><span lang="vi">Cài đặt</span><span lang="en">Installation</span></a>
           <a href="#ide-setup"><span lang="vi">Tích hợp IDE</span><span lang="en">IDE Integration</span></a>
           <a href="use-case.html"><span lang="vi">Use Cases</span><span lang="en">Use Cases</span></a>
@@ -1828,7 +1845,8 @@ codex login
         title: "Harness Kit - Bộ Khung Tác Nhân AI Bền Bỉ, Không Thư Viện Ngoài",
         desc: "Trang giới thiệu và hướng dẫn cài đặt bộ khung Harness tác nhân AI bằng Python siêu nhẹ, chỉ sử dụng thư viện chuẩn. Tương thích với Cursor, Claude Code, Antigravity.",
         infoInstall: 'Chạy lệnh này từ thư mục gốc dự án. Sau khi cài xong bạn có: AGENTS.md, feature_list.json, progress.md, hk.py và init.sh/init.ps1.',
-        infoWorkflow: 'Sau khi cài, dùng hk.py để thêm feature và bắt đầu làm việc. Chạy từ bất kỳ terminal nào trong mọi IDE — không cần plugin.',
+        infoPrompt: 'Cách 1 — Prompt AI tự nhiên: chỉ cần nói với Claude Code, Cursor hay Codex điều bạn muốn. Agent tự đọc AGENTS.md và làm theo quy trình mà không cần lệnh gì thêm.',
+        infoWorkflow: 'Cách 2 — CLI hk.py: dùng hk.py để quản lý hàng đợi từ terminal, CI, hay script mà không cần mở phiên chat.',
         infoAudit: 'Xem trạng thái feature đang chạy và hàng đợi. Thêm --html report.html để xuất báo cáo chi tiết.',
         copied: 'Đã Copy!',
         copyBtn: 'Copy'
@@ -1837,7 +1855,8 @@ codex login
         title: "Harness Kit - Standard-Library-Only Resilient AI Agent Harness",
         desc: "Introduction and setup guide for a zero-dependency, standard-library-only Python Agent Harness. Compatible with Cursor, Claude Code, and Antigravity.",
         infoInstall: 'Run this from your project root. After install you get: AGENTS.md, feature_list.json, progress.md, hk.py, and init.sh/init.ps1.',
-        infoWorkflow: 'After install, use hk.py to add features and start working. Runs from any terminal in any IDE — no plugin needed.',
+        infoPrompt: 'Mode 1 — Natural language: just tell Claude Code, Cursor, or Codex what you need. The agent reads AGENTS.md automatically and follows the workflow without extra commands.',
+        infoWorkflow: 'Mode 2 — hk.py CLI: manage the feature queue from a terminal, CI step, or script without opening a chat session.',
         infoAudit: 'Show the active feature and queue. Add --html report.html to export a full scored report.',
         copied: 'Copied!',
         copyBtn: 'Copy'
@@ -1883,6 +1902,13 @@ codex login
         output = currentOS === 'win'
           ? `irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex`
           : `curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh`;
+      } else if (currentTab === 'prompt') {
+        infoText = translations[currentLang].infoPrompt;
+        if (currentLang === 'vi') {
+          output = `# Mở Claude Code, Cursor, Codex... rồi nói:\n\n> "Đọc AGENTS.md và implement feature\n   đang active trong feature_list.json."\n\n> "Thêm feature cho màn hình Settings\n   và bắt đầu làm."\n\n> "Xong F-003 rồi — chạy init.sh,\n   cập nhật progress.md, chuyển sang\n   feature tiếp theo."`;
+        } else {
+          output = `# Open Claude Code, Cursor, Codex... then say:\n\n> "Read AGENTS.md and implement the\n   active feature in feature_list.json."\n\n> "Add a new feature for the Settings\n   screen and start working on it."\n\n> "We're done with F-003 — run init.sh,\n   update progress.md, and move to\n   the next feature."`;
+        }
       } else if (currentTab === 'workflow') {
         infoText = translations[currentLang].infoWorkflow;
         if (currentLang === 'vi') {
