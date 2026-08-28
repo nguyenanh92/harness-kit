@@ -1,0 +1,107 @@
+{
+  "features": [
+    {
+      "id": "F-001",
+      "name": "Project scaffold",
+      "description": "Khởi tạo React + TypeScript + Vite project trong add-in-demo/outlook-copilot/. Cài office-js, @anthropic-ai/sdk, tailwindcss. Config Vite build cho Office add-in (iife format).",
+      "status": "done",
+      "dependencies": [],
+      "evidence": "npm run build → tsc -b && vite build → 27 modules, 0 errors, built in 12.10s"
+    },
+    {
+      "id": "F-002",
+      "name": "Outlook manifest & sideload",
+      "description": "Tạo manifest.xml hợp lệ cho Outlook task pane add-in. Setup local dev cert (office-addin-dev-certs). Ghi hướng dẫn sideload vào README.",
+      "status": "done",
+      "dependencies": [
+        "F-001"
+      ],
+      "evidence": "manifest.xml + commands.html + docs/sideload-guide.md created"
+    },
+    {
+      "id": "F-003",
+      "name": "Task pane UI shell",
+      "description": "Layout task pane: header (logo + tên), tab bar (Summary / Reply), loading spinner, error state. Style theo Fluent UI màu sắc để blend với Outlook.",
+      "status": "done",
+      "dependencies": [
+        "F-001"
+      ],
+      "evidence": ""
+    },
+    {
+      "id": "F-004",
+      "name": "Email content reader",
+      "description": "Dùng Office.js mailbox API đọc subject, sender, body text của email đang xem. Expose qua React context để các tab dùng chung.",
+      "status": "done",
+      "dependencies": [
+        "F-002",
+        "F-003"
+      ],
+      "evidence": ""
+    },
+    {
+      "id": "F-005",
+      "name": "Thread summarizer",
+      "description": "Tab Summary: gọi Claude API với email content, trả về 3-bullet summary + danh sách action items. Hiển thị kết quả, loading state, error fallback.",
+      "status": "done",
+      "dependencies": [
+        "F-004"
+      ],
+      "evidence": "Verified 2026-08-28 10:27: init script passed"
+    },
+    {
+      "id": "F-006",
+      "name": "Smart reply drafts",
+      "description": "Tab Reply: gọi Claude API sinh 3 reply options (tones: professional / friendly / brief). Nút Copy và Insert vào compose window (Office.js setAsync).",
+      "status": "done",
+      "dependencies": [
+        "F-004"
+      ],
+      "evidence": "Verified 2026-08-28 10:28: init.ps1 pass — 76 modules, lint clean, build 1.35s"
+    },
+    {
+      "id": "F-007",
+      "name": "API key settings panel",
+      "description": "Tab Settings: user nhap Anthropic API key, luu localStorage. claude-client.ts doc key tu localStorage truoc, fallback env. Hien thi status key (set/not set) va nut Clear.",
+      "status": "done",
+      "dependencies": [
+        "F-001"
+      ],
+      "evidence": "Verified 2026-08-28 10:37: init script passed"
+    },
+    {
+      "id": "F-008",
+      "name": "Multi-provider support (DeepSeek)",
+      "description": "Them DeepSeek lam AI provider. key-store quan ly provider + key rieng. deepseek-client dung fetch. Settings tab co provider selector.",
+      "status": "done",
+      "dependencies": [
+        "F-007"
+      ],
+      "evidence": "Verified 2026-08-28 10:40: init script passed"
+    },
+    {
+      "id": "F-009",
+      "name": "Translate tab",
+      "description": "Tab Translate thứ 4: dịch email body sang Tiếng Việt hoặc English bằng AI. Hai nút ngôn ngữ, skeleton loading, Copy button. translateEmail() trong claude-client + deepseekTranslate() trong deepseek-client.",
+      "status": "done",
+      "dependencies": ["F-005", "F-008"],
+      "evidence": "Verified 2026-08-28: build pass, translate-tab.tsx created"
+    },
+    {
+      "id": "F-010",
+      "name": "Custom reply context",
+      "description": "Collapsible 'Add context' textarea trong Reply tab. User nhập hướng dẫn (<=200 chars). Nút Regenerate gọi lại AI với context. Persist trong sessionStorage.",
+      "status": "done",
+      "dependencies": ["F-006"],
+      "evidence": "Verified 2026-08-28: build pass, generateReplies nhận optional context param"
+    },
+    {
+      "id": "F-011",
+      "name": "Tone analysis badge",
+      "description": "Extend SummaryResult với tone field (urgent/formal/friendly/neutral). Cùng một AI call trong summarizeEmail. ToneBadge hiển thị dạng pill màu bên cạnh 'Key Points' trong Summary tab.",
+      "status": "done",
+      "dependencies": ["F-005"],
+      "evidence": "Verified 2026-08-28: build pass, ToneBadge component added to summary-tab"
+    }
+  ]
+}
