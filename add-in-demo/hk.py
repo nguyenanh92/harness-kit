@@ -21,6 +21,10 @@ Commands
   audit [--html PATH]
       Score the harness (requires validate_harness.py on the path).
 
+  handoff
+      Auto-generate session-handoff.md from active feature, git log, and
+      progress.md. Run at the end of each session before closing.
+
 Usage from any directory in the project
 -----------------------------------------
   py hk.py feature "Notification Settings"
@@ -28,6 +32,7 @@ Usage from any directory in the project
   py hk.py status
   py hk.py done
   py hk.py audit --html report.html
+  py hk.py handoff       # generate session-handoff.md at end of session
 """
 
 from __future__ import annotations
@@ -294,6 +299,127 @@ def cmd_audit(args: argparse.Namespace, root: Path) -> int:
     return result.returncode
 
 
+def cmd_handoff(args: argparse.Namespace, root: Path) -> int:
+    """Generate session-handoff.md from active feature, git log, and progress.md."""
+    data = load_fl(root)
+    features: List[Dict] = data.get("features", [])
+    active_id = data.get("active_feature")
+    active = get_feature(features, active_id) if active_id else None
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+    # ── git metadata (best-effort; skipped gracefully if git unavailable) ──
+    def _git(*cmd: str) -> str:
+        try:
+            r = subprocess.run(["git", *cmd], capture_output=True, text=True,
+                               cwd=root, timeout=5)
+            return r.stdout.strip() if r.returncode == 0 else ""
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            return ""
+
+    branch     = _git("rev-parse", "--abbrev-ref", "HEAD")
+    recent_log = _git("log", "--oneline", "-5")
+    diff_stat  = _git("diff", "--stat", "HEAD~1") or _git("status", "--short")
+
+    first_hash = ""
+    if recent_log:
+        m = re.match(r"([0-9a-f]{6,})", recent_log)
+        if m:
+            first_hash = m.group(1)
+    commit_ref = f"{branch} @ {first_hash}" if (branch and first_hash) else branch or "(no git)"
+
+    # ── pull recommended next step from progress.md ────────────────────────
+    next_step = ""
+    progress_file = root / "progress.md"
+    if progress_file.is_file():
+        text = progress_file.read_text(encoding="utf-8")
+        m = re.search(r"##\s*Recommended Next Step\s*\n+(.*?)(?=\n##|\Z)", text, re.DOTALL)
+        if m:
+            next_step = m.group(1).strip()
+
+    done_features = [f for f in features if f.get("status") == "done"]
+    agent_file = _agent_instruction_hint(root)
+
+    out: List[str] = [
+        "# Session Handoff",
+        "",
+        "## Current Objective",
+        "",
+        f"- Goal: {active['name'] if active else 'N/A'}",
+        f"- Current status: {active.get('status', '') if active else 'N/A'}",
+        f"- Branch / commit: {commit_ref}",
+        "",
+        "## Completed This Session",
+        "",
+    ]
+    if done_features:
+        for f in done_features[-3:]:
+            out.append(f"- [x] {f['id']} — {f['name']}")
+    else:
+        out.append("- [ ] (none yet)")
+
+    out += [
+        "",
+        "## Verification Evidence",
+        "",
+        "| Check | Command | Result | Notes |",
+        "|---|---|---|---|",
+        "|  |  |  |  |",
+        "",
+        "## Files Changed",
+        "",
+    ]
+    if diff_stat:
+        for line in diff_stat.splitlines()[:12]:
+            out.append(f"- {line}")
+    else:
+        out.append("- (run `git status` to see changes)")
+
+    out += ["", "## Recent Commits", ""]
+    if recent_log:
+        for line in recent_log.splitlines():
+            out.append(f"- {line}")
+    else:
+        out.append("- (no git history)")
+
+    out += [
+        "",
+        "## Decisions Made",
+        "",
+        "- ",
+        "",
+        "## Blockers / Risks",
+        "",
+        "- ",
+        "",
+        "## Next Session Startup",
+        "",
+        f"1. Read `{agent_file}`.",
+        "2. Read `feature_list.json` and `progress.md`.",
+        "3. Review this handoff.",
+        "4. Run `./init.sh` or the documented verification command before editing.",
+        "",
+        "## Recommended Next Step",
+        "",
+    ]
+    if next_step:
+        for line in next_step.splitlines()[:3]:
+            if line.strip():
+                out.append(f"- {line.lstrip('-• ').strip()}")
+    elif active:
+        out.append(f"- Continue {active['id']}: {active.get('description', active['name'])}")
+    else:
+        out.append("- ")
+
+    (root / "session-handoff.md").write_text("\n".join(out) + "\n", encoding="utf-8")
+
+    print(f"✓ session-handoff.md written  ({timestamp})")
+    if active:
+        print(f"  Active : {active['id']} — {active['name']}")
+    if branch:
+        print(f"  Branch : {commit_ref}")
+    return 0
+
+
 # --------------------------------------------------------------------------- #
 # Entry point
 # --------------------------------------------------------------------------- #
@@ -332,6 +458,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     p_audit = sub.add_parser("audit", help="Score the harness (requires validate_harness.py)")
     p_audit.add_argument("--html", metavar="PATH", help="Write HTML report to PATH")
 
+    # handoff
+    sub.add_parser("handoff", help="Generate session-handoff.md from current project state")
+
     args = parser.parse_args(argv)
 
     # Resolve project root
@@ -344,6 +473,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         "status":  cmd_status,
         "done":    cmd_done,
         "audit":   cmd_audit,
+        "handoff": cmd_handoff,
     }
     return dispatch[args.command](args, root)
 
