@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from pathlib import Path
 from typing import List, Dict, Any, Union
 
@@ -45,8 +46,11 @@ class SessionLogger:
                 if line_str:
                     try:
                         events.append(json.loads(line_str))
-                    except json.JSONDecodeError:
-                        # Skip malformed lines silently or log warning
+                    except json.JSONDecodeError as exc:
+                        print(
+                            f"[SessionLogger] Warning: skipped malformed JSONL line: {exc}",
+                            file=sys.stderr,
+                        )
                         continue
         return events
 

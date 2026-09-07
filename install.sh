@@ -59,11 +59,3 @@ git clone --depth 1 --quiet "$REPO" "$TMP/harness-kit"
     $GOVERNANCE_ONLY \
     $PASSTHROUGH
 
-echo ""
-if [ -z "$GOVERNANCE_ONLY" ]; then
-    echo "Done (full harness). Edit AGENTS.md, fill feature_list.json, then:"
-    echo "  py harness/harness.py --mock --goal 'your goal here'"
-else
-    echo "Done. Edit AGENTS.md (or CLAUDE.md) to customize rules for your project."
-    echo "Supported tools: Claude Code, Cursor, Codex, Windsurf, and any AI that reads your instruction file."
-fi

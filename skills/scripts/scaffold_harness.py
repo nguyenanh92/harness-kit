@@ -105,10 +105,23 @@ def main(argv: List[str] | None = None) -> int:
             )
             print_result(result)
 
-    print(
-        f"\nDone. Next: edit {args.agent_file}, fill in feature_list.json, "
-        f"run ./init.sh (or ./init.ps1) to verify, then start coding."
-    )
+    print(f"""
+Done. Your agent harness is ready.
+
+Next steps:
+  1. Open your AI agent and say:
+       "Read {args.agent_file} and start working on F-001."
+
+  2. Or manage features from the terminal:
+       py hk.py status          # see active feature + queue
+       py hk.py feature "My first task" --desc "What you want to build"
+       py hk.py start F-003     # set it active
+
+  3. When a feature is complete:
+       py hk.py done            # runs init script + marks done
+       py hk.py audit           # score your harness (0-100)
+
+Works with Claude Code, Cursor, Codex, Windsurf — any AI that reads {args.agent_file}.""")
     return 0
 
 

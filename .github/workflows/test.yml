@@ -59,7 +59,15 @@ jobs:
         run: |
           python skills/scripts/validate_harness.py \
             --target . \
-            --harness-dir skills \
-            --min-score 0 \
+            --harness-dir skills/templates \
+            --min-score 60 \
+            --html harness-score.html \
             --json
-        continue-on-error: true
+
+      - name: Upload harness score report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harness-score-${{ matrix.os }}-py${{ matrix.python }}
+          path: harness-score.html
+          retention-days: 7

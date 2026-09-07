@@ -25,31 +25,39 @@
 
 ## Install
 
-Run this in your **project root** — works with Claude Code, Cursor, Codex, Windsurf, and any AI that reads an instruction file.
+Run from your **project root**:
 
 ```bash
-# macOS / Linux
+# macOS / Linux — governance files only (recommended for most projects)
 curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh
 
-# Windows (PowerShell)
-irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex
+# macOS / Linux — with Python runtime (harness loop, sub-agents, hooks)
+curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh -s -- --full
+
+# macOS / Linux — if your AI reads CLAUDE.md instead of AGENTS.md
+curl -fsSL https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.sh | sh -s -- --agent-file CLAUDE.md
 ```
+
+```powershell
+# Windows PowerShell — governance files only
+irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1 | iex
+
+# Windows PowerShell — with flags (--full, --agent-file, --force)
+& ([ScriptBlock]::Create((irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1))) --full
+& ([ScriptBlock]::Create((irm https://raw.githubusercontent.com/nguyenanh92/harness-kit/main/install.ps1))) --agent-file CLAUDE.md
+```
+
+> **Windows note:** `irm ... | iex` does not forward arguments to the script.
+> Use the `[ScriptBlock]::Create(...)` form shown above when passing flags.
 
 **Requirements:** Python 3.8+, git
 
-What gets created in your project:
-
-| File | Purpose |
-|---|---|
-| `AGENTS.md` | Rules your AI reads on every session start |
-| `feature_list.json` | Active feature, status, dependencies |
-| `progress.md` | AI writes progress here after each session |
-| `init.sh` / `init.ps1` | Verification script (tests, lint, build) |
-| `session-handoff.md` | Context for the next session |
-| `hk.py` | Workflow CLI — add features, track progress, audit score |
-
-> Use `--agent-file CLAUDE.md` if your tool reads `CLAUDE.md` instead of `AGENTS.md`.  
-> Use `--full` to also install the Python runtime (agent loop, sub-agents, hooks) — needed for programmatic automation.
+| Flag | Default | Effect |
+|------|---------|--------|
+| _(none)_ | governance only | 6 files: AGENTS.md, feature\_list.json, progress.md, init.sh/ps1, session-handoff.md, hk.py |
+| `--full` | off | Also installs the Python harness runtime (harness/ dir with 7 modules) |
+| `--agent-file CLAUDE.md` | AGENTS.md | Write CLAUDE.md instead of AGENTS.md (Claude Code default) |
+| `--force` | off | Overwrite existing files |
 
 ## Two ways to work
 

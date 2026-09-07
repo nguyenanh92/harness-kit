@@ -1,0 +1,25 @@
+{
+  "features": [
+    {
+      "id": "F-001",
+      "name": "Template bug fixes",
+      "description": "Fix classify_command gap and prompt_assembly ancestor-walk boundary",
+      "status": "done",
+      "dependencies": []
+    },
+    {
+      "id": "F-002",
+      "name": "Harness loop test coverage",
+      "description": "Add 5 integration tests: mock loop, compaction, hook veto, classifier table, assembly boundary",
+      "status": "done",
+      "dependencies": ["F-001"]
+    },
+    {
+      "id": "F-003",
+      "name": "CI hardening and repo hygiene",
+      "description": "Fix --harness-dir, raise min-score floor, add AGENTS.md, commit js/main.js deletion, fix persistence warning",
+      "status": "done",
+      "dependencies": ["F-001", "F-002"]
+    }
+  ]
+}

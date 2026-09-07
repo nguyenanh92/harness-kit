@@ -61,15 +61,6 @@ try {
 
     & $py $script @scriptArgs
 
-    Write-Host ""
-    if ($isFull) {
-        Write-Host "Done (full harness). Edit AGENTS.md, fill feature_list.json, then:"
-        Write-Host "  py harness\harness.py --mock --goal 'your goal here'"
-    } else {
-        Write-Host "Done. Edit AGENTS.md (or CLAUDE.md) to customize rules for your project."
-        Write-Host "Supported tools: Claude Code, Cursor, Codex, Windsurf, and any AI that reads your instruction file."
-    }
-
 } finally {
     if (Test-Path $tmp) { Remove-Item -Recurse -Force $tmp }
 }

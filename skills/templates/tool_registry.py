@@ -39,20 +39,38 @@ class ToolRegistry:
         ]
 
     def classify_command(self, cmd: str) -> str:
-        """
-        Dynamically classifies a shell command command string to assess risk level.
+        """Classify a shell command string into a permission tier.
+
+        Checked from most to least dangerous so longer specific patterns
+        (e.g. 'rm -rf') are matched before shorter overlapping ones ('rm ').
         """
         normalized = cmd.strip().lower()
-        
-        # Destructive or system-level actions -> FULL_ACCESS
-        if any(k in normalized for k in ["rm -rf", "sudo", "shutdown", "curl", "wget", "chmod"]):
+
+        # FULL_ACCESS: irreversible / system-level / network actions.
+        # Recursive-delete patterns must come before bare 'rm ' below.
+        _FULL_ACCESS = (
+            "rm -rf", "rm -r",
+            "sudo", "shutdown", "reboot",
+            "curl ", "wget ",
+            "chmod", "chown",
+            "dd ",
+            "mkfs", "fdisk",
+        )
+        if any(p in normalized for p in _FULL_ACCESS):
             return "FULL_ACCESS"
-            
-        # Workspace modification commands -> WORKSPACE_WRITE
-        if any(k in normalized for k in ["mkdir", "touch", "git add", "git commit", "pip install", "npm install"]):
+
+        # WORKSPACE_WRITE: local filesystem mutations (usually recoverable).
+        _WORKSPACE_WRITE = (
+            "rm ",          # single-file remove (after recursive patterns above)
+            "mv ", "cp ",
+            "truncate ",
+            "mkdir", "touch",
+            "git add", "git commit", "git merge", "git rebase",
+            "pip install", "npm install", "yarn add",
+        )
+        if any(p in normalized for p in _WORKSPACE_WRITE):
             return "WORKSPACE_WRITE"
-            
-        # Standard read-only commands
+
         return "READ_ONLY"
 
     def check_and_execute(
