@@ -47,6 +47,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+# Ensure UTF-8 output on Windows (cp1252 default breaks arrow/checkmark chars).
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 
 # =========================================================================== #
 # Inline scorer (ported from harness_utils.py — stdlib only, no imports)

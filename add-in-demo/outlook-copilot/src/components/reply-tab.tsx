@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { generateReplies, generateRsvp, type ReplyDraft, type RsvpDraft } from "../api/claude-client";
 import { useEmail } from "../office-context";
 import CopyButton from "./copy-button";
+import ErrorAlert from "./ui/error-alert";
 
 const SESSION_KEY = "hk_reply_instructions";
 const MAX_CONTEXT = 200;
@@ -164,11 +165,7 @@ export default function ReplyTab() {
     <div className="p-4 space-y-3">
       {loading && <LoadingSkeleton />}
 
-      {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-        </div>
-      )}
+      {error && <ErrorAlert message={error} />}
 
       {!loading && isAppointment && rsvpDrafts.map((draft) => (
         <RsvpCard key={draft.type} draft={draft} />

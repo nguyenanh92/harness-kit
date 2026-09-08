@@ -2,6 +2,8 @@ import { useState } from "react";
 import { translateEmail } from "../api/claude-client";
 import { useEmail } from "../office-context";
 import CopyButton from "./copy-button";
+import ErrorAlert from "./ui/error-alert";
+import SectionHeading from "./ui/section-heading";
 
 interface Language {
   code: string;
@@ -60,13 +62,12 @@ export default function TranslateTab() {
 
   return (
     <div className="p-4 space-y-4">
-      <h2 className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+      <SectionHeading icon={
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
             d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
         </svg>
-        Translate to
-      </h2>
+      }>Translate to</SectionHeading>
 
       <div className="grid grid-cols-2 gap-1.5">
         {LANGUAGES.map((lang) => {
@@ -97,11 +98,7 @@ export default function TranslateTab() {
 
       {loading && <LoadingSkeleton />}
 
-      {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-        </div>
-      )}
+      {error && <ErrorAlert message={error} />}
 
       {result && (
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 space-y-2.5">

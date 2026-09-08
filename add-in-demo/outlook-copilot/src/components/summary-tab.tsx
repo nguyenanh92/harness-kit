@@ -7,6 +7,9 @@ import {
   type MeetingBrief,
 } from "../api/claude-client";
 import { useEmail, type MeetingData } from "../office-context";
+import ErrorAlert from "./ui/error-alert";
+import SectionHeading from "./ui/section-heading";
+import BulletList from "./ui/bullet-list";
 
 const TONE_STYLE: Record<NonNullable<SummaryResult["tone"]>, string> = {
   urgent:   "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300",
@@ -109,42 +112,28 @@ function MeetingBriefView({ brief }: { brief: MeetingBrief }) {
   return (
     <>
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-3.5">
-        <h2 className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M9 12h6m-6 4h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
-          </svg>
-          Key Points
-        </h2>
-        <ul className="space-y-2.5">
-          {brief.bullets.map((bullet, i) => (
-            <li key={i} className="flex gap-2.5 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0078d4] dark:bg-[#4da6e8] shrink-0 mt-1.5" />
-              {bullet}
-            </li>
-          ))}
-        </ul>
+        <div className="mb-3">
+          <SectionHeading icon={
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M9 12h6m-6 4h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
+            </svg>
+          }>Key Points</SectionHeading>
+        </div>
+        <BulletList items={brief.bullets} />
       </div>
 
       {brief.prepItems.length > 0 && (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-3.5">
-          <h2 className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-            </svg>
-            Preparation
-          </h2>
-          <ul className="space-y-2.5">
-            {brief.prepItems.map((item, i) => (
-              <li key={i} className="flex gap-2.5 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                <svg className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                {item}
-              </li>
-            ))}
-          </ul>
+          <div className="mb-3">
+            <SectionHeading icon={
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+            }>Preparation</SectionHeading>
+          </div>
+          <BulletList items={brief.prepItems} icon="check" />
         </div>
       )}
     </>
@@ -193,9 +182,7 @@ export default function SummaryTab() {
   if (error) {
     return (
       <div className="p-4">
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-        </div>
+        <ErrorAlert message={error} />
       </div>
     );
   }
@@ -215,44 +202,28 @@ export default function SummaryTab() {
     <div className="p-3 space-y-3">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-3.5">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+          <SectionHeading icon={
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M9 12h6m-6 4h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
             </svg>
-            Key Points
-          </h2>
+          }>Key Points</SectionHeading>
           <ToneBadge tone={emailResult.tone} />
         </div>
-        <ul className="space-y-2.5">
-          {emailResult.bullets.map((bullet, i) => (
-            <li key={i} className="flex gap-2.5 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0078d4] dark:bg-[#4da6e8] shrink-0 mt-1.5" />
-              {bullet}
-            </li>
-          ))}
-        </ul>
+        <BulletList items={emailResult.bullets} />
       </div>
 
       {emailResult.actionItems.length > 0 && (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-3.5">
-          <h2 className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-            </svg>
-            Action Items
-          </h2>
-          <ul className="space-y-2.5">
-            {emailResult.actionItems.map((item, i) => (
-              <li key={i} className="flex gap-2.5 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                <svg className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                {item}
-              </li>
-            ))}
-          </ul>
+          <div className="mb-3">
+            <SectionHeading icon={
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+            }>Action Items</SectionHeading>
+          </div>
+          <BulletList items={emailResult.actionItems} icon="check" />
         </div>
       )}
     </div>

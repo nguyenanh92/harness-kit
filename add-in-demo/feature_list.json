@@ -84,7 +84,10 @@
       "name": "Translate tab",
       "description": "Tab Translate thứ 4: dịch email body sang Tiếng Việt hoặc English bằng AI. Hai nút ngôn ngữ, skeleton loading, Copy button. translateEmail() trong claude-client + deepseekTranslate() trong deepseek-client.",
       "status": "done",
-      "dependencies": ["F-005", "F-008"],
+      "dependencies": [
+        "F-005",
+        "F-008"
+      ],
       "evidence": "Verified 2026-08-28: build pass, translate-tab.tsx created"
     },
     {
@@ -92,7 +95,9 @@
       "name": "Custom reply context",
       "description": "Collapsible 'Add context' textarea trong Reply tab. User nhập hướng dẫn (<=200 chars). Nút Regenerate gọi lại AI với context. Persist trong sessionStorage.",
       "status": "done",
-      "dependencies": ["F-006"],
+      "dependencies": [
+        "F-006"
+      ],
       "evidence": "Verified 2026-08-28: build pass, generateReplies nhận optional context param"
     },
     {
@@ -100,8 +105,19 @@
       "name": "Tone analysis badge",
       "description": "Extend SummaryResult với tone field (urgent/formal/friendly/neutral). Cùng một AI call trong summarizeEmail. ToneBadge hiển thị dạng pill màu bên cạnh 'Key Points' trong Summary tab.",
       "status": "done",
-      "dependencies": ["F-005"],
+      "dependencies": [
+        "F-005"
+      ],
       "evidence": "Verified 2026-08-28: build pass, ToneBadge component added to summary-tab"
+    },
+    {
+      "id": "F-012",
+      "name": "UI shared components refactor",
+      "description": "Extract ErrorAlert, SectionHeading, BulletList vào components/ui/ để loại bỏ duplicate code trong 3 tabs",
+      "status": "done",
+      "dependencies": [],
+      "evidence": "Verified 2026-09-08 10:12: init script passed"
     }
-  ]
+  ],
+  "active_feature": "F-012"
 }
